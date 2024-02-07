@@ -1,9 +1,14 @@
-import React from 'react'
+import { Roboto } from "next/font/google"
 
+const roboto = Roboto({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+})
 const Footer = () => {
+
   return (
-    <div className='w-screen h-fit border-t-[3px] border-solid justify-between border-black bg-gray-200 absolute bottom-0 rounded-b-md text-center text-[11.6px]'>
-        <p className='text-[#8b8b8b] py-[7px]'>@Copyright 2024 Filipizen</p>
+    <div className={`${roboto.className} w-full h-fit border-t-[3px] border-solid justify-between relative bottom-0 border-black bg-gray-200 rounded-b-md text-center text-[11.6px]`}>
+      <p className='text-[#8b8b8b] py-[7px]'>@Copyright 2024 Filipizen</p>
     </div>
   )
 }
