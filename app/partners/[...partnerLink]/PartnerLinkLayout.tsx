@@ -61,6 +61,7 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
         height={40}
         width={40}
         title={data.title}
+        extraStyle='text-white'
       />
       <ThemeProvider theme={fontTheme}>
         <div className="mb-[2rem] h-[79.7%]">

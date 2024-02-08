@@ -15,6 +15,8 @@ interface ButtonProps {
   disableElevation?: boolean;
   disableRipple?: boolean;
   disableTouchRipple?: boolean;
+  sx?: object;
+  component?: any;
 }
 
 const ButtonComponent: React.FC<ButtonProps> = ({ 
@@ -31,7 +33,9 @@ const ButtonComponent: React.FC<ButtonProps> = ({
   disableFocusRipple,
   disableElevation,
   disableRipple,
-  disableTouchRipple
+  disableTouchRipple,
+  sx,
+  component
 }) => {
   return (
     <Button 
@@ -48,6 +52,8 @@ const ButtonComponent: React.FC<ButtonProps> = ({
       disableElevation={disableElevation}
       disableRipple={disableRipple}
       disableTouchRipple={disableTouchRipple}
+      sx={sx}
+      component={component}
     >
       {children}
     </Button>

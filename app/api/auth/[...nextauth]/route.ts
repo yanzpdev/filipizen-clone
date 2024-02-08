@@ -3,6 +3,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import { connectMongoDB } from "@/lib/mongodb";
 import User from "@/models/user";
+import { redirect } from "next/dist/server/api-utils";
 
 const authOptions = {
   providers: [
@@ -15,11 +16,10 @@ const authOptions = {
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET ?? ''
     }),
   ],
-
   secret: process.env.SECRET,
   
   callbacks: {
-    async signIn({ user, account }: any): Promise<string | boolean> {  
+    async signIn({ user, account }: any): Promise<string | boolean | any> {  
       if(account.provider === 'google' || account.provider === 'facebook') {
         const {id, name, email} = user;
         const userId = id;
@@ -48,6 +48,10 @@ const authOptions = {
 
           else {
             console.log("User exists.");
+          }
+          return {
+            redirect: '/partners',
+            permanent: false
           }
         }
           

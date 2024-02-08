@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Roboto } from 'next/font/google';
 import ImageComponent from '../ui/ImageComponent';
 import { ThemeProvider, createTheme } from '@mui/material';
+import { useSession } from 'next-auth/react'; 
 
 interface Partner {
   id: number;
@@ -39,6 +40,7 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [partnerLink, setPartnerLink] = useState<string>('');
   const router = useRouter();
+  const {data: session, status } = useSession();
 
   const filteredPartners = searchText
   ? memberData.filter((partner: Partner) => new RegExp(`^${searchText.replace(/\\/g, '\\\\')}`, 'i').test(partner.title))
@@ -58,7 +60,7 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
 
   const handleClick = (param: any) => {
     setSearchText(param.title + (param.subtype !== 'province' ? `, ${param.group.title}` : ''));
-    setPartnerLink('/partners/' + param.clusterid + '_' + param.name);
+    setPartnerLink('/partners/' + param.group.name + '_' + param.name);
     setDropdownVisible(false); 
   }
 
@@ -181,8 +183,15 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
           style={{textTransform: 'none'}}
           onClick={redirectToSignIn}
           sx={{backgroundColor: 'transparent'}}
+          disabled={status === 'authenticated'}
         >
-          Sign In
+          {status === 'authenticated' ?
+            <p>You are signed in</p>
+          :status === 'loading' ?
+            <p>Loading...</p>
+          :
+            <p>Sign in</p>
+          }
         </Button>
       </ThemeProvider>
     </div>
