@@ -7,10 +7,14 @@ interface ButtonProps {
   href?: string; // for routing/redirecting
   variant?: 'text' | 'outlined' | 'contained'; // prestyled css button variants
   onClick?: () => void; // for click events and handling functions
-  color: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning'; // prestyled css button colors
-  size: 'small' | 'medium' | 'large'; // prestyled css button sizes
-  startIcon: any; // for svg icons
-  style: object; // override styling with vanilla css
+  color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning'; // prestyled css button colors
+  size?: 'small' | 'medium' | 'large'; // prestyled css button sizes
+  startIcon?: any; // for svg icons
+  style?: object; // override styling with vanilla css
+  disableFocusRipple?: boolean;
+  disableElevation?: boolean;
+  disableRipple?: boolean;
+  disableTouchRipple?: boolean;
 }
 
 const ButtonComponent: React.FC<ButtonProps> = ({ 
@@ -23,7 +27,11 @@ const ButtonComponent: React.FC<ButtonProps> = ({
   color,
   size,
   startIcon,
-  style
+  style,
+  disableFocusRipple,
+  disableElevation,
+  disableRipple,
+  disableTouchRipple
 }) => {
   return (
     <Button 
@@ -36,6 +44,10 @@ const ButtonComponent: React.FC<ButtonProps> = ({
       size={size}
       startIcon={startIcon}
       style={style}
+      disableFocusRipple={disableFocusRipple}
+      disableElevation={disableElevation}
+      disableRipple={disableRipple}
+      disableTouchRipple={disableTouchRipple}
     >
       {children}
     </Button>

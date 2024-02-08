@@ -2,12 +2,13 @@ import Link from 'next/link';
 import { IoMdArrowDropdownCircle } from 'react-icons/io';
 import { getServerSession } from 'next-auth';
 import ImageComponent from '../ui/ImageComponent';
+import ContentWrapper from '../ui/ContentWrapper';
 
 const Header = async({navbarStyles, src, height, width, title}: {navbarStyles: string, src: string, height: number, width: number, title: string}) => {
-  const session = await getServerSession();
+  // const session = await getServerSession();
 
   return (
-    <div className={navbarStyles}>
+    <ContentWrapper className={navbarStyles}>
       <Link href='/' className='flex items-center justify-center'>
         <ImageComponent 
           src={src}
@@ -19,11 +20,10 @@ const Header = async({navbarStyles, src, height, width, title}: {navbarStyles: s
         <p className='ml-[10px] text-white text-[20px] font-bold pt-[2px]'>{title}</p>
       </Link>
 
-      {session && session.user && 
+      {/* {session && session.user && 
         <IoMdArrowDropdownCircle className='text-slate-700 active:scale-95 duration-100' size={20}/>
-      }
-      
-    </div>
+      } */}
+    </ContentWrapper>
   )
 }
 

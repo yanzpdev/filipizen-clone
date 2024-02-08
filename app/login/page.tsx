@@ -7,17 +7,6 @@ export const metadata: Metadata = {
   }
 
 const page = async() => {
-//   const res = await fetch("https://filipizen.com/cloud-server/json/partner/CloudPartnerService.getList", {
-//     next: { revalidate: 3600 },
-//   });
-
-//   if(!res.ok) {
-//     throw new Error('Error fetching data');
-//   }
-
-//   const data = await res.json;
-
-//   console.log(data);
   return <SignInPage />
 }
 

@@ -29,7 +29,6 @@ interface Member {
   } 
   channelid: string;
   isonline: string;
-
 }
 
 const page:React.FC<PageProps> = async({params}) => {

@@ -1,3 +1,4 @@
+'use client';
 import { ThemeProvider, createTheme } from "@mui/material";
 import { Roboto } from "next/font/google";
 import Link from "next/link";
