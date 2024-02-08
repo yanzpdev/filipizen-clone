@@ -160,6 +160,7 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
         variant='contained'
         className={`${roboto.className} mt-[38px] text-[14px] font-medium text-[#018786] hover:bg-[#e6f1f1] p-[8px] rounded-md tracking-[.09em] leading-none`}
         style={{ boxShadow: 'none' }}
+        sx={{backgroundColor: 'transparent'}}
       >
         <Link href='/partners'>
           VIEW ALL PARTNERS
@@ -171,6 +172,7 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
         className={`${roboto.className} absolute top-[-40px] text-lg right-14 font-medium text-slate-700 hover:bg-[#e6e9f3] p-[8px] rounded-md`}
         style={{textTransform: 'none'}}
         onClick={redirectToSignIn}
+        sx={{backgroundColor: 'transparent'}}
       >
         Sign In
       </Button>
