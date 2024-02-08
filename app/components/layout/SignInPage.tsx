@@ -98,6 +98,7 @@ const SignInPage = () => {
                 text-sm text-slate-800 rounded-md font-semibold 
                 hover:bg-slate-300 self-center justify-start gap-3"
                 onClick={() => signIn('google')}
+                sx={{backgroundColor: 'transparent'}}
               >
                 <FcGoogle size={32}/>Continue with Google
               </Button>
@@ -108,6 +109,7 @@ const SignInPage = () => {
                 text-sm text-slate-800 rounded-md font-semibold
                 hover:bg-slate-300 self-center justify-start gap-3"
                 onClick={() => signIn('facebook')}
+                sx={{backgroundColor: 'transparent'}}
               >
                 <FaFacebook className='text-[#0866ff]' size={32}/>Continue with Facebook
               </Button>
