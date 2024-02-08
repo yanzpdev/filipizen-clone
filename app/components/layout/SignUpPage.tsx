@@ -111,7 +111,6 @@ const SignUpPage = () => {
           width={250} 
           height={250} 
           className={``} 
-          layout={``}
           priority={true}
         />
       </ContentWrapper>

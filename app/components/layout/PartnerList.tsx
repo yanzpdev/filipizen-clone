@@ -1,3 +1,4 @@
+import { ThemeProvider, createTheme } from "@mui/material";
 import { Roboto } from "next/font/google";
 import Link from "next/link";
 
@@ -8,29 +9,35 @@ interface Member {
   subtype: string;
   state: string;
 }
+
 const roboto = Roboto({ 
   weight: ["400", '500', '700'], 
   subsets: ["latin"]  
 });
 
+export let fontTheme = createTheme({
+  typography: {
+    fontFamily: roboto.style.fontFamily,
+  }
+})
+
 const PartnerList = ({partnerData}: {partnerData: any}) => {
-    const groupedData: Record<string, Member[]> = {};
+  const groupedData: Record<string, Member[]> = {};
+
+  // Grouping partnerData by clusterid
+  partnerData.forEach((item: Member) => {
+    const { clusterid } = item;
   
-    // Grouping partnerData by clusterid
-    partnerData.forEach((item: Member) => {
-      const { clusterid } = item;
-    
-      if (!groupedData[clusterid]) {
-        groupedData[clusterid] = [];
-      }
-      groupedData[clusterid].push(item);
-    });
-  
-    // Sorting each group alphabetically by title
-    Object.values(groupedData).forEach((group) => {
-      group.sort((a, b) => a.title.localeCompare(b.title));
-    });
-        
+    if (!groupedData[clusterid]) {
+      groupedData[clusterid] = [];
+    }
+    groupedData[clusterid].push(item);
+  });
+
+  // Sorting each group alphabetically by title
+  Object.values(groupedData).forEach((group) => {
+    group.sort((a, b) => a.title.localeCompare(b.title));
+  });
 
   const clusteridMapping: Record<string, string> = {
     sarangani: 'Sarangani',
@@ -66,27 +73,29 @@ const PartnerList = ({partnerData}: {partnerData: any}) => {
   };
 
   return (
-    <div className={`columns-5 mb-[16px] h-full ${roboto.className}`}>
-      {Object.keys(groupedData).map((clusterid) => (
-        <div key={clusterid} style={{ breakInside: "avoid-column" }} className="w-[250px] h-fit">
-          <ul className="flex flex-col w-fit">
-            {clusteridMapping[clusterid] && (
-              <h1 className="text-xl text-[#27ae60] font-bold mt-[20px] mb-[5px] leading-none tracking-[-0.01em]">
-                {clusteridMapping[clusterid]}
-              </h1>
-            )}
-            {groupedData[clusterid].map((item: any) => (
-              <li className="text-[#3f51b5] text-[15.2px] leading-6 w-fit" key={item.id}>
-                <Link href={`/partners/${clusterid}_${item.name}`} className="hover:underline">
-                  {item.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+    <div className={`columns-5 mb-[16px] h-full`}>
+      <ThemeProvider theme={fontTheme}>
+        {Object.keys(groupedData).map((clusterid) => (
+          <div key={clusterid} style={{ breakInside: "avoid-column" }} className="w-[250px] h-fit">
+            <ul className="flex flex-col w-fit">
+              {clusteridMapping[clusterid] && (
+                <h1 className="text-xl text-[#27ae60] font-bold mt-[20px] mb-[5px] leading-none tracking-[-0.01em]">
+                  {clusteridMapping[clusterid]}
+                </h1>
+              )}
+              {groupedData[clusterid].map((item: any) => (
+                <li className="text-[#3f51b5] text-[15.2px] leading-6 w-fit" key={item.id}>
+                  <Link href={`/partners/${clusterid}_${item.name}`} className="hover:underline">
+                    {item.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </ThemeProvider>
     </div>
   )
 }
 
-export default PartnerList
+export default PartnerList;
