@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { IoMdArrowDropdownCircle } from 'react-icons/io';
 import { getServerSession } from 'next-auth';
+import ImageComponent from '../ui/ImageComponent';
 
 const Header = async({navbarStyles, src, height, width, title}: {navbarStyles: string, src: string, height: number, width: number, title: string}) => {
   const session = await getServerSession();
@@ -9,11 +9,12 @@ const Header = async({navbarStyles, src, height, width, title}: {navbarStyles: s
   return (
     <div className={navbarStyles}>
       <Link href='/' className='flex items-center justify-center'>
-        <img 
+        <ImageComponent 
           src={src}
           alt='filipizen logo'
           width={width || 24}
           height={height || 24}
+          priority={true}
         />
         <p className='ml-[10px] text-white text-[20px] font-bold pt-[2px]'>{title}</p>
       </Link>

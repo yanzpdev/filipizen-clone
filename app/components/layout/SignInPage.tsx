@@ -77,7 +77,7 @@ const SignInPage = () => {
               className="mt-6 text-sm font-medium leading-none"
               align='center'
             >
-              Don't have an account?  
+              Don&apos;t have an account? 
               <Button
                 component='a'
                 href={'/registration'}
@@ -85,7 +85,7 @@ const SignInPage = () => {
                 disableFocusRipple
                 disableRipple
               >
-                Sign up
+                 Sign up
               </Button>
             </Typography>
             <Typography

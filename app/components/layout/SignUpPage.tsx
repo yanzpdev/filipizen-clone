@@ -63,29 +63,30 @@ const SignUpPage = () => {
     setIsResponseReceived(false);
     try {
       const validatedData = signupFormSchema.parse({ email, name, address, mobilenum });
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        body: JSON.stringify(validatedData),
-      });
+      console.log(validatedData)
+      // const response = await fetch("/api/signup", {
+      //   method: "POST",
+      //   body: JSON.stringify(validatedData),
+      // });
 
-      if (response.ok) {
-        const responseData = await response.text();
-        setResponseMsg(responseData);
-        setIsResponseReceived(true);
-        setResponseSuccess(true);
-      } 
+      // if (response.ok) {
+      //   const responseData = await response.text();
+      //   setResponseMsg(responseData);
+      //   setIsResponseReceived(true);
+      //   setResponseSuccess(true);
+      // } 
       
-      else {
-        const errorMessage = await response.text();
-        setResponseMsg(errorMessage);
-        setIsResponseReceived(true);
-        setResponseSuccess(false);
-      }
-
+      // else {
+      //   const errorMessage = await response.text();
+      //   setResponseMsg(errorMessage);
+      //   setIsResponseReceived(true);
+      //   setResponseSuccess(false);
+      // }
       setName("");
       setEmail("");
       setAddress("");
       setMobilenum("");
+      setIsFormValid(false);
     }
 
     catch (err: any) {
@@ -111,6 +112,7 @@ const SignUpPage = () => {
           height={250} 
           className={``} 
           layout={``}
+          priority={true}
         />
       </ContentWrapper>
       <ContentWrapper 
@@ -119,7 +121,7 @@ const SignUpPage = () => {
       >
         <ThemeProvider theme={fontTheme}>
           <form
-            className="w-1/3"
+            className="w-1/3 mx-auto"
             onSubmit={handleSubmit}
           >
             <Typography 
@@ -130,7 +132,7 @@ const SignUpPage = () => {
               Create Account
             </Typography>
             <TextField
-              className="font-bold w-10/12 self-center rounded-lg"
+              className="font-bold w-full self-center rounded-lg"
               variant='outlined'
               label='Contact Name'
               size='medium'
@@ -142,7 +144,7 @@ const SignUpPage = () => {
               name={`name`} 
             />
             <TextField
-              className="font-bold w-10/12 self-center rounded-lg"
+              className="font-bold w-full self-center rounded-lg"
               variant='outlined'
               label='Contact Address'
               size='medium'
@@ -155,7 +157,7 @@ const SignUpPage = () => {
             />
             <TextField
               error={!isEmailValid && email !== ''}
-              className="font-bold w-10/12 self-center rounded-lg"
+              className="font-bold w-full self-center rounded-lg"
               variant='outlined'
               label='Email Address'
               size='medium'
@@ -167,7 +169,7 @@ const SignUpPage = () => {
               name={`email`} 
             />
             <TextField
-              className="font-bold w-10/12 self-center rounded-lg"
+              className="font-bold w-full self-center rounded-lg"
               variant='outlined'
               label='Mobile No.'
               size='medium'
@@ -182,7 +184,7 @@ const SignUpPage = () => {
             <Button
               type="submit"
               fullWidth={false}
-              className={`mt-4 w-10/12 py-3 tracking-widest 
+              className={`mt-4 w-full py-3 tracking-widest 
               text-lg text-white rounded-md self-center 
               ${!isFormValid ? 'bg-blue-100' : 'bg-blue-400 hover:bg-blue-500'}`}
               disabled={!isFormValid}
