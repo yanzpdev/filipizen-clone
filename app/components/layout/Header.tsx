@@ -7,7 +7,8 @@ import { Typography } from '@mui/material';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import ButtonComponent from '../ui/ButtonComponent';
 import { useRouter } from 'next/navigation';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import DropDownMenu from './DropDownMenu';
 
 interface HeaderProps {
   navbarStyles: string
@@ -16,13 +17,14 @@ interface HeaderProps {
   width: number
   title: string
   extraStyle?: string;
+  userName?: string;
 }
 
-const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, width, title}) => {
+const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, width, title, userName}) => {
   const {data: session, status} = useSession();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  
+
   const handleClick = () => {
     setIsOpen(!isOpen);
   }
@@ -30,11 +32,12 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
   const handleSignInClick = () => {
     router.push('/login');
   }
-  const handleClickOutside = (event: MouseEvent) => {
+
+  const handleClickOutside = useCallback((event: MouseEvent) => {
     if (isOpen && !buttonRef.current?.contains(event.target as Node) && event.target !== buttonRef.current) {
       setIsOpen(false);
     }
-  };
+  }, [isOpen]);
   
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -42,7 +45,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen]);
+  }, [isOpen, handleClickOutside]);
 
   const buttonRef = useRef<any | null>(null);
 
@@ -61,7 +64,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
       {status === 'authenticated' ?
         <ContentWrapper className={`${extraStyle} relative text-slate-700 flex justify-center items-center gap-1`}>
           <Typography variant='body1' className='text-xs font-bold'>
-            {session?.user?.name}
+            {userName}
           </Typography>
 
           {!isOpen &&
@@ -80,12 +83,9 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
           }
 
           {isOpen &&
-            <div 
-              className='absolute top-6 right-1 w-fit text-slate-700 p-6 border rounded-lg bg-[#f5f5f5]'
-              ref={buttonRef}
-            >
-              <p>test</p>
-            </div> 
+            <div ref={buttonRef} className='absolute top-5 right-1'>
+              <DropDownMenu userName={userName} image={session?.user?.image} email={session?.user?.email} />
+            </div>
           }
 
         </ContentWrapper>
@@ -104,9 +104,9 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
       :
         <ContentWrapper>
           <ButtonComponent 
-            variant='outlined' 
+            variant='text' 
             onClick={handleSignInClick}
-            className={`normal-case bg-blue-500 text-white font-semibold`}
+            className={`normal-case text-slate-700 font-semibold hover:bg-transparent hover:underline`}
             disableFocusRipple
             disableElevation
             disableRipple

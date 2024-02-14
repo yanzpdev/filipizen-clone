@@ -25,7 +25,6 @@ export let fontTheme = createTheme({
 const PartnerList = ({partnerData}: {partnerData: any}) => {
   const groupedData: Record<string, Member[]> = {};
 
-  // Grouping partnerData by clusterid
   partnerData.forEach((item: Member) => {
     const { clusterid } = item;
   
@@ -35,7 +34,6 @@ const PartnerList = ({partnerData}: {partnerData: any}) => {
     groupedData[clusterid].push(item);
   });
 
-  // Sorting each group alphabetically by title
   Object.values(groupedData).forEach((group) => {
     group.sort((a, b) => a.title.localeCompare(b.title));
   });
@@ -86,7 +84,7 @@ const PartnerList = ({partnerData}: {partnerData: any}) => {
               )}
               {groupedData[clusterid].map((item: any) => (
                 <li className="text-[#3f51b5] text-[15.2px] leading-6 w-fit" key={item.id}>
-                  <Link href={`/partners/${item.group.name}_${item.name}`} className="hover:underline">
+                  <Link href={`/partners/${item.group.name}_${item.name}`} className="hover:underline" target="_blank">
                     {item.title}
                   </Link>
                 </li>

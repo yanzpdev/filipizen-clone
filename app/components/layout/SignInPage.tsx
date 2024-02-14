@@ -3,17 +3,23 @@ import ContainerComponent from "../ui/ContainerComponent";
 import ContentWrapper from "../ui/ContentWrapper";
 import ImageComponent from "../ui/ImageComponent";
 import { Button, FormControl, TextField, Typography } from "@mui/material";
-import { Raleway } from 'next/font/google';
+import { Raleway, Roboto } from 'next/font/google';
 import { createTheme, ThemeProvider } from "@mui/material/styles"; 
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import ButtonComponent from "../ui/ButtonComponent";
 
 const raleway = Raleway({ 
   subsets: ['latin'], 
   weight: ['400', '500', '600', '700'] 
+});
+
+const roboto = Roboto({ 
+  subsets: ['latin'], 
+  weight: ['400', '500', '700'] 
 });
 
 export let theme = createTheme({
@@ -22,10 +28,16 @@ export let theme = createTheme({
   }
 })
 
+export let theme2 = createTheme({
+  typography: {
+    fontFamily: roboto.style.fontFamily,
+  }
+})
+
 const SignInPage = () => {
   const {data: session, status} = useSession();
   if (session) {
-    redirect('/partners');
+    redirect('/signinchecker');
   }
 
   else {
@@ -33,7 +45,6 @@ const SignInPage = () => {
       <>
         {status === 'loading' ?
           <ContainerComponent className="h-screen w-screen">
-
           </ContainerComponent>
         :
           <ContainerComponent
@@ -41,11 +52,19 @@ const SignInPage = () => {
             classes={{}}
             fixed={false}
             disableGutters={true}
-            component={undefined}
           >
             <ContentWrapper 
-              className={`pt-12 flex items-center justify-center`}
+              className={`pt-6 flex items-center justify-center gap-2`}
             >
+              <ThemeProvider theme={theme2}>
+                <Typography 
+                  variant='h1' 
+                  className="text-5xl leading-none font-extrabold"
+                  align='center'
+                >
+                  Sign in to 
+                </Typography>
+              </ThemeProvider>
               <ImageComponent 
                 src={`/assets/filipizen.svg`} 
                 alt={`Filipizen Logo`} 
@@ -55,60 +74,84 @@ const SignInPage = () => {
                 priority={true}
               />
             </ContentWrapper>
-            <ContentWrapper 
-              className={`pt-16 flex items-center justify-center`}
-              isSpan={false}
-            >
-              <FormControl
-                className="w-1/3"
+            <ThemeProvider theme={theme}>
+              <Typography 
+                variant='h1' 
+                className="text-sm pt-6  font-medium leading-none"
+                align='center'
               >
-                <ThemeProvider theme={theme}>
-                  <Typography 
-                    variant='h1' 
-                    className="pb-8 text-4xl leading-none font-extrabold"
-                    align='center'
-                  >
-                    Sign in to Filipizen
-                  </Typography>
-                  <TextField
-                    className="font-bold w-10/12 self-center rounded-lg"
-                    variant='outlined'
-                    label='Email Address'
-                    size='medium'
-                    sx={{borderRadius: '8px'}}
-                    fullWidth={true}
+                with
+              </Typography>
+
+              <ContentWrapper 
+                className={`pt-6 flex items-center justify-center`}
+                isSpan={false}
+              >
+                <FormControl className="w-1/3">
+                  <ImageComponent 
+                    src={"/assets/qr-code.png"} 
+                    alt={"QR Code"} 
+                    height={220}
+                    width={220}
+                    className="mx-auto rounded-lg"
                   />
-                  <Button
-                    fullWidth={false}
-                    className="mt-4 w-10/12 py-3 tracking-widest 
-                    text-lg text-white rounded-md bg-blue-400
-                    hover:bg-blue-500 self-center"
-                  >
-                    Continue
-                  </Button>
                   <Typography 
                     variant='body1' 
-                    className="mt-6 text-sm font-medium leading-none"
+                    className="mt-6 text-sm font-medium leading-none flex flex-col gap-2 items-center justify-center"
                     align='center'
                   >
-                    Don&apos;t have an account? 
-                    <Button
-                      component='a'
-                      href={'/registration'}
-                      className="text-blue-400 normal-case p-0 -mt-[2px] bg-transparent leading-none items-start justify-start"
-                      disableFocusRipple
-                      disableRipple
-                    >
-                       Sign up
-                    </Button>
+                    Use the Filipizen App to sign in via QR code
+                    <ContentWrapper className="flex gap-4">
+                      <ButtonComponent
+                        variant="text"
+                        className=""
+                        href="https://play.google.com/store/apps"
+                        target="_blank"
+                      >
+                        <ImageComponent 
+                          src={"/assets/googleplay.png"} 
+                          alt={"Google Play"} 
+                          width={120}
+                          height={100}
+                        />
+                      </ButtonComponent>
+                      
+                      <ButtonComponent
+                        variant="text"
+                        className=""
+                        href="https://www.apple.com/ph/app-store/"
+                        target="_blank"
+                      >
+                        <ImageComponent 
+                          src={"/assets/appstore.png"} 
+                          alt={"App Store"} 
+                          width={120}
+                          height={100}
+                        />
+                      </ButtonComponent>
+                      
+                    </ContentWrapper>
                   </Typography>
+                  
+                  <ContentWrapper className="flex gap-2 mt-4 items-center justify-center mx-auto">
+                    <hr style={{ width: '100px', border: '0.3px solid #334155' }} />
+                    <Typography 
+                      variant='h1' 
+                      className="text-sm font-medium leading-none"
+                      align='center'
+                    >
+                      or
+                    </Typography>
+                    <hr style={{ width: '100px', border: '0.3px solid #334155' }} />
+                  </ContentWrapper>
+
                   <Typography
                     align='center'
                   >
                     <Button
                       fullWidth={false}
                       variant='contained'
-                      className="mt-8 w-10/12 py-3 tracking-widest normal-case 
+                      className="mt-4 w-10/12 py-3 tracking-widest normal-case 
                       text-sm text-slate-800 rounded-md font-semibold 
                       hover:bg-slate-300 self-center justify-start gap-3"
                       onClick={() => signIn('google')}
@@ -128,14 +171,29 @@ const SignInPage = () => {
                       <FaFacebook className='text-[#0866ff]' size={32}/>Continue with Facebook
                     </Button>
                   </Typography>
-                </ThemeProvider>
-              </FormControl>        
-            </ContentWrapper>
+                  <ContentWrapper className="mt-3 mx-auto text-center items-center justify-center flex gap-2">
+                    <ButtonComponent
+                      variant="text"
+                      href="/"
+                      className="hover:bg-transparent hover:underline text-slate-700"
+                    >
+                      Terms of Service
+                    </ButtonComponent>
+                    |
+                    <ButtonComponent
+                      variant="text"
+                      href="/"
+                      className="hover:bg-transparent hover:underline text-slate-700"
+                    >
+                      Privacy Policy
+                    </ButtonComponent>
+                  </ContentWrapper>
+                </FormControl>        
+              </ContentWrapper>
+            </ThemeProvider>
           </ContainerComponent>
         }
-      
       </>
-      
     )
   }
 }

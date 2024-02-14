@@ -17,6 +17,7 @@ interface ButtonProps {
   disableTouchRipple?: boolean;
   sx?: object;
   component?: any;
+  target?: '_blank' | '_self' | '_parent' | '_top' | string;
 }
 
 const ButtonComponent: React.FC<ButtonProps> = ({ 
@@ -35,7 +36,8 @@ const ButtonComponent: React.FC<ButtonProps> = ({
   disableRipple,
   disableTouchRipple,
   sx,
-  component
+  component,
+  target
 }) => {
   return (
     <Button 
@@ -54,6 +56,7 @@ const ButtonComponent: React.FC<ButtonProps> = ({
       disableTouchRipple={disableTouchRipple}
       sx={sx}
       component={component}
+      target={target}
     >
       {children}
     </Button>

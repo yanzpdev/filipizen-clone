@@ -1,10 +1,25 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      'www.filipizen.com',
-      'lh3.googleusercontent.com',
-      'platform-lookaside.fbsbx.com'
+    remotePatterns: [
+      // 'www.filipizen.com',
+      // 'lh3.googleusercontent.com',
+      // 'platform-lookaside.fbsbx.com'
+      {
+        protocol: 'https',
+        hostname: 'www.filipizen.com',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'platform-lookaside.fbsbx.com',
+        pathname: '**',
+      },
     ],
   },
 };

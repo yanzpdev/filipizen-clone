@@ -4,18 +4,6 @@ const userSchema = new Schema(
   {
     userId: {
       type: String,
-      required: true,
-    },
-    accProvider: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
       required: true
     },
     firstName: {
@@ -38,5 +26,5 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-const User = models.User || mongoose.model('User', userSchema); 
-export default User;
+const EditUser = models.User || mongoose.model('EditUser', userSchema); 
+export default EditUser;

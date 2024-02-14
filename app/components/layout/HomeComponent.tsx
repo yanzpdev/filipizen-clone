@@ -5,10 +5,12 @@ import Button from '@mui/material/Button';
 import { MdLabel } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Roboto } from 'next/font/google';
+import { Raleway, Roboto } from 'next/font/google';
 import ImageComponent from '../ui/ImageComponent';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { useSession } from 'next-auth/react'; 
+import DropDownMenu from './DropDownMenu';
+import ButtonComponent from '../ui/ButtonComponent';
 
 interface Partner {
   id: number;
@@ -19,7 +21,8 @@ interface Partner {
 
 const roboto = Roboto({ 
   weight: ["400", '500', '700'], 
-  subsets: ["latin"]  
+  subsets: ["latin"],
+  display: 'swap'  
 });
 
 export let fontTheme = createTheme({
@@ -37,6 +40,7 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
   const [disable, setDisable] = useState<boolean>(true);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [partnerLink, setPartnerLink] = useState<string>('');
   const router = useRouter();
@@ -86,8 +90,11 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
     };
   }, [dropdownRef]);
 
+  const buttonRef = useRef<any | null>(null);
+
+
   return (
-    <div className='h-[60%] relative w-screen mt-[64px] flex flex-col items-center'>
+    <div className={`${roboto.className} h-[60%] relative w-screen mt-[64px] flex flex-col items-center`}>
       <div className='h-[50px]'></div>
       <ThemeProvider theme={fontTheme}>
         <ImageComponent
@@ -178,21 +185,38 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
         </Button>
   
         <Button
-          variant='contained'
-          className={`absolute top-[-40px] text-lg right-14 font-medium text-slate-700 hover:bg-[#e6e9f3] p-[8px] rounded-md`}
+          variant={`${status === 'unauthenticated' ? 'contained' : 'text'}`}
+          className={`absolute top-[-40px] text-lg right-14 duration-500 font-medium text-slate-700 p-[8px] ${status === 'authenticated' ? 'rounded-full' : status === 'loading' ? 'rounded-full' : 'rounded-md hover:bg-[#e6e9f3]'}`}
           style={{textTransform: 'none'}}
-          onClick={redirectToSignIn}
+          onClick={status === 'unauthenticated' ? redirectToSignIn : () => setIsOpen(!isOpen)}
           sx={{backgroundColor: 'transparent'}}
-          disabled={status === 'authenticated'}
+          disabled={status === 'loading'}
         >
           {status === 'authenticated' ?
-            <p>You are signed in</p>
+            <ImageComponent 
+              src={session?.user?.image || ''} 
+              alt={'User'} 
+              height={60}
+              width={60}
+              className='rounded-full'
+            />
           :status === 'loading' ?
-            <p>Loading...</p>
+            <ImageComponent 
+              src={'/assets/gearloading.gif'} 
+              alt={'Loading'} 
+              height={60}
+              width={60}
+              className='rounded-full'
+            />
           :
             <p>Sign in</p>
           }
         </Button>
+        {isOpen && 
+          <div ref={buttonRef} className='absolute top-7 right-16 z-50'>
+            <DropDownMenu userName={'test'} image={session?.user?.image} email={session?.user?.email} />
+          </div>
+        }
       </ThemeProvider>
     </div>
   )

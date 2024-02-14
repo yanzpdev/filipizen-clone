@@ -1,6 +1,10 @@
 import { Metadata } from 'next';
 import PartnerLinkLayout from './PartnerLinkLayout';
 import { getMembersData } from '@/app/utils/helpers';
+import { connectMongoDB } from '@/lib/mongodb';
+import { getServerSession } from 'next-auth';
+import User from '@/models/user';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'Filipizen - Partners',
@@ -34,6 +38,14 @@ interface Member {
 const page:React.FC<PageProps> = async({params}) => {
   const partnerData: Member[] = await getMembersData();
   const clusterId = params.partnerLink[0].replace(/[^\w|]/g, "").split("_")
+  await connectMongoDB();
+  const session = await getServerSession();
+  const email = session?.user?.email;
+  const user = await User.findOne({ email });
+
+  if (user && user.isFirstTimeSigningIn) {
+    redirect('/setupprofile');
+  }
 
   const partner: Omit<Member, 'clusterid'>[] = partnerData
   .filter((item) => item.clusterid === clusterId[0])
