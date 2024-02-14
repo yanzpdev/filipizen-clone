@@ -104,7 +104,7 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
             {/* <hr className="my-[8px] invisible border-slate-500"/> */}
             <div className='h-[10px]'></div>
 
-            <ButtonComponent 
+            {/* <ButtonComponent 
               className='hover:underline hover:bg-transparent normal-case'
               variant='text'
               disableFocusRipple
@@ -113,7 +113,7 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
               href='/partners'
             >
               Back to Partners
-            </ButtonComponent>
+            </ButtonComponent> */}
           </div>
 
         </div>

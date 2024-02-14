@@ -57,7 +57,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
           alt='logo'
           width={width || 24}
           height={height || 24}
-          priority={true}
+          priority
         />
         <p className='ml-[10px] text-white text-[20px] font-bold pt-[2px]'>{title}</p>
       </Link>
@@ -99,6 +99,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
             alt={'loading cog'}       
             height={26} 
             width={26} 
+            priority
           />
         </ContentWrapper>
       :

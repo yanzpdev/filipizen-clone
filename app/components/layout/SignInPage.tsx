@@ -94,6 +94,7 @@ const SignInPage = () => {
                     height={220}
                     width={220}
                     className="mx-auto rounded-lg"
+                    priority={true}
                   />
                   <Typography 
                     variant='body1' 
