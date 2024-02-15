@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { IoMdSearch } from 'react-icons/io'; 
 import Button from '@mui/material/Button';
 import { MdLabel } from 'react-icons/md';
@@ -89,6 +89,20 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownRef]);
+
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (isOpen && !buttonRef.current?.contains(event.target as Node) && event.target !== buttonRef.current) {
+      setIsOpen(false);
+    }
+  }, [isOpen]);
+  
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, handleClickOutside]);
 
   const buttonRef = useRef<any | null>(null);
 
@@ -190,7 +204,7 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
           style={{textTransform: 'none'}}
           onClick={status === 'unauthenticated' ? redirectToSignIn : () => setIsOpen(!isOpen)}
           sx={{backgroundColor: 'transparent'}}
-          disabled={status === 'loading'}
+          disabled={status === 'loading' || isOpen}
         >
           {status === 'authenticated' ?
             <ImageComponent 
@@ -214,7 +228,7 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
         </Button>
         {isOpen && 
           <div ref={buttonRef} className='absolute top-7 right-16 z-50'>
-            <DropDownMenu userName={'test'} image={session?.user?.image} email={session?.user?.email} />
+            <DropDownMenu userName={'test'} buttonRef={buttonRef} image={session?.user?.image} email={session?.user?.email} />
           </div>
         }
       </ThemeProvider>

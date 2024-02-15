@@ -71,7 +71,7 @@ const SignInPage = () => {
                 width={250} 
                 height={250} 
                 className={``} 
-                priority={true}
+                priority
               />
             </ContentWrapper>
             <ThemeProvider theme={theme}>
@@ -94,7 +94,7 @@ const SignInPage = () => {
                     height={220}
                     width={220}
                     className="mx-auto rounded-lg"
-                    priority={true}
+                    priority
                   />
                   <Typography 
                     variant='body1' 

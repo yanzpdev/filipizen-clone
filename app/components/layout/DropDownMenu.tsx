@@ -38,8 +38,6 @@ const DropDownMenu:React.FC<dropDownProps> = ({buttonRef, userName, image, email
           priority
         />
       }
-      
-
       <Typography
         className='text-lg font-semibold text-center'
       >
@@ -53,8 +51,16 @@ const DropDownMenu:React.FC<dropDownProps> = ({buttonRef, userName, image, email
       <ButtonComponent
         variant='contained'
         size='small'
+        className='rounded-full w-full mt-6'
+        href='/profile'
+      >
+        Profile
+      </ButtonComponent>
+      <ButtonComponent
+        variant='contained'
+        size='small'
         onClick={signOut}
-        className='bg-red-500 rounded-full hover:bg-red-600 w-full mt-6'
+        className='bg-red-500 rounded-full hover:bg-red-600 w-full mt-2'
       >
         Sign Out
       </ButtonComponent>
