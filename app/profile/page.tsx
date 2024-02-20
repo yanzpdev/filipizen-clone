@@ -3,6 +3,9 @@ import { Suspense } from "react"
 import Loading from "./loading"
 import { getServerSession } from "next-auth"
 import ProfilePage from "../components/layout/ProfilePage"
+import { connectMongoDB } from "@/lib/mongodb"
+import User from "@/models/user"
+import Header from "../components/layout/Header"
 
 export const metadata: Metadata = {
     title: 'Profile',
@@ -10,19 +13,44 @@ export const metadata: Metadata = {
   }
   
 const Profile = async() => {
-  let data = null;
+  let userObject = {
+    firstName: '',
+    lastName: '',
+    contactAddress: '',
+    contactNum: '',
+    contactEmail: ''
+  };
   try {
-    let res = await getServerSession();
-    data = res
-  }
+    await connectMongoDB();
+    const session = await getServerSession();
 
-  catch (error: any) {
-    console.log('Error: ', error)
+    const email: string | any = session?.user?.email;
+    const user = await User.findOne({ email });
+    const firstName = user.firstName;
+    const lastName = user.lastName;
+    const contactAddress = user.address;
+    const contactNum = user.mobileNum;
+
+    userObject.firstName = firstName;
+    userObject.lastName = lastName;
+    userObject.contactAddress = contactAddress;
+    userObject.contactNum = contactNum;
+    userObject.contactEmail = email;
+  } 
+  
+  catch (error) {
+    console.error('An error occured:', error);
   }
 
   return (
     <Suspense fallback={<Loading />}>
-      <ProfilePage />
+      <ProfilePage 
+        fName={userObject.firstName} 
+        lName={userObject.lastName} 
+        contactAddress={userObject.contactAddress} 
+        contactNum={userObject.contactNum} 
+        contactEmail={userObject.contactEmail}
+      />
     </Suspense>
   )
 }

@@ -1,8 +1,8 @@
-import React from 'react'
+import LoadingComponent from '../components/layout/LoadingComponent'
 
 const loading = () => {
   return (
-    <div>loading</div>
+    <LoadingComponent />
   )
 }
 

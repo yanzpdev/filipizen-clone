@@ -33,6 +33,10 @@ const userSchema = new Schema(
     isFirstTimeSigningIn: {
       type: Boolean,
       required: true
+    },
+    image: {
+      type: Buffer,
+      required: true
     }
   },
   { timestamps: true }

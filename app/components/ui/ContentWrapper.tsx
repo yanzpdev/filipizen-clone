@@ -6,6 +6,7 @@ interface ContentWrapperProps {
   children?: React.ReactNode; // contents of the component
   ref?: Ref<HTMLDivElement>; // for dom referencing
   isSpan?: boolean;
+  style?: object;
 }
 
 const ContentWrapper: React.FC<ContentWrapperProps> = ({ 
@@ -13,7 +14,8 @@ const ContentWrapper: React.FC<ContentWrapperProps> = ({
   onClick,
   children,
   ref,
-  isSpan
+  isSpan,
+  style
 }) => {
   return (
     <>
@@ -22,6 +24,7 @@ const ContentWrapper: React.FC<ContentWrapperProps> = ({
         className={className} 
         onClick={onClick}
         ref={ref}
+        style={style}
       >
         {children}
       </span>
@@ -30,6 +33,7 @@ const ContentWrapper: React.FC<ContentWrapperProps> = ({
         className={className} 
         onClick={onClick}
         ref={ref}
+        style={style}
       >
         {children}
       </div>

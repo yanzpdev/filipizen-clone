@@ -11,8 +11,9 @@ interface dropDownProps {
   userName: string | any;
   image?: string | any;
   email?: string | any;
+  page?: string;
 }
-const DropDownMenu:React.FC<dropDownProps> = ({buttonRef, userName, image, email}) => {
+const DropDownMenu:React.FC<dropDownProps> = ({buttonRef, userName, image, email, page}) => {
   const {data: session, status} = useSession();
   return (
     <div 
@@ -48,14 +49,16 @@ const DropDownMenu:React.FC<dropDownProps> = ({buttonRef, userName, image, email
       >
         {email}
       </Typography>
-      <ButtonComponent
-        variant='contained'
-        size='small'
-        className='rounded-full w-full mt-6'
-        href='/profile'
-      >
-        Profile
-      </ButtonComponent>
+      {page !== 'profile' &&
+        <ButtonComponent
+          variant='contained'
+          size='small'
+          className='rounded-full w-full mt-6'
+          href='/profile'
+        >
+          Profile
+        </ButtonComponent>
+      }
       <ButtonComponent
         variant='contained'
         size='small'

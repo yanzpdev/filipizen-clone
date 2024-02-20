@@ -18,16 +18,22 @@ interface HeaderProps {
   title: string
   extraStyle?: string;
   userName?: string;
+  page?: string;
 }
 
-const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, width, title, userName}) => {
+const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, width, title, userName, page}) => {
   const {data: session, status} = useSession();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [fullName, setFullName] = useState<string | undefined >(userName);
 
   const handleClick = () => {
     setIsOpen(!isOpen);
   }
+
+  useEffect(() => {
+    setFullName(userName);
+  }, [userName])
 
   const handleSignInClick = () => {
     router.push('/login');
@@ -64,27 +70,31 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
       {status === 'authenticated' ?
         <ContentWrapper className={`${extraStyle} relative text-slate-700 flex justify-center items-center gap-1`}>
           <Typography variant='body1' className='text-xs font-bold'>
-            {userName}
+            {fullName}
           </Typography>
 
-          {!isOpen &&
-            <HiOutlineDotsHorizontal 
-              className='mx-1 cursor-pointer' 
-              size={26} 
-              onClick={handleClick}
-            />
+          {page !== 'profile2' && 
+            <ContentWrapper>
+              {!isOpen &&
+                <HiOutlineDotsHorizontal 
+                  className='mx-1 cursor-pointer' 
+                  size={26} 
+                  onClick={handleClick}
+                />
+              }
+              {isOpen &&
+                <HiOutlineDotsHorizontal 
+                  className='mx-1 cursor-pointer' 
+                  size={26} 
+                />
+              }
+            </ContentWrapper>
           }
+          
 
           {isOpen &&
-            <HiOutlineDotsHorizontal 
-              className='mx-1 cursor-pointer' 
-              size={26} 
-            />
-          }
-
-          {isOpen &&
-            <div ref={buttonRef} className='absolute top-5 right-1'>
-              <DropDownMenu userName={userName} image={session?.user?.image} email={session?.user?.email} />
+            <div ref={buttonRef} className='z-50 absolute top-5 right-1'>
+              <DropDownMenu page={page} userName={userName} image={session?.user?.image} email={session?.user?.email} />
             </div>
           }
 

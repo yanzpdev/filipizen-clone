@@ -6,9 +6,14 @@ import { Raleway, Roboto } from 'next/font/google';
 import { createTheme, ThemeProvider } from "@mui/material/styles"; 
 import { useEffect, useState } from "react";
 import { signupFormSchema } from "@/lib/validations/signupform";
-import { useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
 import ImageComponent from "../ui/ImageComponent";
+import { motion, AnimatePresence } from 'framer-motion';
+import ButtonComponent from "../ui/ButtonComponent";
+import Header from "./Header";
+import Footer from "./Footer";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import LoadingComponent from "./LoadingComponent";
 
 const raleway = Raleway({ 
   subsets: ['latin'], 
@@ -24,34 +29,49 @@ const roboto = Roboto({
 
 export let fontTheme = createTheme({
   typography: {
-    fontFamily: raleway.style.fontFamily,
+    fontFamily: roboto.style.fontFamily,
   }
 })
 
+interface ProfileProps {
+  fName: string;
+  lName: string;
+  contactAddress: string;
+  contactNum: string;
+  contactEmail: string;
+}
 
-const ProfilePage = () => {
-  const {data: session, status} = useSession();
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [email, setEmail] = useState<string | any>(session?.user?.email);
-  const [address, setAddress] = useState<string>("");
-  const [mobileNum, setMobileNum] = useState<string>("");
+const ProfilePage:React.FC<ProfileProps> = ({fName, lName, contactAddress, contactNum, contactEmail}) => {
+  const [firstName, setFirstName] = useState<string>(fName);
+  const [lastName, setLastName] = useState<string>(lName);
+  const [email, setEmail] = useState<string | any>(contactEmail);
+  const [address, setAddress] = useState<string>(contactAddress);
+  const [mobileNum, setMobileNum] = useState<string>(contactNum);
   const [isMobileNumValid, setIsMobileNumValid] = useState<boolean>(true);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-  const [responseMsg, setResponseMsg] = useState('');
+  const [responseMsg, setResponseMsg] = useState<string>();
   const [responseSuccess, setResponseSuccess] = useState(true);
   const [isResponseReceived, setIsResponseReceived] = useState(true);
   const [isFirstTimeSigningIn, setIsFirstTimeSigningIn] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const router = useRouter();
+  const [isVisible, setIsVisible] = useState(false);
+  const [event, setEvent] = useState<React.FormEvent>();
+  const [validatedData, setValidatedData] = useState<any>();
+  const {data: session, status} = useSession();
 
   useEffect(() => {
-    setEmail(session?.user?.email);
-  }, [session]);
+    if (responseMsg !== '') {
+      setIsVisible(true);
+      const timeout = setTimeout(() => {
+        setIsVisible(false);
+      }, 3000); 
+      return () => clearTimeout(timeout);
+    }
+  }, [responseMsg]);
 
   const validateMobileNum = (mobileNum: string) => {
     const regex = /^\d{11}$/;
-  return regex.test(mobileNum);
+    return regex.test(mobileNum);
   };
 
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,21 +110,22 @@ const ProfilePage = () => {
     }
   }
 
-  const handleSubmit = async(e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async() => {
     setIsResponseReceived(false);
     try {
       const validatedData = signupFormSchema.parse({ email, firstName, lastName, address, mobileNum, isFirstTimeSigningIn });
+      setValidatedData(validatedData);
       const response = await fetch("/api/editprofile", {
         method: "POST",
         body: JSON.stringify(validatedData),
       });
 
       if (response.ok) {
-        const responseData = await response.text();
-        setResponseMsg(responseData);
+        const responseData = await response.json();
+        setResponseMsg(responseData.message);
         setIsResponseReceived(true);
         setResponseSuccess(true);
+        setIsVisible(true);
       } 
       
       else {
@@ -112,11 +133,8 @@ const ProfilePage = () => {
         setResponseMsg(errorMessage);
         setIsResponseReceived(true);
         setResponseSuccess(false);
+        setIsVisible(true);
       }
-      setFirstName("");
-      setLastName("");
-      setAddress("");
-      setMobileNum("");
       setIsFormValid(false);
     }
 
@@ -125,149 +143,238 @@ const ProfilePage = () => {
     }
   }
 
-  return (
-    <ContentWrapper className="">
-      {isModalOpen &&
-        <div className="opacity-50 bg-slate-300 h-screen w-screen">true</div>
-      }
-      <ContainerComponent
-        className={`h-screen w-full flex gap-2 relative text-slate-700 p-10`}
-        classes={{}}
-        fixed={false}
-        disableGutters={true}
-        component={undefined}
-        maxWidth={'xl'}
-      > 
-        <ThemeProvider theme={fontTheme}>
+  const handleSubmitClick = (e: React.FormEvent) => {
+    e.preventDefault();
+    setEvent(e)
+    setIsModalOpen(true)
+  }
+
+  if (status === 'unauthenticated') {
+    redirect('/partners')
+  }
+
+  else {
+    return (
+      <ContentWrapper className="h-screen">
+        <Header 
+          navbarStyles='w-screen px-[50px] pt-[5px] pb-[7px] bg-[#ecf0f1] flex justify-between items-center' 
+          src='/assets/filipizen.svg'
+          height={20.06}
+          width={72.75} 
+          title=''
+          page='profile'
+          userName={
+            validatedData ? validatedData?.firstName + " " + validatedData?.lastName 
+            : 
+            responseSuccess ? fName + ' ' + lName
+            :
+            ''
+          }
+        />
+        <Header 
+          navbarStyles="w-screen px-[50px] pb-[5px] pt-[3px] bg-[#2c3e50] h-[50px] flex justify-between items-center" 
+          src={`https://www.filipizen.com/assets/154.png`}
+          height={40}
+          width={40}
+          title='TAGBILARAN CITY'
+          extraStyle='text-white'
+          page='profile2'
+        />
+        {isModalOpen &&
           <ContentWrapper 
-            className={`pt-6 w-1/2 flex items-center justify-center border rounded-lg pb-10 bg-white`}
-            isSpan={false}
+            className="z-40 h-screen flex items-center justify-center fixed w-screen" 
+            onClick={() => setIsModalOpen(false)}
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
           >
-            <form
-              className="w-8/12 mx-auto h-full"
-              onSubmit={handleSubmit}
-            >
-              <Typography
-                className="py-5 text-2xl font-semibold"
-              >
-                Edit your profile information
-              </Typography>
-  
-              <ContentWrapper className="flex gap-2 items-center justify-center">
-                <TextField
-                  className="font-bold w-full self-center rounded-lg"
-                  variant='outlined'
-                  label='First Name'
-                  size='medium'
-                  sx={{borderRadius: '8px'}}
-                  fullWidth={true}
-                  onChange={handleFirstNameChange}
-                  helperText={' '}
-                  value={firstName}
-                  name={`firstName`} 
-                />
-                <TextField
-                  className="font-bold w-full self-center rounded-lg"
-                  variant='outlined'
-                  label='Last Name'
-                  size='medium'
-                  sx={{borderRadius: '8px'}}
-                  fullWidth={true}
-                  onChange={handleLastNameChange}
-                  helperText={' '}
-                  value={lastName}
-                  name={`lastName`} 
-                />
+            <ThemeProvider theme={fontTheme}>
+              <ContentWrapper className="h-fit w-fit fixed bg-white rounded-lg p-6 drop-shadow-xl flex flex-col gap-2 items-center justify-center">
+                  <Typography className="text-2xl font-semibold text-center">
+                    Confirm update
+                  </Typography>
+                  <ContentWrapper className="flex gap-3 items-center justify-center">
+                    <ButtonComponent 
+                      color="success"
+                      variant="contained"
+                      className="bg-green-500"
+                      disableFocusRipple
+                      disableRipple
+                      disableTouchRipple
+                      onClick={handleSubmit}
+                    >
+                      Yes
+                    </ButtonComponent>
+                    <ButtonComponent
+                      color="error"
+                      variant="contained"
+                      className="bg-red-500"
+                      disableFocusRipple
+                      disableRipple
+                      disableTouchRipple
+                    >
+                      Cancel
+                    </ButtonComponent>
+                  </ContentWrapper>
               </ContentWrapper>
-              <TextField
-                className="font-bold w-full pb-6 self-center rounded-lg"
-                variant='outlined'
-                size='medium'
-                sx={{borderRadius: '8px'}}
-                fullWidth={true}
-                value={email}
-                name={`email`} 
-                disabled
-              />
-              <TextField
-                className="font-bold w-full self-center rounded-lg"
-                variant='outlined'
-                label='Contact Address'
-                size='medium'
-                sx={{borderRadius: '8px'}}
-                fullWidth={true}
-                onChange={handleAddressChange}
-                helperText={' '}
-                value={address}
-                name={`address`} 
-              />
-              <TextField
-                error={!isMobileNumValid && mobileNum !== ''}
-                className="font-bold w-full self-center rounded-lg"
-                variant='outlined'
-                label='Mobile No.'
-                size='medium'
-                type='number'
-                sx={{borderRadius: '8px'}}
-                fullWidth={true}
-                onChange={handleMobilenumChange}
-                helperText={!isMobileNumValid && mobileNum !== '' ? 'Please enter a valid mobile number.' : ' '}
-                value={mobileNum}
-                name={`mobilenum`} 
-              />
-              <Button
-                type="submit"
-                fullWidth={false}
-                className={`mt-4 w-full py-3 tracking-widest 
-                text-lg text-white rounded-md self-center 
-                ${!isFormValid ? 'bg-blue-100' : 'bg-blue-400 hover:bg-blue-500'}`}
-                disabled={!isFormValid}
+            </ThemeProvider>
+          </ContentWrapper>
+        }
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <ThemeProvider theme={fontTheme}>
+            <ContainerComponent
+              className={`h-[80vh] w-full flex gap-2 relative text-slate-700 p-10`}
+              classes={{}}
+              fixed={false}
+              disableGutters={true}
+              component={undefined}
+              maxWidth={'xl'}
+            > 
+              <ContentWrapper 
+                className={`pt-6 w-1/2 flex items-center justify-center border rounded-lg pb-10 bg-white`}
+                isSpan={false}
               >
-                Update
-              </Button>
-            </form>
-          </ContentWrapper>
-          <ContentWrapper className="flex flex-col gap-2 w-1/2">
-            <ContentWrapper 
-              className={`pt-6 h-full w-full border rounded-lg pb-10 bg-white`}
-              isSpan={false}
-            >
-              <div className="mx-auto w-8/12 h-full">
-                <Typography
-                  className="py-5 text-2xl font-semibold text-center"
+                <form
+                  className="w-8/12 mx-auto h-full"
+                  onSubmit={handleSubmitClick}
                 >
-                  Municipality of Cebu
-                </Typography>
-                <ImageComponent 
-                  src={"/assets/filipizen.svg"} 
-                  alt={"Logo"} 
-                  width={300} 
-                  height={300} 
-                  className="mx-auto"
-                  priority
-                />
-              </div>
-              
-            </ContentWrapper>
-            <ContentWrapper 
-              className={`pt-6 h-full w-full border rounded-lg pb-10 bg-white`}
-              isSpan={false}
-            >
-              <div className="mx-auto w-8/12 h-full">
-                <Typography
-                  className="py-5 text-2xl font-semibold"
+                  <Typography
+                    className="py-5 text-2xl font-semibold"
+                  >
+                    Edit your profile information
+                  </Typography>
+      
+                  <ContentWrapper className="flex gap-2 items-center justify-center">
+                    <TextField
+                      className="font-bold w-full self-center rounded-lg"
+                      variant='outlined'
+                      label='First Name'
+                      size='medium'
+                      sx={{borderRadius: '8px'}}
+                      fullWidth={true}
+                      onChange={handleFirstNameChange}
+                      helperText={' '}
+                      value={firstName}
+                      name={`firstName`} 
+                    />
+                    <TextField
+                      className="font-bold w-full self-center rounded-lg"
+                      variant='outlined'
+                      label='Last Name'
+                      size='medium'
+                      sx={{borderRadius: '8px'}}
+                      fullWidth={true}
+                      onChange={handleLastNameChange}
+                      helperText={' '}
+                      value={lastName}
+                      name={`lastName`} 
+                    />
+                  </ContentWrapper>
+                  <TextField
+                    className="font-bold w-full pb-6 self-center rounded-lg"
+                    variant='outlined'
+                    size='medium'
+                    sx={{borderRadius: '8px'}}
+                    fullWidth={true}
+                    value={email}
+                    name={`email`} 
+                    disabled
+                  />
+                  <TextField
+                    className="font-bold w-full self-center rounded-lg"
+                    variant='outlined'
+                    label='Contact Address'
+                    size='medium'
+                    sx={{borderRadius: '8px'}}
+                    fullWidth={true}
+                    onChange={handleAddressChange}
+                    helperText={' '}
+                    value={address}
+                    name={`address`} 
+                  />
+                  <TextField
+                    error={!isMobileNumValid && mobileNum !== ''}
+                    className="font-bold w-full self-center rounded-lg"
+                    variant='outlined'
+                    label='Mobile No.'
+                    size='medium'
+                    type='number'
+                    sx={{borderRadius: '8px'}}
+                    fullWidth={true}
+                    onChange={handleMobilenumChange}
+                    helperText={!isMobileNumValid && mobileNum !== '' ? 'Please enter a valid mobile number.' : ' '}
+                    value={mobileNum}
+                    name={`mobilenum`} 
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth={false}
+                    className={`mt-4 w-full py-3 tracking-widest 
+                    text-lg text-white rounded-md self-center 
+                    ${!isFormValid ? 'bg-blue-100' : 'bg-blue-400 hover:bg-blue-500'}`}
+                    disabled={!isFormValid}
+                  >
+                    Update
+                  </Button>
+                  <AnimatePresence>
+                    {isVisible && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.7 }}
+                        className={`mt-5  ${responseSuccess ? 'text-green-600' : 'text-red-600'} text-2xl text-center font-bold`}
+                      >
+                        {responseMsg}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </form>
+              </ContentWrapper>
+              <ContentWrapper className="flex flex-col gap-2 w-1/2">
+                <ContentWrapper 
+                  className={`pt-6 h-full w-full border rounded-lg pb-10 bg-white`}
+                  isSpan={false}
                 >
-                  Edit your profile information
-                </Typography>
-              </div>
-              
-            </ContentWrapper>
-          </ContentWrapper>
-        </ThemeProvider>
-      </ContainerComponent>
-    </ContentWrapper>
-    
-  )
+                  <div className="mx-auto w-8/12 h-full">
+                    <Typography
+                      className="py-5 text-2xl font-semibold text-center"
+                    >
+                      Municipality of Cebu
+                    </Typography>
+                    <ImageComponent 
+                      src={"/assets/filipizen.svg"} 
+                      alt={"Logo"} 
+                      width={300} 
+                      height={300} 
+                      className="mx-auto"
+                      priority
+                    />
+                  </div>
+                  
+                </ContentWrapper>
+                <ContentWrapper 
+                  className={`pt-6 h-full w-full border rounded-lg pb-10 bg-white`}
+                  isSpan={false}
+                >
+                  <div className="mx-auto w-8/12 h-full">
+                    <Typography
+                      className="py-5 text-2xl font-semibold"
+                    >
+                      Edit your profile information
+                    </Typography>
+                  </div>
+                </ContentWrapper>
+              </ContentWrapper>
+            </ContainerComponent>
+          </ThemeProvider>   
+        </motion.div>
+        <Footer />
+      </ContentWrapper>
+    )
+  }
 }
 
 export default ProfilePage;
