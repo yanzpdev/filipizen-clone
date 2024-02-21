@@ -25,6 +25,5 @@ export default async function handleRequest() {
     console.error('An error occured:', error);
     redirect('/error');
   }
-
   redirect(url);
 }

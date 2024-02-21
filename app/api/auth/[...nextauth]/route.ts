@@ -48,8 +48,6 @@ const authOptions = {
                 name,
                 email,
                 address: '',
-                firstName: '',
-                lastName: '',
                 mobileNum: '',
                 isFirstTimeSigningIn: true
               }),

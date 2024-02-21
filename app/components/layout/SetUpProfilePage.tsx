@@ -28,11 +28,9 @@ export let fontTheme = createTheme({
   }
 })
 
-
 const SetUpProfilePage = () => {
   const {data: session, status} = useSession();
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
+  const [fullName, setFullName] = useState<string | any>(session?.user?.name);
   const [email, setEmail] = useState<string | any>(session?.user?.email);
   const [address, setAddress] = useState<string>("");
   const [mobileNum, setMobileNum] = useState<string>("");
@@ -48,40 +46,33 @@ const SetUpProfilePage = () => {
     setEmail(session?.user?.email);
   }, [session]);
 
-  // console.log(email);  
   const validateMobileNum = (mobileNum: string) => {
     const regex = /^\d{11}$/;
   return regex.test(mobileNum);
   };
 
-  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const firstNameValue = e.target.value;
-    setFirstName(firstNameValue);
-    validateForm(firstNameValue, lastName, address, mobileNum);
-  }
-
-  const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const lastNameValue = e.target.value;
-    setLastName(lastNameValue);
-    validateForm( firstName, lastNameValue, address, mobileNum);
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const nameValue = e.target.value;
+    setFullName(nameValue);
+    validateForm(nameValue, address, mobileNum);
   }
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const addressValue = e.target.value;
     setAddress(addressValue);
-    validateForm(firstName, lastName, addressValue, mobileNum);
+    validateForm(fullName, addressValue, mobileNum);
   }
 
   const handleMobilenumChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const mobilenumValue = e.target.value;
     setMobileNum(mobilenumValue);
-    validateForm(firstName, lastName, address, mobilenumValue);
+    validateForm(fullName, address, mobilenumValue);
     setIsMobileNumValid(validateMobileNum(mobilenumValue));
     setIsFormValid(validateMobileNum(mobilenumValue));
   }
 
-  const validateForm = (firstName: string, lastName: string, address: string, mobileNum: string) => {
-    if (firstName.trim() !== "" && lastName.trim() !== "" && address.trim() !== "" && mobileNum.trim().length === 11) {
+  const validateForm = (fullName: string, address: string, mobileNum: string) => {
+    if (fullName.trim() !== "" && address.trim() !== "" && mobileNum.trim().length === 11) {
       setIsFormValid(true);
     } 
     
@@ -94,8 +85,7 @@ const SetUpProfilePage = () => {
     e.preventDefault();
     setIsResponseReceived(false);
     try {
-      const validatedData = signupFormSchema.parse({ email, firstName, lastName, address, mobileNum, isFirstTimeSigningIn });
-      // console.log('Validated data: ', validatedData)
+      const validatedData = signupFormSchema.parse({ email, fullName, address, mobileNum, isFirstTimeSigningIn });
       const response = await fetch("/api/editprofile", {
         method: "POST",
         body: JSON.stringify(validatedData),
@@ -114,8 +104,7 @@ const SetUpProfilePage = () => {
         setIsResponseReceived(true);
         setResponseSuccess(false);
       }
-      setFirstName("");
-      setLastName("");
+      setFullName("");
       setAddress("");
       setMobileNum("");
       setIsFormValid(false);
@@ -157,26 +146,14 @@ const SetUpProfilePage = () => {
                 <TextField
                   className="font-bold w-full self-center rounded-lg"
                   variant='outlined'
-                  label='First Name'
+                  label='Contact Name'
                   size='medium'
                   sx={{borderRadius: '8px'}}
                   fullWidth={true}
-                  onChange={handleFirstNameChange}
+                  onChange={handleNameChange}
                   helperText={' '}
-                  value={firstName}
-                  name={`firstName`} 
-                />
-                <TextField
-                  className="font-bold w-full self-center rounded-lg"
-                  variant='outlined'
-                  label='Last Name'
-                  size='medium'
-                  sx={{borderRadius: '8px'}}
-                  fullWidth={true}
-                  onChange={handleLastNameChange}
-                  helperText={' '}
-                  value={lastName}
-                  name={`lastName`} 
+                  value={fullName}
+                  name={`fullName`} 
                 />
               </ContentWrapper>
               <TextField
@@ -205,7 +182,7 @@ const SetUpProfilePage = () => {
                 error={!isMobileNumValid && mobileNum !== ''}
                 className="font-bold w-full self-center rounded-lg"
                 variant='outlined'
-                label='Mobile No.'
+                label='Contact No.'
                 size='medium'
                 type='number'
                 sx={{borderRadius: '8px'}}
@@ -254,7 +231,6 @@ const SetUpProfilePage = () => {
       </ContentWrapper>
       </ContainerComponent>
     </div>
-    
   )
 }
 

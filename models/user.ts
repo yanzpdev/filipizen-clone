@@ -18,12 +18,6 @@ const userSchema = new Schema(
       type: String,
       required: true
     },
-    firstName: {
-      type: String,
-    },
-    lastName: {
-      type: String,
-    },
     address: {
       type: String,
     },
@@ -34,10 +28,11 @@ const userSchema = new Schema(
       type: Boolean,
       required: true
     },
-    image: {
-      type: Buffer,
-      required: true
-    }
+    // THIS IS FOR IMAGE / BLOB
+    // image: {
+    //   type: Buffer,
+    //   required: true
+    // }
   },
   { timestamps: true }
 );

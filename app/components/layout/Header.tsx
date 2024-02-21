@@ -17,7 +17,7 @@ interface HeaderProps {
   width: number
   title: string
   extraStyle?: string;
-  userName?: string;
+  userName?: string | any;
   page?: string;
 }
 
@@ -65,7 +65,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
           height={height || 24}
           priority
         />
-        <p className='ml-[10px] text-white text-[20px] font-bold pt-[2px]'>{title}</p>
+        <p className={`${page === 'profile2' ? 'text-[#DDDDDD] text-[21.3333px] ml-[5px]' : ' text-white text-[20px] ml-[10px] pt-[2px]'} font-bold`}>{title}</p>
       </Link>
       {status === 'authenticated' ?
         <ContentWrapper className={`${extraStyle} relative text-slate-700 flex justify-center items-center gap-1`}>
@@ -91,7 +91,6 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
             </ContentWrapper>
           }
           
-
           {isOpen &&
             <div ref={buttonRef} className='z-50 absolute top-5 right-1'>
               <DropDownMenu page={page} userName={userName} image={session?.user?.image} email={session?.user?.email} />
@@ -100,17 +99,21 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
 
         </ContentWrapper>
       :status === 'loading' ?
-        <ContentWrapper className={`${extraStyle} leading-none relative text-slate-700 flex justify-center items-center gap-1`}>
-          <Typography variant='body1' className='text-xs font-bold'>
-            Loading...
-          </Typography>
-          <ImageComponent 
-            src={'/assets/gearloading.gif'} 
-            alt={'loading cog'}       
-            height={26} 
-            width={26} 
-            priority
-          />
+        <ContentWrapper className={`${extraStyle} leading-none relative text-slate-700 `}>
+            {page !== 'profile2' &&
+              <ContentWrapper className='flex justify-center items-center gap-1'>
+                <Typography variant='body1' className='text-xs font-bold'>
+                  Loading...
+                </Typography>
+                <ImageComponent 
+                  src={'/assets/gearloading.gif'} 
+                  alt={'loading cog'}       
+                  height={26} 
+                  width={26} 
+                  priority
+                />
+              </ContentWrapper> 
+            }
         </ContentWrapper>
       :
         <ContentWrapper>

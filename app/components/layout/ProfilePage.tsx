@@ -1,7 +1,7 @@
 'use client';
 import ContainerComponent from "../ui/ContainerComponent";
 import ContentWrapper from "../ui/ContentWrapper";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, Container, Paper, TextField, Typography } from "@mui/material";
 import { Raleway, Roboto } from 'next/font/google';
 import { createTheme, ThemeProvider } from "@mui/material/styles"; 
 import { useEffect, useState } from "react";
@@ -13,7 +13,6 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import LoadingComponent from "./LoadingComponent";
 
 const raleway = Raleway({ 
   subsets: ['latin'], 
@@ -34,16 +33,14 @@ export let fontTheme = createTheme({
 })
 
 interface ProfileProps {
-  fName: string;
-  lName: string;
+  name: string;
   contactAddress: string;
   contactNum: string;
   contactEmail: string;
 }
 
-const ProfilePage:React.FC<ProfileProps> = ({fName, lName, contactAddress, contactNum, contactEmail}) => {
-  const [firstName, setFirstName] = useState<string>(fName);
-  const [lastName, setLastName] = useState<string>(lName);
+const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, contactEmail}) => {
+  const [fullName, setFullName] = useState<string>(name);
   const [email, setEmail] = useState<string | any>(contactEmail);
   const [address, setAddress] = useState<string>(contactAddress);
   const [mobileNum, setMobileNum] = useState<string>(contactNum);
@@ -74,34 +71,28 @@ const ProfilePage:React.FC<ProfileProps> = ({fName, lName, contactAddress, conta
     return regex.test(mobileNum);
   };
 
-  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const firstNameValue = e.target.value;
-    setFirstName(firstNameValue);
-    validateForm(firstNameValue, lastName, address, mobileNum);
-  }
-
-  const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const lastNameValue = e.target.value;
-    setLastName(lastNameValue);
-    validateForm( firstName, lastNameValue, address, mobileNum);
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const nameValue = e.target.value;
+    setFullName(nameValue);
+    validateForm(nameValue, address, mobileNum);
   }
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const addressValue = e.target.value;
     setAddress(addressValue);
-    validateForm(firstName, lastName, addressValue, mobileNum);
+    validateForm(fullName, addressValue, mobileNum);
   }
 
   const handleMobilenumChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const mobilenumValue = e.target.value;
     setMobileNum(mobilenumValue);
-    validateForm(firstName, lastName, address, mobilenumValue);
+    validateForm(fullName, address, mobilenumValue);
     setIsMobileNumValid(validateMobileNum(mobilenumValue));
     setIsFormValid(validateMobileNum(mobilenumValue));
   }
 
-  const validateForm = (firstName: string, lastName: string, address: string, mobileNum: string) => {
-    if (firstName.trim() !== "" && lastName.trim() !== "" && address.trim() !== "" && mobileNum.trim().length === 11) {
+  const validateForm = (fullName: string, address: string, mobileNum: string) => {
+    if (fullName.trim() !== "" && address.trim() !== "" && mobileNum.trim().length === 11) {
       setIsFormValid(true);
     } 
     
@@ -113,7 +104,7 @@ const ProfilePage:React.FC<ProfileProps> = ({fName, lName, contactAddress, conta
   const handleSubmit = async() => {
     setIsResponseReceived(false);
     try {
-      const validatedData = signupFormSchema.parse({ email, firstName, lastName, address, mobileNum, isFirstTimeSigningIn });
+      const validatedData = signupFormSchema.parse({ email, fullName, address, mobileNum, isFirstTimeSigningIn });
       setValidatedData(validatedData);
       const response = await fetch("/api/editprofile", {
         method: "POST",
@@ -164,9 +155,9 @@ const ProfilePage:React.FC<ProfileProps> = ({fName, lName, contactAddress, conta
           title=''
           page='profile'
           userName={
-            validatedData ? validatedData?.firstName + " " + validatedData?.lastName 
+            validatedData ? validatedData.fullName 
             : 
-            responseSuccess ? fName + ' ' + lName
+            responseSuccess ? name
             :
             ''
           }
@@ -177,7 +168,7 @@ const ProfilePage:React.FC<ProfileProps> = ({fName, lName, contactAddress, conta
           height={40}
           width={40}
           title='TAGBILARAN CITY'
-          extraStyle='text-white'
+          extraStyle=''
           page='profile2'
         />
         {isModalOpen &&
@@ -224,44 +215,46 @@ const ProfilePage:React.FC<ProfileProps> = ({fName, lName, contactAddress, conta
           transition={{ duration: 0.5 }}
         >
           <ThemeProvider theme={fontTheme}>
-            <ContainerComponent
-              className={`h-[80vh] w-full flex gap-2 relative text-slate-700 p-10`}
-              classes={{}}
-              fixed={false}
-              disableGutters={true}
-              component={undefined}
-              maxWidth={'xl'}
+            <Container
+              className={`h-[83vh] w-full flex relative pb-[50px]`}
+              // classes={{}}
+              // fixed={false}
+              // component={undefined}
+              // maxWidth={'xl'}
             > 
-              <ContentWrapper 
-                className={`pt-6 w-1/2 flex items-center justify-center border rounded-lg pb-10 bg-white`}
-                isSpan={false}
+              <aside className="w-[17%] h-full">
+
+              </aside>
+              <Paper
+                className={`p-[20px] mt-[10px] w-[66%] h-fit flex items-center border rounded-lg pb-10 bg-white`}
+                style={{boxShadow: 'none', border: 'none'}}
               >
                 <form
-                  className="w-8/12 mx-auto h-full"
+                  className="px-[16px] w-full h-full"
                   onSubmit={handleSubmitClick}
                 >
                   <Typography
-                    className="py-5 text-2xl font-semibold"
+                    className="text-[1.7em] pb-3 font-semibold"
                   >
                     Edit your profile information
                   </Typography>
       
-                  <ContentWrapper className="flex gap-2 items-center justify-center">
+                  {/* <ContentWrapper className="flex gap-2 items-center justify-center"> */}
                     <TextField
                       className="font-bold w-full self-center rounded-lg"
-                      variant='outlined'
-                      label='First Name'
+                      variant='standard'
+                      label='Full Name *'
                       size='medium'
                       sx={{borderRadius: '8px'}}
                       fullWidth={true}
-                      onChange={handleFirstNameChange}
+                      onChange={handleNameChange}
                       helperText={' '}
-                      value={firstName}
+                      value={fullName}
                       name={`firstName`} 
                     />
-                    <TextField
+                    {/* <TextField
                       className="font-bold w-full self-center rounded-lg"
-                      variant='outlined'
+                      variant='standard'
                       label='Last Name'
                       size='medium'
                       sx={{borderRadius: '8px'}}
@@ -270,11 +263,11 @@ const ProfilePage:React.FC<ProfileProps> = ({fName, lName, contactAddress, conta
                       helperText={' '}
                       value={lastName}
                       name={`lastName`} 
-                    />
-                  </ContentWrapper>
+                    /> */}
+                  {/* </ContentWrapper> */}
                   <TextField
                     className="font-bold w-full pb-6 self-center rounded-lg"
-                    variant='outlined'
+                    variant='standard'
                     size='medium'
                     sx={{borderRadius: '8px'}}
                     fullWidth={true}
@@ -284,7 +277,7 @@ const ProfilePage:React.FC<ProfileProps> = ({fName, lName, contactAddress, conta
                   />
                   <TextField
                     className="font-bold w-full self-center rounded-lg"
-                    variant='outlined'
+                    variant='standard'
                     label='Contact Address'
                     size='medium'
                     sx={{borderRadius: '8px'}}
@@ -297,7 +290,7 @@ const ProfilePage:React.FC<ProfileProps> = ({fName, lName, contactAddress, conta
                   <TextField
                     error={!isMobileNumValid && mobileNum !== ''}
                     className="font-bold w-full self-center rounded-lg"
-                    variant='outlined'
+                    variant='standard'
                     label='Mobile No.'
                     size='medium'
                     type='number'
@@ -332,43 +325,11 @@ const ProfilePage:React.FC<ProfileProps> = ({fName, lName, contactAddress, conta
                     )}
                   </AnimatePresence>
                 </form>
-              </ContentWrapper>
-              <ContentWrapper className="flex flex-col gap-2 w-1/2">
-                <ContentWrapper 
-                  className={`pt-6 h-full w-full border rounded-lg pb-10 bg-white`}
-                  isSpan={false}
-                >
-                  <div className="mx-auto w-8/12 h-full">
-                    <Typography
-                      className="py-5 text-2xl font-semibold text-center"
-                    >
-                      Municipality of Cebu
-                    </Typography>
-                    <ImageComponent 
-                      src={"/assets/filipizen.svg"} 
-                      alt={"Logo"} 
-                      width={300} 
-                      height={300} 
-                      className="mx-auto"
-                      priority
-                    />
-                  </div>
-                  
-                </ContentWrapper>
-                <ContentWrapper 
-                  className={`pt-6 h-full w-full border rounded-lg pb-10 bg-white`}
-                  isSpan={false}
-                >
-                  <div className="mx-auto w-8/12 h-full">
-                    <Typography
-                      className="py-5 text-2xl font-semibold"
-                    >
-                      Edit your profile information
-                    </Typography>
-                  </div>
-                </ContentWrapper>
-              </ContentWrapper>
-            </ContainerComponent>
+              </Paper>
+              <aside className="w-[17%] h-full">
+
+              </aside>
+            </Container>
           </ThemeProvider>   
         </motion.div>
         <Footer />

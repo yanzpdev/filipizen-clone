@@ -3,6 +3,9 @@ import Footer from "./components/layout/Footer";
 import { Roboto } from "next/font/google";
 import HomeComponent from "./components/layout/HomeComponent";
 import { getMembersData } from "./utils/helpers";
+import { connectMongoDB } from "@/lib/mongodb";
+import { getServerSession } from "next-auth";
+import User from "@/models/user";
 
 export const metadata: Metadata = {
   title: "Welcome - Filipizen",
@@ -16,6 +19,11 @@ const roboto = Roboto({
 
 export default async function Home() {
   const memberData = await getMembersData();
+  await connectMongoDB();
+  const session = await getServerSession();
+  const email = session?.user?.email;
+  const user = await User.findOne({ email });
+  
   return (
     <main className={`relative flex min-h-screen flex-col items-center justify-between ${roboto.className}`}>
       <HomeComponent memberData={memberData} />

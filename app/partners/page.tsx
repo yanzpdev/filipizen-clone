@@ -20,7 +20,7 @@ const partners = async() => {
   const session = await getServerSession();
   const email = session?.user?.email;
   const user = await User.findOne({ email });
-  const fullName = user?.firstName + " " + user?.lastName
+  const fullName = session?.user?.name;
 
   if (user && user.isFirstTimeSigningIn) {
     redirect('/setupprofile');

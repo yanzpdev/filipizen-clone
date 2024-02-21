@@ -14,8 +14,7 @@ export const metadata: Metadata = {
   
 const Profile = async() => {
   let userObject = {
-    firstName: '',
-    lastName: '',
+    contactName: '',
     contactAddress: '',
     contactNum: '',
     contactEmail: ''
@@ -26,13 +25,11 @@ const Profile = async() => {
 
     const email: string | any = session?.user?.email;
     const user = await User.findOne({ email });
-    const firstName = user.firstName;
-    const lastName = user.lastName;
+    const contactName = user.name;
     const contactAddress = user.address;
     const contactNum = user.mobileNum;
 
-    userObject.firstName = firstName;
-    userObject.lastName = lastName;
+    userObject.contactName = contactName;
     userObject.contactAddress = contactAddress;
     userObject.contactNum = contactNum;
     userObject.contactEmail = email;
@@ -45,8 +42,7 @@ const Profile = async() => {
   return (
     <Suspense fallback={<Loading />}>
       <ProfilePage 
-        fName={userObject.firstName} 
-        lName={userObject.lastName} 
+        name={userObject.contactName} 
         contactAddress={userObject.contactAddress} 
         contactNum={userObject.contactNum} 
         contactEmail={userObject.contactEmail}
