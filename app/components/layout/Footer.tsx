@@ -5,10 +5,11 @@ const roboto = Roboto({
   subsets: ['latin'],
 })
 const Footer = () => {
-
+  const dateToday = new Date();
+  let year = dateToday.getFullYear();
   return (
     <div className={`${roboto.className} w-full h-fit border-t-[3px] border-solid justify-between relative bottom-0 border-black bg-gray-200 rounded-b-md text-center text-[11.6px]`}>
-      <p className='text-[#8b8b8b] py-[7px]'>@Copyright 2024 Filipizen</p>
+      <p className='text-[#8b8b8b] py-[7px]'>@Copyright {year} Filipizen</p>
     </div>
   )
 }

@@ -21,13 +21,17 @@ export default async function Home() {
   const memberData = await getMembersData();
   await connectMongoDB();
   const session = await getServerSession();
-  const email = session?.user?.email;
+  const email: any = session?.user?.email;
+  const name: any = session?.user?.name;
   const user = await User.findOne({ email });
   
   return (
     <main className={`relative flex min-h-screen flex-col items-center justify-between ${roboto.className}`}>
-      <HomeComponent memberData={memberData} />
-      <Footer />
+      <HomeComponent memberData={memberData} userEmail={email} name={name} />
+      <div className="absolute bottom-0 w-full">
+        <Footer />
+      </div>
+      
     </main>
   );
 }

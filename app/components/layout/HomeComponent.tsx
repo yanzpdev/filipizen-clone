@@ -10,7 +10,8 @@ import ImageComponent from '../ui/ImageComponent';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { useSession } from 'next-auth/react'; 
 import DropDownMenu from './DropDownMenu';
-import ButtonComponent from '../ui/ButtonComponent';
+import SetUpProfilePage from './SetUpProfilePage';
+import ContentWrapper from '../ui/ContentWrapper';
 
 interface Partner {
   id: number;
@@ -33,9 +34,11 @@ export let fontTheme = createTheme({
 
 interface LoginComponentProps {
   memberData: Partner[];
+  userEmail: string;
+  name: string;
 }
 
-const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
+const LoginComponent: React.FC<LoginComponentProps> = ({ memberData, userEmail, name }) => {
   const [searchText, setSearchText] = useState<string>('');
   const [disable, setDisable] = useState<boolean>(true);
   const [isClicked, setIsClicked] = useState<boolean>(false);
@@ -45,6 +48,9 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
   const [partnerLink, setPartnerLink] = useState<string>('');
   const router = useRouter();
   const {data: session, status } = useSession();
+
+  const image = session?.user?.image;
+  const email = session?.user?.email;
 
   const filteredPartners = searchText
   ? memberData.filter((partner: Partner) => new RegExp(`^${searchText.replace(/\\/g, '\\\\')}`, 'i').test(partner.title))
@@ -106,134 +112,128 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData }) => {
 
   const buttonRef = useRef<any | null>(null);
 
+  if (session) {
+    return (
+      <SetUpProfilePage 
+        userEmail={userEmail}
+        name={name}
+      />
+    )
+  }
 
-  return (
-    <div className={`${roboto.className} h-[60%] relative w-screen mt-[64px] flex flex-col items-center`}>
-      <div className='h-[50px]'></div>
-      <ThemeProvider theme={fontTheme}>
-        <ImageComponent
-          src='/assets/filipizen.svg'
-          alt='Filipizen Logo'
-          width={220}
-          height={60.66}
-          priority
-        />
-        <div className='mt-[2rem] min-w-[60%] flex items-center justify-center '>
-          <div className='h-fit min-w-[40%] bg-gradient-to-t relative from-white to-[#f5f5f5]'>
-            <div
-              className='h-[52.8px] relative w-full border border-slate-400 z-40 hover:border-black rounded-full flex items-center justify-center bg-white'
-              style={{ boxShadow: '#00000059 0 5px 15px', }}
-            >
-              <div className='text-[#737373] static w-[15%] h-full z-30 flex bg-white rounded-l-full'>
-                <IoMdSearch size={24} className='ml-[20px] self-center font-bold' />
+  else {
+    return (
+      <ContentWrapper className={`${roboto.className} h-[60%] relative w-screen mt-[64px] flex flex-col items-center`}>
+        <ContentWrapper className='h-[50px]'></ContentWrapper>
+        <ThemeProvider theme={fontTheme}>
+          <ImageComponent
+            src='/assets/filipizen.svg'
+            alt='Filipizen Logo'
+            width={220}
+            height={60.66}
+            priority
+          />
+          <ContentWrapper className='mt-[2rem] min-w-[60%] flex items-center justify-center '>
+            <ContentWrapper className='h-fit min-w-[40%] bg-gradient-to-t relative from-white to-[#f5f5f5]'>
+              <ContentWrapper
+                className='h-[52.8px] relative w-full border border-slate-400 z-40 hover:border-black rounded-full flex items-center justify-center bg-white'
+                style={{ boxShadow: '#00000059 0 5px 15px', }}
+              >
+                <ContentWrapper className='text-[#737373] static w-[15%] h-full z-30 flex bg-white rounded-l-full'>
+                  <IoMdSearch size={24} className='ml-[20px] self-center font-bold' />
+                </ContentWrapper>
+                <ContentWrapper className='w-[85%] static z-30 h-full'>
+                  <input
+                    autoComplete='off'
+                    className={`h-full w-full static search-input text-[.970rem] rounded-full rounded-l-none`}
+                    type='text'
+                    name='search'
+                    value={searchText}
+                    onChange={(e) => {
+                      setSearchText(e.target.value);
+                      setDropdownVisible(!!e.target.value);
+                      setDisable(!e.target.value);
+                      setPartnerLink('');
+                    }}
+                    placeholder='Search Partner LGU'
+                  />
+                </ContentWrapper>
+              </ContentWrapper>
+              <div
+                className='w-full'
+                style={{
+                  position: 'absolute',
+                  zIndex: 10,
+                  top: '2rem',
+                  display: dropdownVisible ? 'block' : 'none',
+                }}
+                ref={dropdownRef}
+              >
+                {searchText &&
+                  <ul
+                    className='h-[231.6px] border-[1px] pt-[27px] flex flex-col rounded-md rounded-br-none bg-white overflow-y-scroll'
+                    style={{ boxShadow: '#00000059 0 5px 15px', }}
+                  >
+                    {sortedFilteredPartners.map((partner: Partner) => (
+                      <li key={partner.id}>
+                        <button
+                          className='px-[16px] flex items-center text-base justify-start text-[#000000de] py-3'
+                          onClick={() => handleClick(partner)}
+                        >
+                          <MdLabel size={24} className='text-[#9e9e9e] mr-[32px]' /> <div className='truncate'>{partner.title}{partner.subtype !== 'province' && `, ${partner.group.title}`}</div>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                }
               </div>
-              <div className='w-[85%] static z-30 h-full'>
-                <input
-                  autoComplete='off'
-                  className={`h-full w-full static search-input text-[.970rem] rounded-full rounded-l-none`}
-                  type='text'
-                  name='search'
-                  value={searchText}
-                  onChange={(e) => {
-                    setSearchText(e.target.value);
-                    setDropdownVisible(!!e.target.value);
-                    setDisable(!e.target.value);
-                    setPartnerLink('');
-                  }}
-                  placeholder='Search Partner LGU'
-                />
-              </div>
+            </ContentWrapper>
+          </ContentWrapper>
+    
+          <Button
+            variant='contained'                                                    
+            className={`mt-[34px] text-[14px] ${!partnerLink ? 'text-[#989898]' : ''} bg-[#f5f5f5] font-medium text-[#731cef] hover:bg-[#eeeaf4] p-[8px] rounded-md tracking-[.09em] leading-none`}
+            style={{
+              boxShadow: 'none',
+            }}
+            onClick={redirectToPartner}
+            disabled={!partnerLink}
+          >
+             GO TO SERVICES
+          </Button>
+          <div className='h-[30px]'></div>
+          <Button
+            variant='contained'
+            className={`mt-[38px] text-[14px] font-medium text-[#018786] hover:bg-[#e6f1f1] p-[8px] rounded-md tracking-[.09em] leading-none`}
+            style={{ boxShadow: 'none' }}
+            sx={{backgroundColor: 'transparent'}}
+          >
+            <Link href='/partners'>
+              VIEW ALL PARTNERS
+            </Link> 
+          </Button>
+    
+          <Button
+            variant={`${status === 'unauthenticated' ? 'contained' : 'text'}`}
+            className={`absolute top-[-40px] text-lg right-14 duration-300 font-medium text-slate-700 p-[8px] hover:bg-[#e6e9f3]`}
+            style={{textTransform: 'none'}}
+            onClick={status === 'unauthenticated' ? redirectToSignIn : () => setIsOpen(!isOpen)}
+            sx={{backgroundColor: 'transparent'}}
+            disabled={status === 'loading' || isOpen}
+          >
+            Sign In
+          </Button>
+          {isOpen && 
+            <div ref={buttonRef} className='absolute top-7 right-16 z-50'>
+              <DropDownMenu userName={'test'} buttonRef={buttonRef} image={image} email={email} />
             </div>
-            <div
-              className='w-full'
-              style={{
-                position: 'absolute',
-                zIndex: 10,
-                top: '2rem',
-                display: dropdownVisible ? 'block' : 'none',
-              }}
-              ref={dropdownRef}
-            >
-              {searchText &&
-                <ul
-                  className='h-[231.6px] border-[1px] pt-[27px] flex flex-col rounded-md rounded-br-none bg-white overflow-y-scroll'
-                  style={{ boxShadow: '#00000059 0 5px 15px', }}
-                >
-                  {sortedFilteredPartners.map((partner: Partner) => (
-                    <li key={partner.id}>
-                      <button
-                        className='px-[16px] flex items-center text-base justify-start text-[#000000de] py-3'
-                        onClick={() => handleClick(partner)}
-                      >
-                        <MdLabel size={24} className='text-[#9e9e9e] mr-[32px]' /> <div className='truncate'>{partner.title}{partner.subtype !== 'province' && `, ${partner.group.title}`}</div>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              }
-            </div>
-          </div>
-        </div>
-  
-        <Button
-          variant='contained'                                                    // #62000e
-          className={`mt-[34px] text-[14px] ${!partnerLink ? 'text-[#989898]' : ''} bg-[#f5f5f5] font-medium text-[#731cef] hover:bg-[#eeeaf4] p-[8px] rounded-md tracking-[.09em] leading-none`}
-          style={{
-            boxShadow: 'none',
-          }}
-          onClick={redirectToPartner}
-          disabled={!partnerLink}
-        >
-           GO TO SERVICES
-        </Button>
-        <div className='h-[30px]'></div>
-        <Button
-          variant='contained'
-          className={`mt-[38px] text-[14px] font-medium text-[#018786] hover:bg-[#e6f1f1] p-[8px] rounded-md tracking-[.09em] leading-none`}
-          style={{ boxShadow: 'none' }}
-          sx={{backgroundColor: 'transparent'}}
-        >
-          <Link href='/partners'>
-            VIEW ALL PARTNERS
-          </Link> 
-        </Button>
-  
-        <Button
-          variant={`${status === 'unauthenticated' ? 'contained' : 'text'}`}
-          className={`absolute top-[-40px] text-lg right-14 duration-500 font-medium text-slate-700 p-[8px] ${status === 'authenticated' ? 'rounded-full' : status === 'loading' ? 'rounded-full' : 'rounded-md hover:bg-[#e6e9f3]'}`}
-          style={{textTransform: 'none'}}
-          onClick={status === 'unauthenticated' ? redirectToSignIn : () => setIsOpen(!isOpen)}
-          sx={{backgroundColor: 'transparent'}}
-          disabled={status === 'loading' || isOpen}
-        >
-          {status === 'authenticated' ?
-            <ImageComponent 
-              src={session?.user?.image || ''} 
-              alt={'User'} 
-              height={60}
-              width={60}
-              className='rounded-full'
-            />
-          :status === 'loading' ?
-            <ImageComponent 
-              src={'/assets/gearloading.gif'} 
-              alt={'Loading'} 
-              height={60}
-              width={60}
-              className='rounded-full'
-            />
-          :
-            <p>Sign in</p>
           }
-        </Button>
-        {isOpen && 
-          <div ref={buttonRef} className='absolute top-7 right-16 z-50'>
-            <DropDownMenu userName={'test'} buttonRef={buttonRef} image={session?.user?.image} email={session?.user?.email} />
-          </div>
-        }
-      </ThemeProvider>
-    </div>
-  )
+        </ThemeProvider>
+      </ContentWrapper>
+    )
+  }
+
+  
 }
 
 export default LoginComponent;

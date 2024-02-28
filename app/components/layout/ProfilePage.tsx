@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ButtonComponent from "../ui/ButtonComponent";
 import Header from "./Header";
 import Footer from "./Footer";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 const raleway = Raleway({ 
@@ -147,30 +147,6 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, c
   else {
     return (
       <ContentWrapper className="h-screen">
-        <Header 
-          navbarStyles='w-screen px-[50px] pt-[5px] pb-[7px] bg-[#ecf0f1] flex justify-between items-center' 
-          src='/assets/filipizen.svg'
-          height={20.06}
-          width={72.75} 
-          title=''
-          page='profile'
-          userName={
-            validatedData ? validatedData.fullName 
-            : 
-            responseSuccess ? name
-            :
-            ''
-          }
-        />
-        <Header 
-          navbarStyles="w-screen px-[50px] pb-[5px] pt-[3px] bg-[#2c3e50] h-[50px] flex justify-between items-center" 
-          src={`https://www.filipizen.com/assets/154.png`}
-          height={40}
-          width={40}
-          title='TAGBILARAN CITY'
-          extraStyle=''
-          page='profile2'
-        />
         {isModalOpen &&
           <ContentWrapper 
             className="z-40 h-screen flex items-center justify-center fixed w-screen" 
@@ -214,6 +190,30 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, c
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
+          <Header 
+            navbarStyles='w-screen px-[50px] pt-[5px] pb-[7px] bg-[#ecf0f1] flex justify-between items-center' 
+            src='/assets/filipizen.svg'
+            height={20.06}
+            width={72.75} 
+            title=''
+            page='profile'
+            userName={
+              validatedData ? validatedData.fullName 
+              : 
+              responseSuccess ? name
+              :
+              ''
+            }
+          />
+          <Header 
+            navbarStyles="w-screen px-[50px] pb-[5px] pt-[3px] bg-[#2c3e50] h-[50px] flex justify-between items-center" 
+            src={`https://www.filipizen.com/assets/154.png`}
+            height={40}
+            width={40}
+            title='TAGBILARAN CITY'
+            extraStyle=''
+            page='profile2'
+          />
           <ThemeProvider theme={fontTheme}>
             <Container
               className={`h-[83vh] w-full flex relative pb-[50px]`}
@@ -227,7 +227,10 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, c
               </aside>
               <Paper
                 className={`p-[20px] mt-[10px] w-[66%] h-fit flex items-center border rounded-lg pb-10 bg-white`}
-                style={{boxShadow: 'none', border: 'none'}}
+                style={{
+                  boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)', 
+                  border: 'none',
+                }}
               >
                 <form
                   className="px-[16px] w-full h-full"
@@ -238,8 +241,6 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, c
                   >
                     Edit your profile information
                   </Typography>
-      
-                  {/* <ContentWrapper className="flex gap-2 items-center justify-center"> */}
                     <TextField
                       className="font-bold w-full self-center rounded-lg"
                       variant='standard'
@@ -252,19 +253,6 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, c
                       value={fullName}
                       name={`firstName`} 
                     />
-                    {/* <TextField
-                      className="font-bold w-full self-center rounded-lg"
-                      variant='standard'
-                      label='Last Name'
-                      size='medium'
-                      sx={{borderRadius: '8px'}}
-                      fullWidth={true}
-                      onChange={handleLastNameChange}
-                      helperText={' '}
-                      value={lastName}
-                      name={`lastName`} 
-                    /> */}
-                  {/* </ContentWrapper> */}
                   <TextField
                     className="font-bold w-full pb-6 self-center rounded-lg"
                     variant='standard'
@@ -301,16 +289,20 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, c
                     value={mobileNum}
                     name={`mobilenum`} 
                   />
-                  <Button
-                    type="submit"
-                    fullWidth={false}
-                    className={`mt-4 w-full py-3 tracking-widest 
-                    text-lg text-white rounded-md self-center 
-                    ${!isFormValid ? 'bg-blue-100' : 'bg-blue-400 hover:bg-blue-500'}`}
-                    disabled={!isFormValid}
-                  >
-                    Update
-                  </Button>
+                  <ContentWrapper className="flex items-center justify-end">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      fullWidth={false}
+                      className={`mt-4 w-fit py-3 tracking-widest 
+                      text-lg text-white rounded-md self-end   
+                      ${!isFormValid ? 'bg-blue-100' : 'bg-[#3f51b5] hover:bg-blue-500'}`}
+                      disabled={!isFormValid}
+                    >
+                      Update
+                    </Button>
+                  </ContentWrapper>
+                  
                   <AnimatePresence>
                     {isVisible && (
                       <motion.div

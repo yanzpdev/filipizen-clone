@@ -4,6 +4,11 @@ import { connectMongoDB } from '@/lib/mongodb';
 import User from '@/models/user';
 import { redirect } from 'next/navigation';
 import { getServerSession } from "next-auth/next"
+import { Suspense } from "react";
+import Loading from "./loading";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
+import ContentWrapper from "../components/ui/ContentWrapper";
 
 
 export const metadata: Metadata = {
@@ -13,7 +18,8 @@ export const metadata: Metadata = {
 const page = async() => {
   await connectMongoDB();
   const session = await getServerSession();
-  const email = session?.user?.email;
+  const email: any = session?.user?.email;
+  const name: any = session?.user?.name;
   const user = await User.findOne({ email });
 
   if (user && !user.isFirstTimeSigningIn) {
@@ -25,7 +31,16 @@ const page = async() => {
   }
   
   else {
-    return <SetUpProfilePage />
+    return (
+      <ContentWrapper className="h-screen w-screen">
+        <Suspense fallback={<Loading />}>
+          <SetUpProfilePage 
+            userEmail={email}
+            name={name}
+          />
+        </Suspense>
+      </ContentWrapper>
+    )
   }
 }
 

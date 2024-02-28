@@ -74,7 +74,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
           </Typography>
 
           {page !== 'profile2' && 
-            <ContentWrapper>
+            <button>
               {!isOpen &&
                 <HiOutlineDotsHorizontal 
                   className='mx-1 cursor-pointer' 
@@ -88,7 +88,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
                   size={26} 
                 />
               }
-            </ContentWrapper>
+            </button>
           }
           
           {isOpen &&
@@ -102,14 +102,11 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
         <ContentWrapper className={`${extraStyle} leading-none relative text-slate-700 `}>
             {page !== 'profile2' &&
               <ContentWrapper className='flex justify-center items-center gap-1'>
-                <Typography variant='body1' className='text-xs font-bold'>
-                  Loading...
-                </Typography>
                 <ImageComponent 
-                  src={'/assets/gearloading.gif'} 
+                  src={'/assets/roundloading.gif'} 
                   alt={'loading cog'}       
-                  height={26} 
-                  width={26} 
+                  height={30} 
+                  width={30} 
                   priority
                 />
               </ContentWrapper> 

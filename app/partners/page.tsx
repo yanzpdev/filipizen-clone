@@ -8,6 +8,7 @@ import { getServerSession } from 'next-auth';
 import { NextAuthOptions } from 'next-auth'; 
 import User from '@/models/user';
 import { redirect } from 'next/navigation';
+import ContentWrapper from '../components/ui/ContentWrapper';
 
 export const metadata: Metadata = {
   title: 'Filipizen - Partners',
@@ -28,7 +29,7 @@ const partners = async() => {
 
   else {
     return (
-      <div className='h-full overflow-x-hidden relative'>
+      <ContentWrapper className='h-full overflow-x-hidden relative'>
         <Header 
           navbarStyles='w-screen px-[20px] pt-[5px] pb-[7px] bg-[#ecf0f1] flex justify-between items-center' 
           src='/assets/filipizen.svg'
@@ -37,19 +38,22 @@ const partners = async() => {
           title=''
           userName={fullName}
         />
-        <div className='p-[20px] w-fit'></div>
-        <div className='mx-[48px] h-full'>
+        <ContentWrapper className='p-[20px] w-fit'></ContentWrapper>
+        <ContentWrapper className='mx-[48px] h-full'>
           <h1 
             className='text-[#000000d9] text-[1.71rem] font-[700] mb-[16px] leading-none tracking-tight'
           >
             List of Partners
           </h1>
           <PartnerList partnerData={partnerData} />
-        </div>
+        </ContentWrapper>
       
-        <div className='h-[80px]'></div>
-        <Footer />
-      </div>
+        <ContentWrapper className='h-[80px]'></ContentWrapper>
+        <div className='w-full absolute bottom-0'>
+          <Footer />
+        </div>
+        
+      </ContentWrapper>
     )
   }
 

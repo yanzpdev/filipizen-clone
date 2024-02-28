@@ -8,6 +8,7 @@ const Loading = () => {
         alt={"Loading..."} 
         width={150} 
         height={150} 
+        priority
       />
     </div>
   )

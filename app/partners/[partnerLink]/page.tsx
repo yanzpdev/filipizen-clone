@@ -5,10 +5,11 @@ import { connectMongoDB } from '@/lib/mongodb';
 import { getServerSession } from 'next-auth';
 import User from '@/models/user';
 import { redirect } from 'next/navigation';
+import Custom404 from '@/app/components/layout/Custom404';
 
 export const metadata: Metadata = {
   title: 'Filipizen - Partners',
-  description: 'Etracs Landing Page',
+  description: 'Filipizen Website',
 }
 
 interface PageProps {
@@ -37,14 +38,16 @@ interface Member {
 
 const page:React.FC<PageProps> = async({params}) => {
   const partnerData: Member[] = await getMembersData();
-  const clusterId = params.partnerLink[0].replace(/[^\w|]/g, "").split("_")
+  const clusterId = params.partnerLink.replace(/[^\w|]/g, "").split("_")
+  const acceptedUrlParams: string[] = [];
+
   await connectMongoDB();
   const session = await getServerSession();
   const email = session?.user?.email;
   const user = await User.findOne({ email });
 
   if (user && user.isFirstTimeSigningIn) {
-    redirect('/setupprofile');
+    redirect('/');
   }
 
   const partner: Omit<Member, 'clusterid'>[] = partnerData
@@ -77,17 +80,28 @@ const page:React.FC<PageProps> = async({params}) => {
     isonline
   }));
 
-  return (
-    <div className='h-screen'>
-      {partner.map((item) => (
-        <div key={item.id}>
-          {item.name === clusterId[1] &&
-            <PartnerLinkLayout data={item} />
-          } 
-        </div>
-      ))}
-    </div>
-  )
+  partnerData.map((partner) => {
+    acceptedUrlParams.push(partner.group.name + "_" + partner.name);
+  })
+
+
+  if (acceptedUrlParams.includes(params.partnerLink)) {
+    return (
+      <div className='h-screen'>
+        {partner.map((item) => (
+          <div key={item.id}>
+            {item.name === clusterId[1] &&
+              <PartnerLinkLayout data={item} />
+            } 
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  else {
+    return <Custom404 />
+  }
 }
 
 export default page

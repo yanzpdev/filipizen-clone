@@ -5,25 +5,29 @@ import { getServerSession } from "next-auth/next"
 
 export default async function handleRequest() {
   let url = '';
+  let requestStatus = false;
+
   try {
     await connectMongoDB();
-    const session = await getServerSession();
+    requestStatus = true;
+  }
 
-    const email = session?.user?.email;
-    const user = await User.findOne({ email });
-
+  catch(e) {
+    console.log('An error ocurred: ', e)
+    url = '/error';
+  }
+  
+  const session = await getServerSession();
+  const email = session?.user?.email;
+  const user = await User.findOne({ email });
+  if (requestStatus) {
     if (user && user.isFirstTimeSigningIn) {
-      url='/setupprofile'
+      url = '/setupprofile';
     } 
     
     else {
-      url='/partners'
+      url = '/partners';
     }
-  } 
-  
-  catch (error) {
-    console.error('An error occured:', error);
-    redirect('/error');
   }
   redirect(url);
 }

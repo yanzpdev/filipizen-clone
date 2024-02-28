@@ -37,7 +37,7 @@ export let theme2 = createTheme({
 const SignInPage = () => {
   const {data: session, status} = useSession();
   if (session) {
-    redirect('/signinchecker');
+    redirect('/');
   }
 
   else {
@@ -89,8 +89,8 @@ const SignInPage = () => {
               >
                 <FormControl className="w-1/3">
                   <ImageComponent 
-                    src={"/assets/qr-code.png"} 
-                    alt={"QR Code"} 
+                    src={"/assets/qr-code.png"}
+                    alt={"QR Code"}
                     height={220}
                     width={220}
                     className="mx-auto rounded-lg"

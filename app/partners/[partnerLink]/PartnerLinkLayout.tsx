@@ -4,6 +4,7 @@ import Header from '@/app/components/layout/Header';
 import ButtonComponent from '@/app/components/ui/ButtonComponent';
 import ContentWrapper from '@/app/components/ui/ContentWrapper';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useSession } from 'next-auth/react';
 import { Roboto } from 'next/font/google';
 import Link from 'next/link';
 
@@ -42,6 +43,7 @@ interface PartnerProps {
 }
   
 const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
+  const {data: session, status} = useSession();
   const str = data.includeservices;
   const services = str.replace(/[^\w|]/g, "").split("|");
   services.sort();
@@ -62,6 +64,8 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
         width={40}
         title={data.title}
         extraStyle='text-white'
+        page=''
+        userName={session?.user?.name}
       />
       <ThemeProvider theme={fontTheme}>
         <div className="mb-[2rem] h-[79.7%]">
@@ -72,17 +76,17 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
                 <div key={service}>
                   <h2 className="mt-[20px] mb-[5px] leading-none text-[#27ae60] text-[19.6px] font-bold">{serviceMapping[service]}</h2>
                   {service === 'bpls' ?
-                    <div className='flex flex-col leading-relaxed'>
-                      <Link href={`/partners/${data.group.name}_${data.name}/${service}/billing`} className="text-[15.2px] text-[#3f51b5] hover:underline">Business Online Billing and Payment</Link>                  
-                      <Link href={`/partners/${data.group.name}_${data.name}/${service}/newbusiness`} className="text-[15.2px] text-[#3f51b5] hover:underline">New Business Application</Link>                  
-                      <Link href={`/partners/${data.group.name}_${data.name}/${service}/renewbusiness`} className="text-[15.2px] text-[#3f51b5] hover:underline">Renew Business Application</Link>                  
+                    <div className='flex flex-col leading-relaxed w-fit'>
+                      <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/billing`} target='_blank' className="text-[15.2px] text-[#3f51b5] hover:underline">Business Online Billing and Payment</Link>                  
+                      <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/newbusiness`} target='_blank' className="text-[15.2px] text-[#3f51b5] hover:underline">New Business Application</Link>                                       
+                      <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/renewbusiness`} target='_blank' className="text-[15.2px] text-[#3f51b5] hover:underline">Renew Business Application</Link>                  
                     </div>
                    : 
                   service === 'rptis' ?
-                    <Link href={`/partners/${data.group.name}_${data.name}/${service}/billing`} className="text-[15.2px] text-[#3f51b5] hover:underline">Realty Tax Online Billing and Payment</Link>                  
+                    <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/billing`} target='_blank' className="text-[15.2px] text-[#3f51b5] hover:underline">Realty Tax Online Billing and Payment</Link>                  
                    :
                   service === 'po' ? 
-                    <Link href={`/partners/${data.group.name}_${data.name}/${service}/billing`} className="text-[15.2px] text-[#3f51b5] hover:underline">Online Payment Order</Link>                  
+                    <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/billing`} target='_blank' className="text-[15.2px] text-[#3f51b5] hover:underline">Online Payment Order</Link>                  
                    :
                     null
                   }
@@ -101,24 +105,14 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
             >
               Search Payments
             </ButtonComponent>
-            {/* <hr className="my-[8px] invisible border-slate-500"/> */}
             <div className='h-[10px]'></div>
-
-            {/* <ButtonComponent 
-              className='hover:underline hover:bg-transparent normal-case'
-              variant='text'
-              disableFocusRipple
-              disableTouchRipple
-              disableRipple
-              href='/partners'
-            >
-              Back to Partners
-            </ButtonComponent> */}
           </div>
 
         </div>
       </ThemeProvider>
-      <Footer />
+      <div className='w-full absolute bottom-0'>
+        <Footer />
+      </div>
     </div>
   )
 }
