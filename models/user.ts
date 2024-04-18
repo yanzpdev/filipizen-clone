@@ -21,6 +21,9 @@ const userSchema = new Schema(
     address: {
       type: String,
     },
+    lgu: {
+      type: String,
+    },
     mobileNum: {
       type: String,
     },

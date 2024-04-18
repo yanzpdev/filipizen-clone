@@ -49,6 +49,7 @@ const authOptions = {
                 email,
                 address: '',
                 mobileNum: '',
+                lgu: '',
                 isFirstTimeSigningIn: true
               }),
             });

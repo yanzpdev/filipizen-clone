@@ -15,6 +15,9 @@ const userSchema = new Schema(
     mobileNum: {
       type: String,
     },
+    lgu: {
+      type: String,
+    },
     isFirstTimeSigningIn: {
       type: Boolean,
       required: true

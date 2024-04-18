@@ -1,7 +1,7 @@
 'use client';
 import ContainerComponent from "../ui/ContainerComponent";
 import ContentWrapper from "../ui/ContentWrapper";
-import { Button, Container, Paper, TextField, Typography } from "@mui/material";
+import { Button, Container, Paper, Select, TextField, Typography } from "@mui/material";
 import { Raleway, Roboto } from 'next/font/google';
 import { createTheme, ThemeProvider } from "@mui/material/styles"; 
 import { useEffect, useState } from "react";
@@ -12,7 +12,7 @@ import ButtonComponent from "../ui/ButtonComponent";
 import Header from "./Header";
 import Footer from "./Footer";
 import { signOut, useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 const raleway = Raleway({ 
   subsets: ['latin'], 
@@ -35,13 +35,15 @@ export let fontTheme = createTheme({
 interface ProfileProps {
   name: string;
   contactAddress: string;
+  contactLgu: string;
   contactNum: string;
   contactEmail: string;
 }
 
-const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, contactEmail}) => {
+const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactLgu, contactNum, contactEmail}) => {
   const [fullName, setFullName] = useState<string>(name);
   const [email, setEmail] = useState<string | any>(contactEmail);
+  const [lgu, setLgu] = useState<string | any>(contactLgu);
   const [address, setAddress] = useState<string>(contactAddress);
   const [mobileNum, setMobileNum] = useState<string>(contactNum);
   const [isMobileNumValid, setIsMobileNumValid] = useState<boolean>(true);
@@ -55,6 +57,11 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, c
   const [event, setEvent] = useState<React.FormEvent>();
   const [validatedData, setValidatedData] = useState<any>();
   const {data: session, status} = useSession();
+  const router = useRouter();
+
+  const handleGoBack = () => {
+    router.back();
+  };
 
   useEffect(() => {
     if (responseMsg !== '') {
@@ -104,7 +111,7 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, c
   const handleSubmit = async() => {
     setIsResponseReceived(false);
     try {
-      const validatedData = signupFormSchema.parse({ email, fullName, address, mobileNum, isFirstTimeSigningIn });
+      const validatedData = signupFormSchema.parse({ email, fullName, address, lgu, mobileNum, isFirstTimeSigningIn });
       setValidatedData(validatedData);
       const response = await fetch("/api/editprofile", {
         method: "POST",
@@ -237,7 +244,7 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, c
                   onSubmit={handleSubmitClick}
                 >
                   <Typography
-                    className="text-[1.7em] pb-3 font-semibold"
+                    className="text-[1.7em] mb-3 font-semibold"
                   >
                     Edit your profile information
                   </Typography>
@@ -254,13 +261,14 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, c
                       name={`firstName`} 
                     />
                   <TextField
-                    className="font-bold w-full pb-6 self-center rounded-lg"
+                    className="font-bold w-full mb-6 self-center rounded-lg"
                     variant='standard'
                     size='medium'
                     sx={{borderRadius: '8px'}}
                     fullWidth={true}
                     value={email}
                     name={`email`} 
+                    label='Email Address'
                     disabled
                   />
                   <TextField
@@ -274,6 +282,17 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, c
                     helperText={' '}
                     value={address}
                     name={`address`} 
+                  />
+                  <Select
+                    className="font-bold w-full mb-6 self-center rounded-lg"
+                    variant='standard'
+                    size='medium'
+                    sx={{borderRadius: '8px'}}
+                    fullWidth={true}
+                    value={lgu}
+                    name={`lgu`} 
+                    label='LGU'
+                    disabled
                   />
                   <TextField
                     error={!isMobileNumValid && mobileNum !== ''}
@@ -289,7 +308,16 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactNum, c
                     value={mobileNum}
                     name={`mobilenum`} 
                   />
-                  <ContentWrapper className="flex items-center justify-end">
+                  <ContentWrapper className="flex items-center justify-between">
+                    <Button
+                      type="submit"
+                      variant="text"
+                      fullWidth={false}
+                      onClick={handleGoBack}
+                      className={`mt-4 w-fit py-3 tracking-widest text-lg rounded-md text-gray-500 self-end `}
+                    >
+                      Back
+                    </Button>
                     <Button
                       type="submit"
                       variant="contained"

@@ -16,6 +16,7 @@ const Profile = async() => {
   let userObject = {
     contactName: '',
     contactAddress: '',
+    contactLgu: '',
     contactNum: '',
     contactEmail: ''
   };
@@ -27,12 +28,17 @@ const Profile = async() => {
     const user = await User.findOne({ email });
     const contactName = user.name;
     const contactAddress = user.address;
+    const contactLgu = user.lgu;
     const contactNum = user.mobileNum;
 
     userObject.contactName = contactName;
     userObject.contactAddress = contactAddress;
+    userObject.contactLgu = contactLgu;
     userObject.contactNum = contactNum;
     userObject.contactEmail = email;
+
+    console.log(user.createdAt);
+
   } 
   
   catch (error) {
@@ -44,6 +50,7 @@ const Profile = async() => {
       <ProfilePage 
         name={userObject.contactName} 
         contactAddress={userObject.contactAddress} 
+        contactLgu={userObject.contactLgu} 
         contactNum={userObject.contactNum} 
         contactEmail={userObject.contactEmail}
       />

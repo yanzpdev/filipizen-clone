@@ -24,14 +24,16 @@ export default async function Home() {
   const email: any = session?.user?.email;
   const name: any = session?.user?.name;
   const user = await User.findOne({ email });
+  const isFirstTimeSigningIn = user?.isFirstTimeSigningIn
+
+  console.log(isFirstTimeSigningIn);
   
   return (
     <main className={`relative flex min-h-screen flex-col items-center justify-between ${roboto.className}`}>
-      <HomeComponent memberData={memberData} userEmail={email} name={name} />
+      <HomeComponent memberData={memberData} userEmail={email} name={name} isFirstTimeSigningIn={isFirstTimeSigningIn} />
       <div className="absolute bottom-0 w-full">
         <Footer />
       </div>
-      
     </main>
   );
 }
