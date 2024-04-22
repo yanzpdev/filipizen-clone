@@ -1,17 +1,15 @@
 'use client';
-import ContainerComponent from "../ui/ContainerComponent";
 import ContentWrapper from "../ui/ContentWrapper";
 import { Button, Container, Paper, Select, TextField, Typography } from "@mui/material";
 import { Raleway, Roboto } from 'next/font/google';
 import { createTheme, ThemeProvider } from "@mui/material/styles"; 
 import { useEffect, useState } from "react";
 import { signupFormSchema } from "@/lib/validations/signupform";
-import ImageComponent from "../ui/ImageComponent";
 import { motion, AnimatePresence } from 'framer-motion';
 import ButtonComponent from "../ui/ButtonComponent";
 import Header from "./Header";
 import Footer from "./Footer";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 
 const raleway = Raleway({ 
@@ -33,17 +31,21 @@ export let fontTheme = createTheme({
 })
 
 interface ProfileProps {
-  name: string;
+  fullName: string;
   contactAddress: string;
   contactLgu: string;
   contactNum: string;
   contactEmail: string;
+  contactSubtype: string;
+  contactLguID: string;
 }
 
-const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactLgu, contactNum, contactEmail}) => {
-  const [fullName, setFullName] = useState<string>(name);
+const ProfilePage:React.FC<ProfileProps> = ({fullName, contactAddress, contactSubtype, contactLgu, contactLguID, contactNum, contactEmail}) => {
+  const [name, setName] = useState<string>(fullName);
   const [email, setEmail] = useState<string | any>(contactEmail);
-  const [lgu, setLgu] = useState<string | any>(contactLgu);
+  const [lguString, setLguString] = useState<string | any>(contactLgu);
+  const [lguID, setLguID] = useState<string>(contactLguID);
+  const [subtype, setSubtype] = useState<string>(contactSubtype);
   const [address, setAddress] = useState<string>(contactAddress);
   const [mobileNum, setMobileNum] = useState<string>(contactNum);
   const [isMobileNumValid, setIsMobileNumValid] = useState<boolean>(true);
@@ -80,26 +82,26 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactLgu, c
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nameValue = e.target.value;
-    setFullName(nameValue);
+    setName(nameValue);
     validateForm(nameValue, address, mobileNum);
   }
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const addressValue = e.target.value;
     setAddress(addressValue);
-    validateForm(fullName, addressValue, mobileNum);
+    validateForm(name, addressValue, mobileNum);
   }
 
   const handleMobilenumChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const mobilenumValue = e.target.value;
     setMobileNum(mobilenumValue);
-    validateForm(fullName, address, mobilenumValue);
+    validateForm(name, address, mobilenumValue);
     setIsMobileNumValid(validateMobileNum(mobilenumValue));
     setIsFormValid(validateMobileNum(mobilenumValue));
   }
 
-  const validateForm = (fullName: string, address: string, mobileNum: string) => {
-    if (fullName.trim() !== "" && address.trim() !== "" && mobileNum.trim().length === 11) {
+  const validateForm = (name: string, address: string, mobileNum: string) => {
+    if (name.trim() !== "" && address.trim() !== "" && mobileNum.trim().length === 11) {
       setIsFormValid(true);
     } 
     
@@ -111,12 +113,14 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactLgu, c
   const handleSubmit = async() => {
     setIsResponseReceived(false);
     try {
-      const validatedData = signupFormSchema.parse({ email, fullName, address, lgu, mobileNum, isFirstTimeSigningIn });
+      const validatedData = signupFormSchema.parse({ email, name, address, subtype, lguString, lguID, mobileNum, isFirstTimeSigningIn });
       setValidatedData(validatedData);
       const response = await fetch("/api/editprofile", {
         method: "POST",
         body: JSON.stringify(validatedData),
       });
+
+      console.log("Submitted name: ", validatedData.name);
 
       if (response.ok) {
         const responseData = await response.json();
@@ -198,26 +202,26 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactLgu, c
           transition={{ duration: 0.5 }}
         >
           <Header 
-            navbarStyles='w-screen px-[50px] pt-[5px] pb-[7px] bg-[#ecf0f1] flex justify-between items-center' 
+            navbarStyles='w-screen px-[20px] pt-[5px] pb-[7px] bg-[#ecf0f1] flex justify-between items-center' 
             src='/assets/filipizen.svg'
-            height={20.06}
-            width={72.75} 
+            height={22.06}
+            width={80} 
             title=''
             page='profile'
             userName={
-              validatedData ? validatedData.fullName 
+              validatedData ? validatedData.name 
               : 
-              responseSuccess ? name
+              responseSuccess ? fullName
               :
               ''
             }
           />
           <Header 
             navbarStyles="w-screen px-[50px] pb-[5px] pt-[3px] bg-[#2c3e50] h-[50px] flex justify-between items-center" 
-            src={`https://www.filipizen.com/assets/154.png`}
+            src={`https://www.filipizen.com/assets/${lguID}.png`}
             height={40}
             width={40}
-            title='TAGBILARAN CITY'
+            title={lguString}
             extraStyle=''
             page='profile2'
           />
@@ -257,7 +261,7 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactLgu, c
                       fullWidth={true}
                       onChange={handleNameChange}
                       helperText={' '}
-                      value={fullName}
+                      value={name}
                       name={`firstName`} 
                     />
                   <TextField
@@ -283,17 +287,17 @@ const ProfilePage:React.FC<ProfileProps> = ({name, contactAddress, contactLgu, c
                     value={address}
                     name={`address`} 
                   />
-                  <Select
+                  {/* <TextField
                     className="font-bold w-full mb-6 self-center rounded-lg"
                     variant='standard'
                     size='medium'
                     sx={{borderRadius: '8px'}}
                     fullWidth={true}
-                    value={lgu}
+                    value={lguString}
                     name={`lgu`} 
                     label='LGU'
                     disabled
-                  />
+                  /> */}
                   <TextField
                     error={!isMobileNumValid && mobileNum !== ''}
                     className="font-bold w-full self-center rounded-lg"

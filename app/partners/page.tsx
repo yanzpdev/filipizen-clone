@@ -5,14 +5,13 @@ import PartnerList from '../components/layout/PartnerList';
 import { getMembersData } from '../utils/helpers';
 import { connectMongoDB } from '@/lib/mongodb';
 import { getServerSession } from 'next-auth';
-import { NextAuthOptions } from 'next-auth'; 
 import User from '@/models/user';
 import { redirect } from 'next/navigation';
 import ContentWrapper from '../components/ui/ContentWrapper';
 
 export const metadata: Metadata = {
   title: 'Filipizen - Partners',
-  description: 'Etracs Landing Page',
+  description: 'Filipizen Web',
 }
 
 const partners = async() => {
@@ -21,10 +20,13 @@ const partners = async() => {
   const session = await getServerSession();
   const email = session?.user?.email;
   const user = await User.findOne({ email });
-  const fullName = session?.user?.name;
+  let fullName = '';
+  if (session) {
+    fullName = user?.name;
+  }
 
   if (user && user.isFirstTimeSigningIn) {
-    redirect('/setupprofile');
+    redirect('/');
   }
 
   else {

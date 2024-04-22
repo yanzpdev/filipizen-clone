@@ -3,12 +3,15 @@ import { Raleway, Roboto } from 'next/font/google';
 import {useSession } from 'next-auth/react'; 
 import SetUpProfilePage from './SetUpProfilePage';
 import LandingPage from './LandingPage';
+import { ThemeProvider } from '@emotion/react';
+import { createTheme } from '@mui/material';
 
 interface Partner {
   id: number;
   title: string;
   subtype: string;
   group: { title: string };
+  clusterid: string;
 }
 
 const roboto = Roboto({ 
@@ -16,6 +19,12 @@ const roboto = Roboto({
   subsets: ["latin"],
   display: 'swap'  
 });
+
+export let fontTheme = createTheme({
+  typography: {
+    fontFamily: roboto.style.fontFamily,
+  }
+})
 
 
 interface LoginComponentProps {
@@ -25,7 +34,7 @@ interface LoginComponentProps {
   isFirstTimeSigningIn: boolean;
 }
 
-const LoginComponent: React.FC<LoginComponentProps> = ({ memberData, userEmail, name, isFirstTimeSigningIn }) => {
+const HomeComponent: React.FC<LoginComponentProps> = ({ memberData, userEmail, name, isFirstTimeSigningIn }) => {
   const {data: session } = useSession();
 
   if (session?.user) {
@@ -33,23 +42,28 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ memberData, userEmail, 
       return (
         <SetUpProfilePage 
           userEmail={userEmail}
-          name={name}
+          fullName={name}
+          memberData={memberData}
         />
       )
     }
 
     else {
       return (
-        <LandingPage memberData={memberData} userEmail={userEmail} name={name} isFirstTimeSigningIn={isFirstTimeSigningIn} />
+        <ThemeProvider theme={fontTheme}>
+          <LandingPage memberData={memberData} userEmail={userEmail} fullName={name} isFirstTimeSigningIn={isFirstTimeSigningIn} />
+        </ThemeProvider>
       )
     }
   }
 
   else {
     return (
-      <LandingPage memberData={memberData} userEmail={userEmail} name={name} isFirstTimeSigningIn={isFirstTimeSigningIn} />
+      <ThemeProvider theme={fontTheme}>
+        <LandingPage memberData={memberData} userEmail={userEmail} fullName={name} isFirstTimeSigningIn={isFirstTimeSigningIn} />
+      </ThemeProvider>
     )
   }
 }
 
-export default LoginComponent;
+export default HomeComponent;

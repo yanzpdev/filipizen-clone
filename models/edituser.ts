@@ -6,7 +6,7 @@ const userSchema = new Schema(
       type: String,
       required: true
     },
-    fullName: {
+    name: {
       type: String,
     },
     address: {
@@ -15,7 +15,13 @@ const userSchema = new Schema(
     mobileNum: {
       type: String,
     },
-    lgu: {
+    lguString: {
+      type: String,
+    },
+    lguID: {
+      type: String,
+    },
+    subtype: {
       type: String,
     },
     isFirstTimeSigningIn: {

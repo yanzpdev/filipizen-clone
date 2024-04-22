@@ -18,41 +18,46 @@ const Profile = async() => {
     contactAddress: '',
     contactLgu: '',
     contactNum: '',
-    contactEmail: ''
+    contactEmail: '',
+    contactSubtype: '',
+    contactLguID: ''
   };
   try {
     await connectMongoDB();
     const session = await getServerSession();
-
     const email: string | any = session?.user?.email;
     const user = await User.findOne({ email });
     const contactName = user.name;
     const contactAddress = user.address;
-    const contactLgu = user.lgu;
+    const contactLgu = user.lguString;
     const contactNum = user.mobileNum;
+    const contactSubtype = user.subtype;
+    const contactLguID = user.lguID;
 
     userObject.contactName = contactName;
     userObject.contactAddress = contactAddress;
     userObject.contactLgu = contactLgu;
     userObject.contactNum = contactNum;
     userObject.contactEmail = email;
-
-    console.log(user.createdAt);
-
+    userObject.contactSubtype = contactSubtype;
+    userObject.contactLguID = contactLguID;
   } 
+
   
   catch (error) {
     console.error('An error occured:', error);
   }
-
+  
   return (
     <Suspense fallback={<Loading />}>
       <ProfilePage 
-        name={userObject.contactName} 
+        fullName={userObject.contactName} 
         contactAddress={userObject.contactAddress} 
         contactLgu={userObject.contactLgu} 
         contactNum={userObject.contactNum} 
         contactEmail={userObject.contactEmail}
+        contactSubtype={userObject.contactSubtype}
+        contactLguID={userObject.contactLguID}
       />
     </Suspense>
   )

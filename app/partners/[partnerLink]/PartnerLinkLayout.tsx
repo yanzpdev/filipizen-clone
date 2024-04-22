@@ -45,18 +45,16 @@ interface PartnerProps {
 const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
   const {data: session, status} = useSession();
   const str = data.includeservices;
-  const services = str.replace(/[^\w|]/g, "").split("|");
-  services.sort();
+  const services = str.split("|");
   
   const serviceMapping: ServiceMapping = {
-    po: "Payment Order",
-    rptis: "Real Property",
-    bpls: "Business",
-    renewbusiness: ''
+    "po.*": "Payment Order",
+    "bpls.*": "Business",
+    "rptis.*": "Real Property", 
   };
 
   return (
-    <div className={`min-h-[100vh] h-screen max-h-[100%] relative`}>
+    <ContentWrapper className={`min-h-[100vh] h-screen max-h-[100%] relative`}>
       <Header 
         navbarStyles="w-screen px-[50px] pb-[5px] pt-[3px] bg-[#2c3e50] h-[50px] flex justify-between items-center" 
         src={`https://www.filipizen.com/resources/${data.id}.png`}
@@ -68,32 +66,32 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
         userName={session?.user?.name}
       />
       <ThemeProvider theme={fontTheme}>
-        <div className="mb-[2rem] h-[79.7%]">
-          <div className="mx-[80px] px-[32px]">
+        <ContentWrapper className="mb-[2rem] h-[79.7%]">
+          <ContentWrapper className="mx-[80px] px-[32px]">
             <h1 className="mt-[32px] mb-[36px] text-[28px] font-bold leading-none">Select Transaction</h1>
-            <div className="container">
+            <ContentWrapper className="container">
               {services.map((service: any) => (
-                <div key={service}>
+                <ContentWrapper key={service}>
                   <h2 className="mt-[20px] mb-[5px] leading-none text-[#27ae60] text-[19.6px] font-bold">{serviceMapping[service]}</h2>
-                  {service === 'bpls' ?
-                    <div className='flex flex-col leading-relaxed w-fit'>
-                      <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/billing`} target='_blank' className="text-[15.2px] text-[#3f51b5] hover:underline">Business Online Billing and Payment</Link>                  
-                      <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/newbusiness`} target='_blank' className="text-[15.2px] text-[#3f51b5] hover:underline">New Business Application</Link>                                       
-                      <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/renewbusiness`} target='_blank' className="text-[15.2px] text-[#3f51b5] hover:underline">Renew Business Application</Link>                  
-                    </div>
+                  {service === 'bpls.*' ?
+                    <ContentWrapper className='flex flex-col leading-relaxed w-fit text-[15.2px] text-[#3f51b5]'>
+                      <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/billing`} target='_blank' className="hover:underline">Business Online Billing and Payment</Link>                  
+                      <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/newbusiness`} target='_blank' className="hover:underline">New Business Application</Link>                                       
+                      <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/renewbusiness`} target='_blank' className="hover:underline">Renew Business Application</Link>                  
+                    </ContentWrapper>
                    : 
-                  service === 'rptis' ?
+                  service === 'rptis.*' ?
                     <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/billing`} target='_blank' className="text-[15.2px] text-[#3f51b5] hover:underline">Realty Tax Online Billing and Payment</Link>                  
                    :
-                  service === 'po' ? 
+                  service === 'po.*' ? 
                     <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/billing`} target='_blank' className="text-[15.2px] text-[#3f51b5] hover:underline">Online Payment Order</Link>                  
                    :
                     null
                   }
-                </div>
+                </ContentWrapper>
               ))}
-            </div>
-            <div className='h-[15px]'></div>
+            </ContentWrapper>
+            <ContentWrapper className='h-[15px]'></ContentWrapper>
             <hr className="my-[8px] border-slate-500"/>
             <ButtonComponent
               variant='contained'
@@ -105,15 +103,14 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
             >
               Search Payments
             </ButtonComponent>
-            <div className='h-[10px]'></div>
-          </div>
-
-        </div>
+            <ContentWrapper className='h-[10px]'></ContentWrapper>
+          </ContentWrapper>
+        </ContentWrapper>
       </ThemeProvider>
-      <div className='w-full absolute bottom-0'>
+      <ContentWrapper className='w-full absolute bottom-0'>
         <Footer />
-      </div>
-    </div>
+      </ContentWrapper>
+    </ContentWrapper>
   )
 }
 

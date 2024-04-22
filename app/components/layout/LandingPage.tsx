@@ -34,11 +34,11 @@ export let fontTheme = createTheme({
 interface LandingPageProps {
   memberData: Partner[];
   userEmail: string;
-  name: string;
+  fullName: string;
   isFirstTimeSigningIn: boolean;
 }
 
-const LandingPage:React.FC<LandingPageProps> = ({ memberData, userEmail, name, isFirstTimeSigningIn }) => {
+const LandingPage:React.FC<LandingPageProps> = ({ memberData, userEmail, fullName, isFirstTimeSigningIn }) => {
     const [searchText, setSearchText] = useState<string>('');
   const [disable, setDisable] = useState<boolean>(true);
   const [isClicked, setIsClicked] = useState<boolean>(false);
@@ -218,7 +218,7 @@ const LandingPage:React.FC<LandingPageProps> = ({ memberData, userEmail, name, i
         </Button>
         {isOpen && 
           <div ref={buttonRef} className='absolute top-7 right-16 z-50'>
-            <DropDownMenu userName={'test'} buttonRef={buttonRef} image={image} email={email} />
+            <DropDownMenu userName={name} buttonRef={buttonRef} image={image} email={email} />
           </div>
         }
       </ThemeProvider>

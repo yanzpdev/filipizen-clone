@@ -1,14 +1,12 @@
 'use client';
-import ContainerComponent from "../ui/ContainerComponent";
 import ContentWrapper from "../ui/ContentWrapper";
-import { Button, Container, Paper, TextField, Typography } from "@mui/material";
+import { Button, Container, FormControl, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
 import { Raleway, Roboto } from 'next/font/google';
 import { createTheme, ThemeProvider } from "@mui/material/styles"; 
 import { useEffect, useState } from "react";
 import { signupFormSchema } from "@/lib/validations/signupform";
 import { signOut, useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
-import ImageComponent from "../ui/ImageComponent";
 import { AnimatePresence, motion } from "framer-motion";
 import Footer from "./Footer";
 import ButtonComponent from "../ui/ButtonComponent";
@@ -34,13 +32,20 @@ export let fontTheme = createTheme({
 
 interface SetUpProfileProps {
   userEmail: string | '';
-  name: string | '';
+  fullName: string | '';
+  memberData: any;
 }
 
-const SetUpProfilePage:React.FC<SetUpProfileProps> = ({name, userEmail}) => {
+const SetUpProfilePage:React.FC<SetUpProfileProps> = ({memberData, fullName, userEmail}) => {
   const {data: session, status} = useSession();
-  const [fullName, setFullName] = useState(name);
+  const [name, setName] = useState(fullName);
   const [email, setEmail] = useState(userEmail);
+  const [subtype, setSubtype] = useState<string>("");
+  const [lgu, setLgu] = useState<any>("");
+  const [lguID, setLguID] = useState<string>("");
+  const [lguString, setLguString] = useState<string>("");
+  const [lguList, setLguList] = useState<any>();
+  const [action, setAction] = useState<string>('');
   const [address, setAddress] = useState<string>("");
   const [mobileNum, setMobileNum] = useState<string>("");
   const [isMobileNumValid, setIsMobileNumValid] = useState<boolean>(true);
@@ -53,38 +58,67 @@ const SetUpProfilePage:React.FC<SetUpProfileProps> = ({name, userEmail}) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [validatedData, setValidatedData] = useState<any>();
   const [event, setEvent] = useState<React.FormEvent>();
-
-
-
+  const uniqueSubtypesSet = new Set(memberData.map((item: any) => item.subtype));
+  const subtypes = Array.from(uniqueSubtypesSet);
+  const municipalities = Array.from(memberData.filter((item: any) => item.subtype === 'municipality'));
+  const provinces = Array.from(memberData.filter((item: any) => item.subtype === 'province'));
+  const cities = Array.from(memberData.filter((item: any) => item.subtype === 'city'));
+  const terminals = Array.from(memberData.filter((item: any) => item.subtype === 'terminal'));
   const router = useRouter();
 
   const validateMobileNum = (mobileNum: string) => {
     const regex = /^\d{11}$/;
-  return regex.test(mobileNum);
+    return regex.test(mobileNum);
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nameValue = e.target.value;
-    setFullName(nameValue);
-    validateForm(nameValue, address, mobileNum);
+    setName(nameValue);
+    validateForm(nameValue, subtype, address, mobileNum);
+  }
+
+  const handleSubtypeChange = (e: SelectChangeEvent<string>) => {
+    const subtypeValue = e.target.value as string;
+    setSubtype(subtypeValue);
+    if (subtypeValue === "municipality") {
+      setLguList(municipalities);
+    }
+    else if (subtypeValue === "city") {
+      setLguList(cities);
+    }
+    else if (subtypeValue === "province") {
+      setLguList(provinces);
+    }
+    else if (subtypeValue === "terminal") {
+      setLguList(terminals);
+    }
+    validateForm(fullName, subtypeValue, address, mobileNum);
+  }
+
+  const handleLguChange = (e: SelectChangeEvent<any>) => {
+    const lguValue = e.target.value;
+    setLgu(lguValue);
+    setLguID(lguValue.id)
+    setLguString(lguValue.title);
+    validateForm(name, subtype, address, mobileNum);
   }
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const addressValue = e.target.value;
     setAddress(addressValue);
-    validateForm(fullName, addressValue, mobileNum);
+    validateForm(name, subtype, addressValue, mobileNum);
   }
 
   const handleMobilenumChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const mobilenumValue = e.target.value;
     setMobileNum(mobilenumValue);
-    validateForm(fullName, address, mobilenumValue);
+    validateForm(name, subtype, address, mobilenumValue);
     setIsMobileNumValid(validateMobileNum(mobilenumValue));
     setIsFormValid(validateMobileNum(mobilenumValue));
   }
 
-  const validateForm = (fullName: string, address: string, mobileNum: string) => {
-    if (fullName.trim() !== "" && address.trim() !== "" && mobileNum.trim().length === 11) {
+  const validateForm = (name: string, subtype: string, address: string, mobileNum: string) => {
+    if (name.trim() !== "" && subtype.trim() !== "" && address.trim() !== "" && mobileNum.trim().length === 11) {
       setIsFormValid(true);
     } 
     
@@ -96,8 +130,9 @@ const SetUpProfilePage:React.FC<SetUpProfileProps> = ({name, userEmail}) => {
   const handleSubmit = async() => {
     setIsResponseReceived(false);
     try {
-      const validatedData = signupFormSchema.parse({ email, fullName, address, mobileNum, isFirstTimeSigningIn });
+      const validatedData = signupFormSchema.parse({ email, subtype, lguString, lguID, name, address, mobileNum, isFirstTimeSigningIn });
       setValidatedData(validatedData);
+      console.log(validatedData)
       const response = await fetch("/api/editprofile", {
         method: "POST",
         body: JSON.stringify(validatedData),
@@ -116,7 +151,12 @@ const SetUpProfilePage:React.FC<SetUpProfileProps> = ({name, userEmail}) => {
         setIsResponseReceived(true);
         setResponseSuccess(false);
       }
-      setFullName("");
+      setName("");
+      setSubtype("");
+      setLgu("");
+      setLguString("");
+      setLguID("");
+      setLguList(null);
       setAddress("");
       setMobileNum("");
       setIsFormValid(false);
@@ -131,12 +171,14 @@ const SetUpProfilePage:React.FC<SetUpProfileProps> = ({name, userEmail}) => {
   const handleSubmitClick = (e: React.FormEvent) => {
     e.preventDefault();
     setEvent(e)
-    setIsModalOpen(true)
+    handleModalOpen('submit');
   }
   
-  const handleSignOut = () => {
-    signOut();
+  const handleModalOpen = (action: string) => {
+    setAction(action);
+    setIsModalOpen(true);
   }
+
 
   useEffect(() => {
     const handleWindowClose = async (event: BeforeUnloadEvent) => {
@@ -165,35 +207,35 @@ const SetUpProfilePage:React.FC<SetUpProfileProps> = ({name, userEmail}) => {
           >
             <ThemeProvider theme={fontTheme}>
               <ContentWrapper className="h-fit w-fit fixed bg-white rounded-lg p-6 drop-shadow-xl flex flex-col gap-2 items-center justify-center">
-                  <Typography className="text-2xl font-semibold text-center">
-                    Confirm Submission
-                  </Typography>
-                  <Typography className="text-center">
-                    Submit this information?
-                  </Typography>
-                  <ContentWrapper className="flex gap-3 items-center justify-center">
-                    <ButtonComponent 
-                      color="success"
-                      variant="contained"
-                      className="bg-green-500"
-                      disableFocusRipple
-                      disableRipple
-                      disableTouchRipple
-                      onClick={handleSubmit}
-                    >
-                      OK
-                    </ButtonComponent>
-                    <ButtonComponent
-                      color="error"
-                      variant="contained"
-                      className="bg-red-500"
-                      disableFocusRipple
-                      disableRipple
-                      disableTouchRipple
-                    >
-                      Cancel
-                    </ButtonComponent>
-                  </ContentWrapper>
+                <Typography className="text-2xl font-semibold text-center">
+                  {action === 'submit' ? 'Confirm Submission' : 'Cancel Profile Setup?'}
+                </Typography>
+                <Typography className="text-center">
+                  {action === 'submit' ? 'Are you sure you want to submit this information?' : 'Cancelling setup will sign you out, proceed?'}
+                </Typography>
+                <ContentWrapper className="flex gap-3 items-center justify-center">
+                  <ButtonComponent 
+                    color="success"
+                    variant="contained"
+                    className="bg-green-500"
+                    disableFocusRipple
+                    disableRipple
+                    disableTouchRipple
+                    onClick={action === 'submit' ? handleSubmit : signOut}
+                  >
+                    {action === 'submit' ? 'OK' : 'Yes'}
+                  </ButtonComponent>
+                  <ButtonComponent
+                    color="error"
+                    variant="contained"
+                    className="bg-red-500"
+                    disableFocusRipple
+                    disableRipple
+                    disableTouchRipple
+                  >
+                    {action === 'submit' ? 'Cancel' : 'No'}
+                  </ButtonComponent>
+                </ContentWrapper>
               </ContentWrapper>
             </ThemeProvider>
           </ContentWrapper>
@@ -239,11 +281,11 @@ const SetUpProfilePage:React.FC<SetUpProfileProps> = ({name, userEmail}) => {
                       fullWidth={true}
                       onChange={handleNameChange}
                       helperText={' '}
-                      value={fullName}
+                      value={name}
                       name={`firstName`} 
                     />
                   <TextField
-                    className="font-bold w-full pb-6 self-center rounded-lg"
+                    className="font-bold w-full mb-6 self-center rounded-lg"
                     variant='standard'
                     size='medium'
                     sx={{borderRadius: '8px'}}
@@ -252,6 +294,51 @@ const SetUpProfilePage:React.FC<SetUpProfileProps> = ({name, userEmail}) => {
                     name={`email`} 
                     disabled
                   />
+                  <FormControl fullWidth>
+                  <InputLabel id="lgutype-label" className="-ml-3">LGU Type * </InputLabel>
+                    <Select
+                      className="capitalize mb-6"
+                      labelId="lgutype-label"
+                      id="lgutype"
+                      label="LGU Type *"
+                      value={subtype}
+                      variant="standard"
+                      onChange={handleSubtypeChange}
+                    >
+                      {subtypes.map((item: any, index: number) => (
+                        <MenuItem key={index} value={item} className='capitalize'>
+                          {item}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl fullWidth>
+                  <InputLabel id="lgutype-label" className="-ml-3 capitalize">{subtype === '' ? 'LGU *' : subtype + ' *'}</InputLabel>
+                    <Select
+                      className="capitalize mb-6 relative"
+                      labelId="lgutype-label"
+                      id="lgutype"
+                      label={subtype === '' ? 'LGU *' : subtype + ' *'}
+                      value={lgu}
+                      disabled={subtype === ''}
+                      variant="standard"
+                      onChange={handleLguChange}
+                      MenuProps={{
+                        PaperProps: {
+                          sx: {
+                            height: 'auto',
+                            maxHeight: '200px'
+                          }
+                        } 
+                      }}
+                    >
+                      {lguList?.map((item: any, index: number) => (
+                        <MenuItem key={index} value={item} className='capitalize relative'>
+                          {item.title}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                   <TextField
                     className="font-bold w-full self-center rounded-lg"
                     variant='standard'
@@ -278,7 +365,15 @@ const SetUpProfilePage:React.FC<SetUpProfileProps> = ({name, userEmail}) => {
                     value={mobileNum}
                     name={`mobilenum`} 
                   />
-                  <ContentWrapper className="flex items-center justify-end">
+                  <ContentWrapper className="flex items-center justify-between">
+                    <Button
+                      variant="text"
+                      fullWidth={false}
+                      onClick={() => handleModalOpen('cancel')}
+                      className={`mt-4 w-fit py-3 tracking-widest text-lg rounded-md text-gray-500 self-end `}
+                    >
+                      Cancel
+                    </Button>
                     <Button
                       type="submit"
                       variant="contained"

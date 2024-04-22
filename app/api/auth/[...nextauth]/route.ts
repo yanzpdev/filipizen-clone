@@ -49,7 +49,9 @@ const authOptions = {
                 email,
                 address: '',
                 mobileNum: '',
-                lgu: '',
+                subtype: '',
+                lguString: '',
+                lguID: '',
                 isFirstTimeSigningIn: true
               }),
             });

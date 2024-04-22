@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Footer from "./components/layout/Footer";
-import { Roboto } from "next/font/google";
+import { Raleway, Roboto } from "next/font/google";
 import HomeComponent from "./components/layout/HomeComponent";
 import { getMembersData } from "./utils/helpers";
 import { connectMongoDB } from "@/lib/mongodb";
@@ -17,6 +17,11 @@ const roboto = Roboto({
   subsets: ["latin"]  
 });
 
+const raleway = Raleway({ 
+  weight: ["400", '500', '700'], 
+  subsets: ["latin"]  
+});
+
 export default async function Home() {
   const memberData = await getMembersData();
   await connectMongoDB();
@@ -29,7 +34,7 @@ export default async function Home() {
   console.log(isFirstTimeSigningIn);
   
   return (
-    <main className={`relative flex min-h-screen flex-col items-center justify-between ${roboto.className}`}>
+    <main className={`relative flex min-h-screen flex-col items-center justify-between ${raleway.className}`}>
       <HomeComponent memberData={memberData} userEmail={email} name={name} isFirstTimeSigningIn={isFirstTimeSigningIn} />
       <div className="absolute bottom-0 w-full">
         <Footer />
