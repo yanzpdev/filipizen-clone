@@ -19,7 +19,8 @@ const roboto = Roboto({
 
 const raleway = Raleway({ 
   weight: ["400", '500', '700'], 
-  subsets: ["latin"]  
+  subsets: ["latin"],  
+  display: 'swap'
 });
 
 export default async function Home() {

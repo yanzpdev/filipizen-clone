@@ -179,7 +179,6 @@ const SetUpProfilePage:React.FC<SetUpProfileProps> = ({memberData, fullName, use
     setIsModalOpen(true);
   }
 
-
   useEffect(() => {
     const handleWindowClose = async (event: BeforeUnloadEvent) => {
       const confirmationMessage = 'Are you sure you want to leave this site? Changes you made may not be saved.';

@@ -10,7 +10,8 @@ import Link from 'next/link';
 
 const roboto = Roboto({ 
   weight: ["400", '500', '700'], 
-  subsets: ["latin"]  
+  subsets: ["latin"],
+  display: 'swap'  
 });
 
 export let fontTheme = createTheme({
@@ -46,7 +47,6 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
   const {data: session, status} = useSession();
   const str = data.includeservices;
   const services = str.split("|");
-  
   const serviceMapping: ServiceMapping = {
     "po.*": "Payment Order",
     "bpls.*": "Business",
@@ -62,8 +62,10 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
         width={40}
         title={data.title}
         extraStyle='text-white'
-        page=''
+        page='partner'
         userName={session?.user?.name}
+        data={data}
+        headerSelect='services'
       />
       <ThemeProvider theme={fontTheme}>
         <ContentWrapper className="mb-[2rem] h-[79.7%]">

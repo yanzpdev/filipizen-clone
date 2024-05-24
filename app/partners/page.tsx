@@ -54,7 +54,7 @@ const partners = async() => {
         <div className='w-full absolute bottom-0'>
           <Footer />
         </div>
-        
+       
       </ContentWrapper>
     )
   }

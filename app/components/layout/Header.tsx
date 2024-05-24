@@ -10,6 +10,25 @@ import { useRouter } from 'next/navigation';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import DropDownMenu from './DropDownMenu';
 
+type DataProps = {
+  id: number;
+  title: string;
+  subtype: string;
+  state: string;
+  email: string;
+  name: string;
+  includeservices: string;
+  excludeservices: string;
+  phoneno: string;
+  group: {
+    name: string;
+    objid: string;
+    title: string;
+  } 
+  channelid: string;
+  isonline: string;
+}
+
 interface HeaderProps {
   navbarStyles: string
   src: string
@@ -19,14 +38,16 @@ interface HeaderProps {
   extraStyle?: string;
   userName?: string | any;
   page?: string;
+  data?: DataProps;
+  headerSelect?: string;
 }
 
-const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, width, title, userName, page}) => {
+const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, width, title, userName, page, data, headerSelect}) => {
   const {data: session, status} = useSession();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [fullName, setFullName] = useState<string | undefined >(userName);
-
+  
   const handleClick = () => {
     setIsOpen(!isOpen);
   }
@@ -57,17 +78,26 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
 
   return (
     <ContentWrapper className={navbarStyles}>
-      <Link href='/' className='flex items-center justify-center'>
-        <ImageComponent 
-          src={src}
-          alt='logo'
-          width={width || 24}
-          height={height || 24}
-          priority
-        />
-        <p className={`${page === 'profile2' ? 'text-[#DDDDDD] text-[21.3333px] ml-[5px]' : ' text-white text-[20px] ml-[10px] pt-[2px]'} font-bold`}>{title}</p>
-      </Link>
-      {status === 'authenticated' ?
+      <ContentWrapper className='flex pt-[2px] gap-5 items-center justify-center text-white'>
+        <Link href='/' className='flex items-center justify-center text-center'>
+          <ImageComponent   
+            src={src}
+            alt='logo'
+            width={width || 24}
+            height={height || 24}
+            priority
+          />
+          <p className={`${page === 'profile2' ? 'text-[#DDDDDD] text-[21.3333px] ml-[5px]' : ' text-white text-[20px] ml-[10px] pt-[0px]'} font-bold`}>{title}</p>
+        </Link>
+        {page === 'partner' &&
+          <ContentWrapper className='ml-10 text-white flex items-center justify-center gap-10 text-[20px] font-bold'>
+            <Link href={`/partners/${data?.group?.name}_${data?.name}/services`} className={`px-3 py-1 rounded-md duration-300 ${headerSelect === 'services' ? 'bg-white text-[#2c3e50] hover:bg-slate-400' : 'hover:bg-white hover:text-[#2c3e50]'} `}>Services</Link>
+            <Link href={`/partners/${data?.group?.name}_${data?.name}/data`} className={`px-3 py-1 rounded-md duration-300 ${headerSelect === 'data' ? 'bg-white text-[#2c3e50] hover:bg-slate-400' : 'hover:bg-white hover:text-[#2c3e50]'}`}>Data</Link>
+          </ContentWrapper>
+        }
+      </ContentWrapper>
+
+      { status === 'authenticated' ?
         <ContentWrapper className={`${extraStyle} relative text-slate-700 flex justify-center items-center gap-1`}>
           <Typography variant='body1' className='text-xs font-bold'>
             {fullName}
@@ -96,9 +126,8 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
               <DropDownMenu page={page} userName={userName} image={session?.user?.image} email={session?.user?.email} />
             </div>
           }
-
         </ContentWrapper>
-      :status === 'loading' ?
+      : status === 'loading' ?
         <ContentWrapper className={`${extraStyle} leading-none relative text-slate-700 `}>
             {page !== 'profile2' &&
               <ContentWrapper className='flex justify-center items-center gap-1'>
@@ -117,7 +146,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
           <ButtonComponent 
             variant='text' 
             onClick={handleSignInClick}
-            className={`normal-case text-slate-700 font-semibold hover:bg-transparent hover:underline`}
+            className={`normal-case ${page === 'partner' ? 'text-white' : ' text-slate-700'} font-semibold hover:bg-transparent hover:underline`}
             disableFocusRipple
             disableElevation
             disableRipple
