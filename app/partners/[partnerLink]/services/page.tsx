@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import PartnerLinkLayout from './PartnerLinkLayout';
-import { getMembersData } from '@/app/utils/helpers';
+import { getMembersData, getServices } from '@/app/utils/helpers';
 import { connectMongoDB } from '@/lib/mongodb';
 import { getServerSession } from 'next-auth';
 import User from '@/models/user';
@@ -80,6 +80,8 @@ const page:React.FC<PageProps> = async({params}) => {
     isonline
   }));
 
+  const services = await getServices(clusterId[0], clusterId[1]);
+
   partnerData.map((partner) => {
     acceptedUrlParams.push(partner.group.name + "_" + partner.name);
   })
@@ -90,7 +92,7 @@ const page:React.FC<PageProps> = async({params}) => {
         {partner.map((item) => (
           <div key={item.id}>
             {item.name === clusterId[1] &&
-              <PartnerLinkLayout data={item} />
+              <PartnerLinkLayout data={item} serviceList={services} />
             } 
           </div>
         ))}

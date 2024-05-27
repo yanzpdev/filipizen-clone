@@ -42,77 +42,80 @@ interface PartnerProps {
   channelid: string;
   isonline: string;
 }
-  
-const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
-  const {data: session, status} = useSession();
-  const str = data.includeservices;
-  const services = str.split("|");
-  const serviceMapping: ServiceMapping = {
-    "po.*": "Payment Order",
-    "bpls.*": "Business",
-    "rptis.*": "Real Property", 
-  };
 
+interface ServiceProps {
+  seqno: number;
+  title: string;
+  objid: string;
+  services: { name: string; title: string }[];
+}
+
+interface ServiceListProps {
+  serviceList: ServiceProps[];
+}
+  
+const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceListProps[] }> = ({ data, serviceList }) => {
+  const {data: session} = useSession();
   return (
-    <ContentWrapper className={`min-h-[100vh] h-screen max-h-[100%] relative`}>
-      <Header 
-        navbarStyles="w-screen px-[50px] pb-[5px] pt-[3px] bg-[#2c3e50] h-[50px] flex justify-between items-center" 
-        src={`https://www.filipizen.com/resources/${data.id}.png`}
-        height={40}
-        width={40}
-        title={data.title}
-        extraStyle='text-white'
-        page='partner'
-        userName={session?.user?.name}
-        data={data}
-        headerSelect='services'
-      />
-      <ThemeProvider theme={fontTheme}>
-        <ContentWrapper className="mb-[2rem] h-[79.7%]">
-          <ContentWrapper className="mx-[80px] px-[32px]">
-            <h1 className="mt-[32px] mb-[36px] text-[28px] font-bold leading-none">Select Transaction</h1>
-            <ContentWrapper className="container">
-              {services.map((service: any) => (
-                <ContentWrapper key={service}>
-                  <h2 className="mt-[20px] mb-[5px] leading-none text-[#27ae60] text-[19.6px] font-bold">{serviceMapping[service]}</h2>
-                  {service === 'bpls.*' ?
-                    <ContentWrapper className='flex flex-col leading-relaxed w-fit text-[15.2px] text-[#3f51b5]'>
-                      <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/billing`} target='_blank' className="hover:underline">Business Online Billing and Payment</Link>                  
-                      <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/newbusiness`} target='_blank' className="hover:underline">New Business Application</Link>                                       
-                      <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/renewbusiness`} target='_blank' className="hover:underline">Renew Business Application</Link>                  
-                    </ContentWrapper>
-                   : 
-                  service === 'rptis.*' ?
-                    <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/billing`} target='_blank' className="text-[15.2px] text-[#3f51b5] hover:underline">Realty Tax Online Billing and Payment</Link>                  
-                   :
-                  service === 'po.*' ? 
-                    <Link href={`http://localhost:3001/${data.group.name}_${data.name}/${service}/billing`} target='_blank' className="text-[15.2px] text-[#3f51b5] hover:underline">Online Payment Order</Link>                  
-                   :
-                    null
-                  }
-                </ContentWrapper>
-              ))}
+    <>
+      <ContentWrapper className={`min-h-[95.3vh] h-full relative`}>
+        <Header 
+          navbarStyles="w-full px-[50px] pb-[5px] pt-[3px] bg-[#2c3e50] h-[50px] flex justify-between items-center" 
+          src={`https://www.filipizen.com/resources/${data.id}.png`}
+          height={40}
+          width={40}
+          title={data.title}
+          extraStyle='text-white'
+          page='partner'
+          userName={session?.user?.name}
+          data={data}
+          headerSelect='services'
+        />
+        <ThemeProvider theme={fontTheme}>
+          <ContentWrapper className="mb-[2rem] min-h-[79.7%]">
+            <ContentWrapper className="mx-[80px] px-[32px]"> 
+              <h1 className="mt-[32px] mb-[16px] text-[28px] font-bold leading-none">Select Transaction</h1>
+              <ContentWrapper className="grid grid-cols-2 w-fit gap-x-5">
+                {serviceList.map((service: any, index: number) => (
+                  <ContentWrapper key={index}>
+                    <h2 className={`mt-[20px] mb-[5px] leading-none text-[#27ae60] text-[19.6px] font-bold order-[${index}]`}>{service.title}</h2>
+                    {service.services.map((subservice: any, index: number) => 
+                      <ContentWrapper 
+                        key={index}
+                        className='flex flex-col leading-relaxed w-fit text-[15.2px] text-[#3f51b5]'
+                      >
+                        <Link 
+                          href={`services/${service.objid}/${subservice.name}`} 
+                          target='_blank' 
+                          className="hover:underline"
+                        >
+                          {subservice.title}
+                        </Link>
+                      </ContentWrapper>
+                    )}
+                  </ContentWrapper>
+                ))}
+              </ContentWrapper>
+              <ContentWrapper className='h-[15px]'></ContentWrapper>
+              <hr className="my-[8px] border-slate-500"/>
+              <ButtonComponent
+                variant='contained'
+                className={`text-[14px] font-[500] bg-[#f5f5f5] text-[#731cef] hover:bg-[#eeeaf4] rounded-md tracking-widest`}
+                style={{
+                  boxShadow: 'none',
+                  border: '1px solid #d7d7d7',
+                }} 
+              >
+                Search Payments
+              </ButtonComponent>
+              <ContentWrapper className='h-[10px]' />
             </ContentWrapper>
-            <ContentWrapper className='h-[15px]'></ContentWrapper>
-            <hr className="my-[8px] border-slate-500"/>
-            <ButtonComponent
-              variant='contained'
-              className={`text-[14px] font-[500] bg-[#f5f5f5] text-[#731cef] hover:bg-[#eeeaf4] rounded-md tracking-widest`}
-              style={{
-                boxShadow: 'none',
-                border: '1px solid #d7d7d7',
-              }} 
-            >
-              Search Payments
-            </ButtonComponent>
-            <ContentWrapper className='h-[10px]'></ContentWrapper>
           </ContentWrapper>
-        </ContentWrapper>
-      </ThemeProvider>
-      <ContentWrapper className='w-full absolute bottom-0'>
-        <Footer />
+        </ThemeProvider>
       </ContentWrapper>
-    </ContentWrapper>
+      <Footer />
+    </>
+    
   )
 }
 
