@@ -151,23 +151,23 @@ export const flattenedData = async () => {
   const propertyClassifications = data['Property Classifications'];
   const reportDates = data['Report Dates'];
   const reportDataList = data['Report Data List'];
-
+  
   return reportDataList.map((report: any) => {
     // const propertyType = propertyTypes.find((type: any) => type.objid === report.propertyTypeId);
     // const propertyClass = propertyClassifications.find((cls: any) => cls.objid === report.propertyClassId);
     // const taxableType = taxableTypes.find((type: any) => type.objid === report.taxableTypeId);
     // const reportDate = reportDates.find((date: any) => date.objid === report.reportDateId);
-
-    return {
+    var data = {      
       'Property Type': report.propertytype.name,
       'Property Class': report.propertyclass.name,
       'Taxable Type': report.taxabletype.name,
-      // 'Report Date': `${reportDate?.year}-${reportDate?.month}`,
       'Quarter': 'QTR ' + report.reportdate.qtr,
       'Month': report.reportdate.monthname,
       'Year': report.reportdate.year,
       'Assessed Value': report.totalav,
       'Market Value': report.totalmv,
-    };
+      'Total Count': report.totalcount
+     }
+     return data;
   });
 }

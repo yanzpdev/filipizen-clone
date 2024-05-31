@@ -46,10 +46,12 @@ const page:React.FC<PageProps> = async({params}) => {
   const session = await getServerSession();
   const email = session?.user?.email;
   const user = await User.findOne({ email });
-
+  
   if (user && user.isFirstTimeSigningIn) {
     redirect('/');
   }
+
+  // console.log(data);
 
   const partner: Omit<Member, 'clusterid'>[] = partnerData
   .filter((item) => item.clusterid === clusterId[0])

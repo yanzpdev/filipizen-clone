@@ -12,13 +12,18 @@ const PIVOT_TABLE_CONFIG_KEY = 'pivotTableConfig';
 const PivotTable = ({data}: any) => {
   const [height, setHeight] = useState<number>();
   const [pivotRows, setPivotRows] = useState<any>([{name: 'Property Class', caption: 'Property Class'}, {name: 'Property Type', caption: 'Property Type'}]);
-  const [pivotCols, setPivotCols] = useState<any>([{name: 'Year', caption: 'Year'}, {name: 'Month', caption: 'Month'}]);
-  const [pivotValues, setPivotValues] = useState<any>([{name: 'Market Value', caption: 'Market Value'}, {name: 'Assessed Value', caption: 'Assessed Value'}]);
+  const [pivotCols, setPivotCols] = useState<any>([{name: 'Year', caption: 'Year'}]);
+  const [pivotValues, setPivotValues] = useState<any>([{name: 'Total Count', caption: 'Total Count'}, {name: 'Market Value', caption: 'Market Value'}]);
   const [pivotFilters, setPivotFilters] = useState<any>([]);
   const currentYear = new Date().getFullYear();
-  const yearsToShow = Array.from({length: 5}, (_, i) => (currentYear - i).toString());
+
+  const yearsToShow = Array.from({length: 3}, (_, i) => (currentYear - i).toString());
+  const gridSettings = {
+    allowSelection: true,
+  }
 
   const pivotdata = data;
+
   const dataSourceSettings = {
     dataSource: pivotdata,
     expandAll: false,
@@ -27,21 +32,21 @@ const PivotTable = ({data}: any) => {
     enableSorting: false,
     values: pivotValues,
     filters: pivotFilters,
+    gridSettings: gridSettings,
     filterSettings: [
       { name: 'Year', type: 'Include' as FilterType, items: yearsToShow }
     ],
-    // sortSettings: [{name: 'Year', mode: 'Ascending'}, {name: 'Month', mode: 'Descending'}],
+    sortSettings: [{name: 'Year', mode: 'Descending'}],
     formatSettings: [
       {name: 'Assessed Value', format: '#,##0.00'}, 
       {name: 'Market Value', format: '#,##0.00'}
     ],
-    calculatedFieldSettings: [{
-      name: 'Total',
-      formula: 'assessedValue + marketValue'
-    }]
+    // calculatedFieldSettings: [{
+    //   name: 'Total Count',
+    //   formula: 'Assessed Value + Market Value'
+    // }]
   };
 
-  console.log(pivotdata);
   useEffect(() => {
     if (typeof window !== "undefined") {
       var height = window.innerHeight - 50;
@@ -75,16 +80,19 @@ const PivotTable = ({data}: any) => {
   };
 
   return (
-    <PivotViewComponent
-      height={`${height}px`}
-      width="100%"
-      dataSourceSettings={dataSourceSettings}
-      showFieldList={true}
-      allowCalculatedField={true}
-      fieldListRefreshed={handleFieldListChange}
-    >
-      <Inject services={[FieldList, CalculatedField]} />
-    </PivotViewComponent>
+    <>
+      <PivotViewComponent
+        height={`${height}px`}
+        width="100%"
+        dataSourceSettings={dataSourceSettings}
+        showFieldList={true}
+        allowCalculatedField={true}
+        fieldListRefreshed={handleFieldListChange}
+      >
+        <Inject services={[FieldList, CalculatedField]} />
+      </PivotViewComponent>
+    </>
+
   )
 }
 
