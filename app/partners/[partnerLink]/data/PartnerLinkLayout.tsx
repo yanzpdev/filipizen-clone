@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import Footer from '@/app/components/layout/Footer';
 import Header from '@/app/components/layout/Header';
 import ButtonComponent from '@/app/components/ui/ButtonComponent';
@@ -7,9 +8,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useSession } from 'next-auth/react';
 import { Roboto } from 'next/font/google';
 import { useState, useEffect } from 'react';
-import { Chart } from "react-google-charts";
-import PivotTable from './PivotTable';
-
+import Link from 'next/link';
 
 const roboto = Roboto({ 
   weight: ["400", '500', '700'], 
@@ -47,14 +46,41 @@ interface PartnerProps {
 }
 
 const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
+  const {data: session, status} = useSession();
+  const [display, setDisplay] = useState('reports');
+  const [chartType, setChartType] = useState('BarChart');
+  const [dataType, setDataType] = useState('Amount');
+  const [dataTypeInfo, setDataTypeInfo] = useState([]);
+
   const chartdata = [
-    ["City", "2010 Population", "2000 Population"],
-    ["New York City, NY", 8175000, 8008000],
-    ["Los Angeles, CA", 3792000, 3694000],
-    ["Chicago, IL", 2695000, 2896000],
-    ["Houston, TX", 2099000, 1953000],
-    ["Philadelphia, PA", 1526000, 1517000],
+    ["City", dataType],
+    ["GCash", 8175000, 8008000],
+    ["Maya", 3792000, 3694000],
+    ["LBP", 2695000, 2896000],
   ];
+
+  const items = [
+    {
+      name: 'Datasets', 
+      menu: 
+      [
+        {name: 'Real Property'},
+        {name: 'Business Data'}
+      ]
+    },
+    {
+      name: 'Reports', 
+      menu: 
+      [
+        {name: 'Quarterly Report of Real Property Assessment (QRRPA)'},
+        {name: 'Assessment Roll'},
+        {name: 'Statement of Receipt Sources'},
+        {name: 'City Municipality Competitive Index (CMCI)'},
+        {name: 'PSIC Report'},
+        {name: 'LIFT Report'}
+      ]
+    }
+  ]
   
   const options = {
     title: "Population of Largest U.S. Cities",
@@ -68,11 +94,6 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
     },
   };
   
-  const {data: session, status} = useSession();
-  const [display, setDisplay] = useState('reports');
-
-
-
   return (
     <ContentWrapper className={`min-h-[100vh] max-h-[100%] relative w-screen`}>
       <Header 
@@ -87,61 +108,39 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
         data={data}
         headerSelect='data'
       />
-      <ContentWrapper className='h-full w-screen'>
-        <ContentWrapper className='flex items-center justify-start gap-7 px-[50px] my-7'>
-          <ButtonComponent
-            variant='text' 
-            className={`normal-case text-xl font-semibold hover:bg-transparent hover:underline underline-offset-4 text-slate-800 ${display === 'reports' && 'underline'}`}
-            onClick={() => setDisplay('reports')}
-            disableFocusRipple
-            disableElevation
-            disableRipple
-            disableTouchRipple
-            sx={{
-              padding: '0',
-            }}
-          >
-            Reports
-          </ButtonComponent>
-          <ButtonComponent 
-            variant='text' 
-            className={`normal-case text-xl font-semibold hover:bg-transparent hover:underline underline-offset-4 text-slate-800 ${display === 'charts' && 'underline'}`}
-            disableFocusRipple
-            onClick={() => setDisplay('charts')}
-            disableElevation
-            disableRipple
-            disableTouchRipple
-            sx={{
-              padding: '0',
-            }}
-          >
-            Charts
-          </ButtonComponent>
+      <ThemeProvider theme={fontTheme}>
+        <ContentWrapper className="mb-[2rem] min-h-[79.7%]">
+          <ContentWrapper className="mx-[80px] px-[32px] h-full">
+          <h1 className="mt-[32px] mb-[16px] text-[28px] font-bold leading-none">Datasets</h1>
+          <ContentWrapper className="flex flex-col w-fit gap-x-5 h-full">
+            {items.map((item, index) => (
+                <ContentWrapper 
+                  key={index} 
+                  className={`col-span-1 ${
+                    index % 2 === 0 ? 'row-start-1' : 'row-start-2'
+                  } break-inside-avoid`}
+                >
+                  <h2 className={`pt-[20px] pb-[5px] leading-none text-[#27ae60] text-[19.6px] font-bold `}>{item.name}</h2>
+                    <ContentWrapper className='flex flex-col leading-relaxed w-fit text-[15.2px] text-[#3f51b5]'>
+                      {item.menu.map((menuItem, index) => 
+                      <Link 
+                        key={index}
+                        href={`data/rptdata`} 
+                        className="hover:underline"
+                      >
+                        {menuItem.name}
+                      </Link>
+                      )}
+                    </ContentWrapper>
+                </ContentWrapper>
+            ))} 
+            </ContentWrapper>
+            <ContentWrapper className='h-[15px]'></ContentWrapper>
+            <hr className="my-[8px] border-slate-500"/>
+            <ContentWrapper className='h-[10px]' />
+          </ContentWrapper>
         </ContentWrapper>
-        <div className='w-screen'>
-          {display === 'reports' && (
-            <div>
-              <PivotTable />
-            </div>
-          )}
-          {display === 'charts' && (
-            <div className='grid grid-cols-10 '>
-              <div className='flex flex-col gap-2 col-span-2 bg-red-500'>
-
-              </div>
-              <div className='col-span-8'>
-                <Chart
-                  chartType="BarChart"
-                  width="99.9%"
-                  height="400px"
-                  data={chartdata}
-                  options={options}
-                />
-              </div>   
-            </div>
-          )}
-        </div>   
-      </ContentWrapper>
+      </ThemeProvider>
       <ContentWrapper className='w-full absolute bottom-0'>
         <Footer />
       </ContentWrapper>

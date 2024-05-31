@@ -1,7 +1,7 @@
 const getMembersData = async () => {
   try {
                                // http://192.168.2.20:90/cloud-server/json/partner/CloudPartnerService.getList for local server
-    const response = await fetch('https://filipizen.com/cloud-server/json/partner/CloudPartnerService.getList');
+    const response = await fetch('http://107.21.113.74:90/cloud-server/json/partner/CloudPartnerService.getList');
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }
@@ -19,7 +19,7 @@ export { getMembersData };
 
 export const getServices = async (clusterid: string, name: string) => {
   try {
-    const response = await fetch('https://filipizen.com/cloud-server/json/partner/CloudPartnerMenuService.getList?groupname=' + clusterid + '&name=' + name);
+    const response = await fetch('http://107.21.113.74:90/cloud-server/json/partner/CloudPartnerMenuService.getList?groupname=' + clusterid + '&name=' + name);
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }

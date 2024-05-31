@@ -6,6 +6,7 @@ import { getServerSession } from 'next-auth';
 import User from '@/models/user';
 import { redirect } from 'next/navigation';
 import Custom404 from '@/app/components/layout/Custom404';
+import { flattenedData } from './data';
 
 export const metadata: Metadata = {
   title: 'Filipizen - Partners',
@@ -40,8 +41,8 @@ const page:React.FC<PageProps> = async({params}) => {
   const partnerData: Member[] = await getMembersData();
   const clusterId = params.partnerLink.replace(/[^\w|]/g, "").split("_")
   const acceptedUrlParams: string[] = [];
-
   await connectMongoDB();
+  const data = await flattenedData();
   const session = await getServerSession();
   const email = session?.user?.email;
   const user = await User.findOne({ email });
@@ -81,17 +82,17 @@ const page:React.FC<PageProps> = async({params}) => {
   }));
 
   partnerData.map((partner) => {
-    acceptedUrlParams.push(partner.group.name + "_" + partner.name);
+    acceptedUrlParams.push(partner.group.name + "_" + partner.name + '/data/rptdata');
   })
 
-  
-  if (acceptedUrlParams.includes(params.partnerLink)) {
+
+  if (acceptedUrlParams.includes(params.partnerLink+'/data/rptdata')) {
     return (
       <div className='h-screen'>
         {partner.map((item) => (
           <div key={item.id}>
             {item.name === clusterId[1] &&
-              <PartnerLinkLayout data={item} />
+              <PartnerLinkLayout data={item} pivotdata={data} />
             } 
           </div>
         ))}

@@ -73,7 +73,7 @@ const PartnerList = ({partnerData}: {partnerData: any}) => {
   };
 
   return (
-    <div className={`2xl:columns-5 xl:columns-5 lg:columns-5 md:columns-3 sm:columns-2 xs:columns-2 xxs:columns-1 xxxs:columns-1 mb-[16px] h-full`}>
+    <div className={`2xl:columns-5 lg:columns-5 md:columns-3 xs:columns-2 columns-1 mb-[16px] h-full`}>
       <ThemeProvider theme={fontTheme}>
         {Object.keys(groupedData).map((clusterid) => (
           <div key={clusterid} style={{ breakInside: "avoid-column" }} className="w-[250px] h-fit">
