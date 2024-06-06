@@ -17,29 +17,34 @@ const Reports = ({prevLink, pivotdata}: any) => {
   const [page, setPage] = useState<number>(1);
   const router = useRouter();
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>(['Report Dates']);
+  const currentYear = new Date().getFullYear();
+  const yearsToShow = Array.from({length: 5}, (_, i) => (currentYear - i).toString());
 
-  const handleCheckboxChange = (dimension: string) => {
-    setSelectedDimensions(prevSelected => {
-      if (prevSelected.includes(dimension)) {
-        return prevSelected.filter(item => item !== dimension);
-      } 
-      
-      else {
-        return [...prevSelected, dimension];
-      }
-    });
-  };
+  const filteredData = pivotdata.filter((item: any) => {
+    return item.Year !== undefined && yearsToShow.includes(item.Year.toString());
+  });
 
+  const totalMarketValueByYear: { [key: string]: any } = filteredData.reduce((acc: any, item: any) => {
+    if (item.Year !== undefined && item['Market Value'] !== undefined && item['Assessed Value'] !== undefined) {
+        const year = item.Year.toString();
+        if (!acc[year]) {
+            acc[year] = { MarketValue: 0, AssessedValue: 0 };
+        }
+        acc[year].MarketValue += item['Market Value'];
+        acc[year].AssessedValue += item['Assessed Value'];
+    }
+    return acc;
+  }, {} as { [key: string]: any });
+
+  const result = Object.entries(totalMarketValueByYear).map(([year, totalValues]) => {
+    return [year, totalValues.MarketValue, totalValues.AssessedValue];
+  });
+  const transformedResult = result.map((item) => [item[0], item[1], item[2]]);
 
   const chartdata = [
     ["Year", "Market Value", "Assessed Value"],
-    ["2024", 8175000, 8008000],
-    ["2023", 3792000, 3694000],
-    ["2022", 2695000, 2896000],
-    ["2021", 2099000, 1953000],
-    ["2020", 1526000, 1517000],
+    ...transformedResult.reverse()
   ];
-
   
   const options = {
     title: "Tax Collected from the Last 5 Years",
@@ -49,9 +54,22 @@ const Reports = ({prevLink, pivotdata}: any) => {
       minValue: 0,
     },
     vAxis: {
-      title: "City",
+      title: "Year",
     },
   };
+
+  // const handleCheckboxChange = (dimension: string) => {
+  //   setSelectedDimensions(prevSelected => {
+  //     if (prevSelected.includes(dimension)) {
+  //       return prevSelected.filter(item => item !== dimension);
+  //     } 
+      
+  //     else {
+  //       return [...prevSelected, dimension];
+  //     }
+  //   });
+  // };
+
 
   return (
     <ContentWrapper className='h-full w-full py-5'>

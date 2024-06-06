@@ -9,7 +9,7 @@ import Custom404 from '@/app/components/layout/Custom404';
 import { flattenedData } from './data';
 
 export const metadata: Metadata = {
-  title: 'Filipizen - Partners',
+  title: 'Filipizen - Partners - Data',
   description: 'Filipizen Website',
 }
 
@@ -50,8 +50,6 @@ const page:React.FC<PageProps> = async({params}) => {
   if (user && user.isFirstTimeSigningIn) {
     redirect('/');
   }
-
-  // console.log(data);
 
   const partner: Omit<Member, 'clusterid'>[] = partnerData
   .filter((item) => item.clusterid === clusterId[0])

@@ -34,9 +34,12 @@ const PivotTable = ({data}: any) => {
     filters: pivotFilters,
     gridSettings: gridSettings,
     filterSettings: [
-      { name: 'Year', type: 'Include' as FilterType, items: yearsToShow }
+      { name: 'Year', type: 'Include' as FilterType, items: yearsToShow },
     ],
-    sortSettings: [{name: 'Year', mode: 'Descending'}],
+    // sortSettings: [
+    //   {name: 'Year', mode: 'Ascending'},
+    // ],
+    
     formatSettings: [
       {name: 'Assessed Value', format: '#,##0.00'}, 
       {name: 'Market Value', format: '#,##0.00'}

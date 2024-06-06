@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation';
 import Custom404 from '@/app/components/layout/Custom404';
 
 export const metadata: Metadata = {
-  title: 'Filipizen - Partners',
+  title: 'Filipizen - Partners - Service',
   description: 'Filipizen Website',
 }
 
