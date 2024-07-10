@@ -79,7 +79,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
   return (
     <ContentWrapper className={navbarStyles}>
       <ContentWrapper className='flex pt-[2px] gap-5 items-center justify-center text-white'>
-        <Link href='/' className='flex items-center justify-center text-center'>
+        <Link href={`/partners`} className='flex items-center justify-center text-center'>
           <ImageComponent   
             src={src}
             alt='logo'
@@ -91,7 +91,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
         </Link>
         {page === 'partner' &&
           <ContentWrapper className='ml-10 text-[#f5f5f5] flex items-center relative justify-center gap-10 text-[20px] font-bold'>
-            <Link href={`/partners/${data?.group?.name}_${data?.name}/services`} className={`px-3 py-1 rounded-md duration-200 relative top-[9px] h-14 ${headerSelect === 'services' ? 'bg-[#f5f5f5] text-[#2c3e50]' : 'hover:bg-[#f5f5f5] hover:text-[#2c3e50]'} `}>Services</Link>
+            <Link href={`/partners/${data?.group?.name}_${data?.name}`} className={`px-3 py-1 rounded-md duration-200 relative top-[9px] h-14 ${headerSelect === 'services' ? 'bg-[#f5f5f5] text-[#2c3e50]' : 'hover:bg-[#f5f5f5] hover:text-[#2c3e50]'} `}>Services</Link>
             <Link href={`/partners/${data?.group?.name}_${data?.name}/data`} className={`px-3 py-1 rounded-md duration-200 relative top-[9px] h-14 ${headerSelect === 'data' ? 'bg-[#f5f5f5] text-[#2c3e50]' : 'hover:bg-[#f5f5f5] hover:text-[#2c3e50]'}`}>Data</Link>
           </ContentWrapper>
         }

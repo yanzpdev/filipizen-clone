@@ -85,7 +85,10 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, pivotdata: any }> = ({ d
       <ContentWrapper className="mb-[2rem] min-h-[79.7%]">
         <ContentWrapper className="mx-[80px] px-[32px]"> 
           <ContentWrapper className="w-full h-full">
-            <Reports prevLink={'/partners/' + data.group.name + '_' + data.name + '/data'} pivotdata={pivotdata}/>
+            <ContentWrapper className='mt-16'>
+              No data available.
+            </ContentWrapper>
+            {/* <Reports prevLink={'/partners/' + data.group.name + '_' + data.name + '/data'} pivotdata={pivotdata}/> */}
           </ContentWrapper>
           
           <ContentWrapper className='h-[10px]' />

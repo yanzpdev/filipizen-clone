@@ -85,7 +85,7 @@ const PartnerList = ({partnerData}: {partnerData: any}) => {
               )}
               {groupedData[clusterid].map((item: any) => (
                 <li className="text-[#3f51b5] text-[15.2px] leading-6 w-fit" key={item.id}>
-                  <Link href={`/partners/${item.group.name}_${item.name}/services`} className="hover:underline" target="_blank">
+                  <Link href={`/partners/${item.group.name}_${item.name}`} className="hover:underline" target="_blank">
                     {item.title}
                   </Link>
                 </li>
