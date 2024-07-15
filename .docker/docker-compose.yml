@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  
+   filipizen-main:
+      container_name: filipizen-main
+      image: ramesesinc/filipizen-main:1.01
+      logging:
+         driver: "json-file"
+         options:
+            max-file: "5"
+            max-size: 10m
+      ports:
+         - "9090:3000"
+      volumes:
+         - ../_custom/.emptydir:/app/app
