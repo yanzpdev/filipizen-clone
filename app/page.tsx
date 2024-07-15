@@ -2,10 +2,7 @@ import { Metadata } from "next";
 import Footer from "./components/layout/Footer";
 import { Raleway, Roboto } from "next/font/google";
 import HomeComponent from "./components/layout/HomeComponent";
-import { getMembersData } from "./utils/helpers";
-import { connectMongoDB } from "@/lib/mongodb";
-import { getServerSession } from "next-auth";
-import User from "@/models/user";
+import { getMembersData } from "./utils/CloudPartnerService";
 
 export const metadata: Metadata = {
   title: "Welcome - Filipizen",
@@ -25,18 +22,10 @@ const raleway = Raleway({
 
 export default async function Home() {
   const memberData = await getMembersData();
-  await connectMongoDB();
-  const session = await getServerSession();
-  const email: any = session?.user?.email;
-  const name: any = session?.user?.name;
-  const user = await User.findOne({ email });
-  const isFirstTimeSigningIn = user?.isFirstTimeSigningIn
-
-  console.log(isFirstTimeSigningIn);
   
   return (
     <main className={`relative flex min-h-screen flex-col items-center justify-between ${raleway.className}`}>
-      <HomeComponent memberData={memberData} userEmail={email} name={name} isFirstTimeSigningIn={isFirstTimeSigningIn} />
+      <HomeComponent memberData={memberData} />
       <div className="absolute bottom-0 w-full">
         <Footer />
       </div>

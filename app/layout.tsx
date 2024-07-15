@@ -1,6 +1,5 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import SessionProvider from './components/SessionProvider'
 import { registerLicense } from '@syncfusion/ej2-base';
 
 const inter = Inter({ subsets: ["latin"], display: 'swap' });
@@ -13,9 +12,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <SessionProvider>
-        <body className={inter.className}>{children}</body>
-      </SessionProvider>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }

@@ -3,12 +3,8 @@ import Footer from '@/app/components/layout/Footer';
 import Header from '@/app/components/layout/Header';
 import ContentWrapper from '@/app/components/ui/ContentWrapper';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { useSession } from 'next-auth/react';
 import { Roboto } from 'next/font/google';
 import { useState, useEffect } from 'react';
-import ButtonComponent from '@/app/components/ui/ButtonComponent';
-import Reports from './Reports';
-// import { flattenedData } from './1data';
 
 const roboto = Roboto({ 
   weight: ["400", '500', '700'], 
@@ -45,7 +41,6 @@ interface PartnerProps {
 
 
 const PartnerLinkLayout: React.FC<{ data: PartnerProps, pivotdata: any }> = ({ data, pivotdata }) => {
-  const {data: session, status} = useSession();
   const [dataType, setDataType] = useState('Amount');
   const chartdata = [
     ["City", dataType],
@@ -53,8 +48,6 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, pivotdata: any }> = ({ d
     ["Maya", 3792000, 3694000],
     ["LBP", 2695000, 2896000],
   ];
-
-  // console.log(pivotdata);
   
   const options = {
     title: "Population of Largest U.S. Cities",
@@ -78,7 +71,6 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, pivotdata: any }> = ({ d
         title={data.title}
         extraStyle='text-white'
         page='partner'
-        userName={session?.user?.name}
         data={data}
         headerSelect='data'
       />
@@ -88,9 +80,7 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, pivotdata: any }> = ({ d
             <ContentWrapper className='mt-16'>
               No data available.
             </ContentWrapper>
-            {/* <Reports prevLink={'/partners/' + data.group.name + '_' + data.name + '/data'} pivotdata={pivotdata}/> */}
           </ContentWrapper>
-          
           <ContentWrapper className='h-[10px]' />
         </ContentWrapper>
       </ContentWrapper>

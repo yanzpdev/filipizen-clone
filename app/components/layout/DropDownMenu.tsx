@@ -4,7 +4,6 @@ import ButtonComponent from '../ui/ButtonComponent'
 import { Typography } from '@mui/material'
 import { signOut } from 'next-auth/react'
 import ImageComponent from '../ui/ImageComponent'
-import { useSession } from 'next-auth/react';
 
 interface dropDownProps {
   buttonRef?: Ref<HTMLDivElement>;
@@ -14,31 +13,19 @@ interface dropDownProps {
   page?: string;
 }
 const DropDownMenu:React.FC<dropDownProps> = ({buttonRef, userName, image, email, page}) => {
-  const {data: session, status} = useSession();
   return (
     <div 
       className='w-auto text-slate-700 p-6 border rounded-lg select-none bg-[#f5f5f5]'
       ref={buttonRef}
     >
-      {status === 'loading' ?
-        <ImageComponent 
-          src={'/assets/gearloading.gif'} 
-          alt={'User'}  
-          width={70}
-          height={70}            
-          className='rounded-full self-center m-auto'
-          priority
-        />
-      :
-        <ImageComponent 
-          src={image} 
-          alt={'User'}  
-          width={70}
-          height={70}            
-          className='rounded-full self-center m-auto'
-          priority
-        />
-      }
+      <ImageComponent 
+        src={image} 
+        alt={'User'}  
+        width={70}
+        height={70}            
+        className='rounded-full self-center m-auto'
+        priority
+      />
       <Typography
         className='text-lg font-semibold text-center'
       >
