@@ -1,0 +1,9 @@
+**/node_modules/
+**/dist
+.git
+.docker
+npm-debug.log
+.coverage
+.coverage.*
+.aws
+.next
