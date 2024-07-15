@@ -68,7 +68,7 @@ const SignInPage = () => {
               className="mt-6 text-sm font-medium leading-none flex flex-col gap-2 items-center justify-center"
               align='center'
             >
-              Use the Filipizen App to sign in via QR code
+              Use the Filipizen App to log in via QR code
               <ContentWrapper className="flex gap-4">
                 <ButtonComponent
                   variant="text"

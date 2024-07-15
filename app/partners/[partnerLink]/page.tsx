@@ -38,7 +38,7 @@ const page:React.FC<PageProps> = async({params}) => {
   const acceptedUrlParams: string[] = [];
 
   const partner: Omit<Member, 'clusterid'>[] = partnerData
-  .filter((item) => item.clusterid === clusterId[0])
+  .filter((item) => item.group.name === clusterId[0]) // change back to item.clusterid when error occurs
   .map(({ 
     id, 
     title, 
@@ -72,6 +72,9 @@ const page:React.FC<PageProps> = async({params}) => {
   partnerData.map((partner) => {
     acceptedUrlParams.push(partner.group.name + "_" + partner.name);
   })
+
+  // console.log(acceptedUrlParams.filter((item) => item === params.partnerLink));
+  // console.log(partner);
 
   if (acceptedUrlParams.includes(params.partnerLink)) {
     return (

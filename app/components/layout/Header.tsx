@@ -42,6 +42,8 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [fullName, setFullName] = useState<string | undefined >(userName);
+
+  const fallBackSrc = '/assets/'
   
   const handleClick = () => {
     setIsOpen(!isOpen);
@@ -74,7 +76,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
   return (
     <ContentWrapper className={navbarStyles}>
       <ContentWrapper className='flex pt-[2px] gap-5 items-center justify-center text-white'>
-        <Link href={data === undefined ? `` : `/partners/${data?.group?.name}_${data?.name}`} className='flex items-center justify-center text-center'>
+        <Link href={data === undefined ? `/` : `/partners/${data?.group?.name}_${data?.name}`} className='flex items-center justify-center text-center'>
           <ImageComponent   
             src={src}
             alt='logo'

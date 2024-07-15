@@ -65,6 +65,10 @@ const LandingPage:React.FC<LandingPageProps> = ({ memberData }) => {
     setDropdownVisible(false); 
   }
 
+  const redirectToLogin = () => {
+    router.push('/login');
+  }
+
   const redirectToPartner = () => {
     setIsClicked(true);
     router.push(partnerLink);
@@ -194,6 +198,7 @@ const LandingPage:React.FC<LandingPageProps> = ({ memberData }) => {
           className={`absolute top-[-40px] text-lg right-14 duration-300 font-medium text-slate-700 p-[8px] hover:bg-[#e6e9f3]`}
           style={{textTransform: 'none'}}
           sx={{backgroundColor: 'transparent'}}
+          onClick={redirectToLogin}
         >
           <span>Sign In</span>
         </Button>
