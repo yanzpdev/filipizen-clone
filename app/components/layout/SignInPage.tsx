@@ -48,23 +48,23 @@ const SignInPage = () => {
           </ContainerComponent>
         :
           <ContainerComponent
-            className={`h-screen w-screen relative text-slate-700`}
+            className={`h-full w-full relative text-slate-700`}
             classes={{}}
             fixed={false}
             disableGutters={true}
           >
             <ContentWrapper 
-              className={`pt-6 flex items-center justify-center gap-2`}
+              className={`mt-20 flex items-center justify-center gap-2`}
             >
-              <ThemeProvider theme={theme2}>
+              {/* <ThemeProvider theme={theme2}>
                 <Typography 
                   variant='h1' 
                   className="text-5xl leading-none font-extrabold"
                   align='center'
                 >
-                  Sign in to 
+                   Sign in to
                 </Typography>
-              </ThemeProvider>
+              </ThemeProvider> */}
               <ImageComponent 
                 src={`/assets/filipizen.svg`} 
                 alt={`Filipizen Logo`} 
@@ -75,13 +75,13 @@ const SignInPage = () => {
               />
             </ContentWrapper>
             <ThemeProvider theme={theme}>
-              <Typography 
+              {/* <Typography 
                 variant='h1' 
                 className="text-sm pt-6  font-medium leading-none"
                 align='center'
               >
                 with
-              </Typography>
+              </Typography> */}
 
               <ContentWrapper 
                 className={`pt-6 flex items-center justify-center`}
@@ -91,8 +91,8 @@ const SignInPage = () => {
                   <ImageComponent 
                     src={"/assets/qr-code.png"}
                     alt={"QR Code"}
-                    height={220}
-                    width={220}
+                    height={300}
+                    width={300}
                     className="mx-auto rounded-lg"
                     priority
                   />
@@ -134,7 +134,7 @@ const SignInPage = () => {
                     </ContentWrapper>
                   </Typography>
                   
-                  <ContentWrapper className="flex gap-2 mt-4 items-center justify-center mx-auto">
+                  {/* <ContentWrapper className="flex gap-2 mt-4 items-center justify-center mx-auto">
                     <hr style={{ width: '100px', border: '0.3px solid #334155' }} />
                     <Typography 
                       variant='h1' 
@@ -171,7 +171,7 @@ const SignInPage = () => {
                     >
                       <FaFacebook className='text-[#0866ff]' size={32}/>Continue with Facebook
                     </Button>
-                  </Typography>
+                  </Typography> */}
                   <ContentWrapper className="mt-3 mx-auto text-center items-center justify-center flex gap-2">
                     <ButtonComponent
                       variant="text"

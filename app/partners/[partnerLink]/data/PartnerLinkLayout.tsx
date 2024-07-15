@@ -22,9 +22,6 @@ export let fontTheme = createTheme({
   }
 })
 
-interface ServiceMapping {
-  [key: string]: string;
-}
 
 interface PartnerProps {
   id: number;
@@ -113,7 +110,8 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
           <ContentWrapper className="mx-[80px] px-[32px] h-full">
           <h1 className="mt-[32px] mb-[16px] text-[28px] font-bold leading-none">Datasets</h1>
           <ContentWrapper className="flex flex-col w-fit gap-x-5 h-full">
-            {items.map((item, index) => (
+          <h2 className={`pt-[20px] pb-[5px] leading-none text-slate-800 text-[19.6px] font-semibold`}>No data available yet.</h2>
+            {/* {items.map((item, index) => (
                 <ContentWrapper 
                   key={index} 
                   className={`col-span-1 ${
@@ -133,11 +131,11 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
                       )}
                     </ContentWrapper>
                 </ContentWrapper>
-            ))} 
+            ))}  */}
             </ContentWrapper>
             <ContentWrapper className='h-[15px]'></ContentWrapper>
-            <hr className="my-[8px] border-slate-500"/>
-            <ContentWrapper className='h-[10px]' />
+            {/* <hr className="my-[8px] border-slate-500"/>
+            <ContentWrapper className='h-[10px]' /> */}
           </ContentWrapper>
         </ContentWrapper>
       </ThemeProvider>
