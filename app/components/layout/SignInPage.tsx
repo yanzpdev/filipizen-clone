@@ -6,6 +6,7 @@ import { Button, FormControl, TextField, Typography } from "@mui/material";
 import { Raleway, Roboto } from 'next/font/google';
 import { createTheme, ThemeProvider } from "@mui/material/styles"; 
 import ButtonComponent from "../ui/ButtonComponent";
+import Link from "next/link";
 
 const raleway = Raleway({ 
   subsets: ['latin'], 
@@ -40,14 +41,16 @@ const SignInPage = () => {
       <ContentWrapper 
         className={`mt-20 flex items-center justify-center gap-2`}
       >
-        <ImageComponent 
-          src={`/assets/filipizen.svg`} 
-          alt={`Filipizen Logo`} 
-          width={250} 
-          height={250} 
-          className={``} 
-          priority
-        />
+        <Link href='/'>
+          <ImageComponent 
+            src={`/assets/filipizen.svg`} 
+            alt={`Filipizen Logo`} 
+            width={250} 
+            height={250} 
+            className={``} 
+            priority
+          />
+        </Link>
       </ContentWrapper>
       <ThemeProvider theme={theme}>
         <ContentWrapper 
