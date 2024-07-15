@@ -4,7 +4,6 @@ import Header from '@/app/components/layout/Header';
 import ButtonComponent from '@/app/components/ui/ButtonComponent';
 import ContentWrapper from '@/app/components/ui/ContentWrapper';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { useSession } from 'next-auth/react';
 import { Roboto } from 'next/font/google';
 import Link from 'next/link';
 
@@ -59,7 +58,6 @@ interface PartnerLinkLayoutProps {
 }
   
 const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceListProps[] }> = ({ data, serviceList }) => {
-  const {data: session} = useSession();
   return (
     <>
       <ContentWrapper className={`min-h-[95.3vh] h-full relative`}>
@@ -71,7 +69,6 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceList
           title={data.title}
           extraStyle='text-white'
           page='partner'
-          userName={session?.user?.name}
           data={data}
           headerSelect='services'
         />

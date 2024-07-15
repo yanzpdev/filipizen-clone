@@ -5,7 +5,6 @@ import Header from '@/app/components/layout/Header';
 import ButtonComponent from '@/app/components/ui/ButtonComponent';
 import ContentWrapper from '@/app/components/ui/ContentWrapper';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { useSession } from 'next-auth/react';
 import { Roboto } from 'next/font/google';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -43,7 +42,6 @@ interface PartnerProps {
 }
 
 const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
-  const {data: session, status} = useSession();
   const [display, setDisplay] = useState('reports');
   const [chartType, setChartType] = useState('BarChart');
   const [dataType, setDataType] = useState('Amount');
@@ -101,7 +99,6 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
         title={data.title}
         extraStyle='text-white'
         page='partner'
-        userName={session?.user?.name}
         data={data}
         headerSelect='data'
       />

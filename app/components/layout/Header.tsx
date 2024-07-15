@@ -2,13 +2,9 @@
 import Link from 'next/link';
 import ImageComponent from '../ui/ImageComponent';
 import ContentWrapper from '../ui/ContentWrapper';
-import { signOut, useSession } from 'next-auth/react';
-import { Typography } from '@mui/material';
-import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import ButtonComponent from '../ui/ButtonComponent';
 import { useRouter } from 'next/navigation';
 import { useState, useRef, useEffect, useCallback } from 'react';
-import DropDownMenu from './DropDownMenu';
 
 type DataProps = {
   id: number;
@@ -43,7 +39,6 @@ interface HeaderProps {
 }
 
 const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, width, title, userName, page, data, headerSelect}) => {
-  const {data: session, status} = useSession();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [fullName, setFullName] = useState<string | undefined >(userName);
@@ -79,7 +74,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
   return (
     <ContentWrapper className={navbarStyles}>
       <ContentWrapper className='flex pt-[2px] gap-5 items-center justify-center text-white'>
-        <Link href={`/partners/${data?.group?.name}_${data?.name}`} className='flex items-center justify-center text-center'>
+        <Link href={data === undefined ? `` : `/partners/${data?.group?.name}_${data?.name}`} className='flex items-center justify-center text-center'>
           <ImageComponent   
             src={src}
             alt='logo'
@@ -96,53 +91,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
           </ContentWrapper>
         }
       </ContentWrapper>
-
-      { status === 'authenticated' ?
-        <ContentWrapper className={`${extraStyle} relative text-slate-700 flex justify-center items-center gap-1`}>
-          <Typography variant='body1' className='text-xs font-bold'>
-            {fullName}
-          </Typography>
-
-          {page !== 'profile2' && 
-            <button>
-              {!isOpen &&
-                <HiOutlineDotsHorizontal 
-                  className='mx-1 cursor-pointer' 
-                  size={26} 
-                  onClick={handleClick}
-                />
-              }
-              {isOpen &&
-                <HiOutlineDotsHorizontal 
-                  className='mx-1 cursor-pointer' 
-                  size={26} 
-                />
-              }
-            </button>
-          }
-          
-          {isOpen &&
-            <div ref={buttonRef} className='z-50 absolute top-5 right-1'>
-              <DropDownMenu page={page} userName={userName} image={session?.user?.image} email={session?.user?.email} />
-            </div>
-          }
-        </ContentWrapper>
-      : status === 'loading' ?
-        <ContentWrapper className={`${extraStyle} leading-none relative text-slate-700 `}>
-            {page !== 'profile2' &&
-              <ContentWrapper className='flex justify-center items-center gap-1'>
-                <ImageComponent 
-                  src={'/assets/roundloading.gif'} 
-                  alt={'loading cog'}       
-                  height={30} 
-                  width={30} 
-                  priority
-                />
-              </ContentWrapper> 
-            }
-        </ContentWrapper>
-      :
-        <ContentWrapper>
+      <ContentWrapper>
           <ButtonComponent 
             variant='text' 
             onClick={handleSignInClick}
@@ -158,7 +107,6 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
             Sign in
           </ButtonComponent>
         </ContentWrapper>
-      }
     </ContentWrapper>
   )
 }

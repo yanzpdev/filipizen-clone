@@ -1,10 +1,6 @@
 import { Metadata } from 'next';
 import PartnerLinkLayout from './PartnerLinkLayout';
-import { getMembersData, getServices } from '@/app/utils/helpers';
-import { connectMongoDB } from '@/lib/mongodb';
-import { getServerSession } from 'next-auth';
-import User from '@/models/user';
-import { redirect } from 'next/navigation';
+import { getMembersData, getServices } from '@/app/utils/CloudPartnerService';
 import Custom404 from '@/app/components/layout/Custom404';
 
 export const metadata: Metadata = {
@@ -40,15 +36,6 @@ const page:React.FC<PageProps> = async({params}) => {
   const partnerData: Member[] = await getMembersData();
   const clusterId = params.partnerLink.replace(/[^\w|]/g, "").split("_")
   const acceptedUrlParams: string[] = [];
-
-  await connectMongoDB();
-  const session = await getServerSession();
-  const email = session?.user?.email;
-  const user = await User.findOne({ email });
-
-  if (user && user.isFirstTimeSigningIn) {
-    redirect('/');
-  }
 
   const partner: Omit<Member, 'clusterid'>[] = partnerData
   .filter((item) => item.clusterid === clusterId[0])

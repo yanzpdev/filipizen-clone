@@ -1,10 +1,7 @@
 'use client';
 import ButtonComponent from '@/app/components/ui/ButtonComponent';
 import ContentWrapper from '@/app/components/ui/ContentWrapper';
-import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
-import PivotTable from './PivotTable';
-import ChartComponent from './ChartComponent';
 import { useRouter } from 'next/navigation';
 import { flattenedData } from './data';
 import Link from 'next/link';
@@ -105,62 +102,7 @@ const Reports = ({prevLink, pivotdata}: any) => {
           </ButtonComponent>
         </ContentWrapper>
         <div className='w-full'>
-          {display === 'reports' && (
-            <div>
-              <PivotTable data={pivotdata} />
-            </div>
-          )}
-          {display === 'charts' && (
-            <div className='grid grid-cols-10 border w-full bg-white'>
-              <div className='flex flex-col gap-2 col-span-1 p-5 bg-white border-r'>
-                <ButtonComponent 
-                  variant='text' 
-                  className={`w-10 normal-case text-base mx-auto font-semibold ${chartType === 'BarChart' ? 'bg-black text-white' : 'bg-slate-200 text-slate-800 hover:bg-black hover:text-white'}  underline-offset-4 `}
-                  disableFocusRipple
-                  onClick={() => setChartType('BarChart')}
-                  disableElevation
-                  disableRipple
-                  disableTouchRipple
-                  sx={{
-                    padding: '0',
-                  }}
-                >
-                  Bar
-                </ButtonComponent>
-                <ButtonComponent 
-                  variant='text' 
-                  className={`w-10 normal-case text-base mx-auto font-semibold ${chartType === 'PieChart' ? 'bg-black text-white' : 'bg-slate-200 text-slate-800 hover:bg-black hover:text-white'}  underline-offset-4 `}
-                  disableFocusRipple
-                  onClick={() => setChartType('PieChart')}
-                  disableElevation
-                  disableRipple
-                  disableTouchRipple
-                  sx={{
-                    padding: '0',
-                  }}
-                >
-                  Pie
-                </ButtonComponent>
-                <ButtonComponent 
-                  variant='text' 
-                  className={`w-10 normal-case text-base mx-auto font-semibold ${chartType === 'LineChart' ? 'bg-black text-white' : 'bg-slate-200 text-slate-800 hover:bg-black hover:text-white'}  underline-offset-4 `}
-                  disableFocusRipple
-                  onClick={() => setChartType('LineChart')}
-                  disableElevation
-                  disableRipple
-                  disableTouchRipple
-                  sx={{
-                    padding: '0',
-                  }}
-                >
-                  Line
-                </ButtonComponent>
-              </div>
-              <div className='col-span-9 flex flex-col gap-y-5'>
-                <ChartComponent chartType={chartType} chartData={chartdata} chartOptions={options} />
-              </div>   
-            </div>
-          )}
+          
         </div>
       </>
       <ContentWrapper className='h-[15px]' />

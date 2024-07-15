@@ -2,11 +2,7 @@ import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
 import { Metadata } from 'next';
 import PartnerList from '../components/layout/PartnerList';
-import { getMembersData } from '../utils/helpers';
-import { connectMongoDB } from '@/lib/mongodb';
-import { getServerSession } from 'next-auth';
-import User from '@/models/user';
-import { redirect } from 'next/navigation';
+import { getMembersData } from '../utils/CloudPartnerService';
 import ContentWrapper from '../components/ui/ContentWrapper';
 
 export const metadata: Metadata = {
@@ -16,20 +12,7 @@ export const metadata: Metadata = {
 
 const partners = async() => {
   const partnerData = await getMembersData();
-  await connectMongoDB();
-  const session = await getServerSession();
-  const email = session?.user?.email;
-  const user = await User.findOne({ email });
-  let fullName = '';
-  if (session) {
-    fullName = user?.name;
-  }
 
-  if (user && user.isFirstTimeSigningIn) {
-    redirect('/');
-  }
-
-  else {
     return (
       <ContentWrapper className='h-full overflow-x-hidden relative'>
         <Header 
@@ -38,7 +21,6 @@ const partners = async() => {
           height={22.06}
           width={80} 
           title=''
-          userName={fullName}
         />
         <ContentWrapper className='p-[20px] w-fit'></ContentWrapper>
         <ContentWrapper className='mx-[48px] h-full'>
@@ -58,8 +40,4 @@ const partners = async() => {
       </ContentWrapper>
     )
   }
-
-  
-}
-
 export default partners

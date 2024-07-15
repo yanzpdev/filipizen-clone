@@ -8,8 +8,6 @@ import Link from 'next/link';
 import { Raleway, Roboto } from 'next/font/google';
 import ImageComponent from '../ui/ImageComponent';
 import { ThemeProvider, createTheme } from '@mui/material';
-import { signOut, useSession } from 'next-auth/react'; 
-import DropDownMenu from './DropDownMenu';
 import ContentWrapper from '../ui/ContentWrapper';
 
 interface Partner {
@@ -33,13 +31,10 @@ export let fontTheme = createTheme({
   
 interface LandingPageProps {
   memberData: Partner[];
-  userEmail: string;
-  fullName: string;
-  isFirstTimeSigningIn: boolean;
 }
 
-const LandingPage:React.FC<LandingPageProps> = ({ memberData, userEmail, fullName, isFirstTimeSigningIn }) => {
-    const [searchText, setSearchText] = useState<string>('');
+const LandingPage:React.FC<LandingPageProps> = ({ memberData }) => {
+  const [searchText, setSearchText] = useState<string>('');
   const [disable, setDisable] = useState<boolean>(true);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
@@ -47,10 +42,6 @@ const LandingPage:React.FC<LandingPageProps> = ({ memberData, userEmail, fullNam
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [partnerLink, setPartnerLink] = useState<string>('');
   const router = useRouter();
-  const {data: session, status } = useSession();
-
-  const image = session?.user?.image;
-  const email = session?.user?.email;
 
   const filteredPartners = searchText
   ? memberData.filter((partner: Partner) => new RegExp(`^${searchText.replace(/\\/g, '\\\\')}`, 'i').test(partner.title))
@@ -72,10 +63,6 @@ const LandingPage:React.FC<LandingPageProps> = ({ memberData, userEmail, fullNam
     setSearchText(param.title + (param.subtype !== 'province' ? `, ${param.group.title}` : ''));
     setPartnerLink('/partners/' + param.group.name + '_' + param.name);
     setDropdownVisible(false); 
-  }
-
-  const redirectToSignIn = () => {
-    router.push('/login');
   }
 
   const redirectToPartner = () => {
@@ -203,24 +190,13 @@ const LandingPage:React.FC<LandingPageProps> = ({ memberData, userEmail, fullNam
         </Button>
       
         <Button
-          variant={`${status !== 'authenticated' ? 'contained' : 'text'}`}
+          variant="contained"
           className={`absolute top-[-40px] text-lg right-14 duration-300 font-medium text-slate-700 p-[8px] hover:bg-[#e6e9f3]`}
           style={{textTransform: 'none'}}
-          onClick={status !== 'authenticated' ? redirectToSignIn : () => signOut() }
           sx={{backgroundColor: 'transparent'}}
-          // disabled={status === 'authenticated'}
         >
-          {status === 'authenticated' ?
-            <span>Sign Out</span>
-          :
-            <span>Sign In</span>
-          }
+          <span>Sign In</span>
         </Button>
-        {isOpen && 
-          <div ref={buttonRef} className='absolute top-7 right-16 z-50'>
-            <DropDownMenu userName={name} buttonRef={buttonRef} image={image} email={email} />
-          </div>
-        }
       </ThemeProvider>
     </ContentWrapper>
   )
