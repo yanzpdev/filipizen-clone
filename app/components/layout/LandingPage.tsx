@@ -39,7 +39,7 @@ interface LandingPageProps {
 }
 
 const LandingPage:React.FC<LandingPageProps> = ({ memberData, userEmail, fullName, isFirstTimeSigningIn }) => {
-    const [searchText, setSearchText] = useState<string>('');
+  const [searchText, setSearchText] = useState<string>('');
   const [disable, setDisable] = useState<boolean>(true);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
