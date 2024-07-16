@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN echo "nameserver 1.1.1.1" >> /etc/resolv.conf
+#RUN echo "nameserver 1.1.1.1" >> /etc/resolv.conf
 
 RUN rm -rf .next && rm -rf dist && rm -rf tmp
 

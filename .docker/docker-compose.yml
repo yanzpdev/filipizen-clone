@@ -11,6 +11,4 @@ services:
             max-file: "5"
             max-size: 10m
       ports:
-         - "9090:3000"
-      volumes:
-         - ../_custom/.emptydir:/app/app
+         - "3001:3000"
