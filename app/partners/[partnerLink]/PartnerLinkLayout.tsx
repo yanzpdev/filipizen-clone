@@ -57,8 +57,17 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceProp
     setIsClient(true);
   }, []);
 
-  // const sortedServiceList = serviceList.sort((a, b) => b.services.length - a.services.length);
-  // console.log(serviceList);
+  const newServiceList = serviceList;
+
+  if (serviceList.length <= 4) {
+    const obj = {
+      seqno: 1,
+      title: 'void item',
+      objid: 'void',
+      services: []
+    }
+    newServiceList.push(obj)
+  }
 
   return (
     <>
@@ -85,10 +94,10 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceProp
                       <h2 className={`pt-[20px] pb-[5px] leading-none text-slate-800 text-[19.6px] font-semibold`}>No transactions available yet.</h2>
                     :
                       <>
-                        {serviceList.map((service: any, index: number) => (
+                        {newServiceList.map((service: any, index: number) => (
                           <ContentWrapper 
                             key={index} 
-                            className={``} // ${ index % 2 === 0 ? 'row-start-1' : 'row-start-2' } 
+                            className={`w-full break-inside-avoid ${service.objid === "void" && "invisible"}`} // ${ index % 2 === 0 ? 'row-start-1' : 'row-start-2' } 
                           >
                             <h2 className={`pt-[20px] pb-[5px] leading-none text-[#27ae60] text-[19.6px] font-bold order-[${index}]`}>{service.title}</h2>
                             {service.services.map((subservice: any, subIndex: number) => 
@@ -110,8 +119,6 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceProp
                     }
                   </ContentWrapper>
                   <ContentWrapper className='h-[15px]'></ContentWrapper>
-                  {/* <hr className="my-[8px] border-slate-500"/>
-                  <ContentWrapper className='h-[10px]' /> */}
                 </ContentWrapper>
               </ContentWrapper>
             </ThemeProvider>
