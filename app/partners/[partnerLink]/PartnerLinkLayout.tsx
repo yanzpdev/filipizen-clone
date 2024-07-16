@@ -88,9 +88,9 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceProp
                         {serviceList.map((service: any, index: number) => (
                           <ContentWrapper 
                             key={index} 
-                            className={`col-span-1 break-inside-avoid`} // ${ index % 2 === 0 ? 'row-start-1' : 'row-start-2' } 
+                            className={``} // ${ index % 2 === 0 ? 'row-start-1' : 'row-start-2' } 
                           >
-                            <h2 className={`pt-[20px] pb-[5px] leading-none text-[#27ae60] text-[19.6px] font-bold order-[${index}]`}>{index} - {service.title}</h2>
+                            <h2 className={`pt-[20px] pb-[5px] leading-none text-[#27ae60] text-[19.6px] font-bold order-[${index}]`}>{service.title}</h2>
                             {service.services.map((subservice: any, subIndex: number) => 
                               <ContentWrapper 
                                 key={subIndex}
