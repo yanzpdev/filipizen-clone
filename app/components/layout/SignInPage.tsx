@@ -8,6 +8,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ButtonComponent from "../ui/ButtonComponent";
 import Link from "next/link";
 import Footer from "./Footer";
+import Image from 'next/image';
 
 const raleway = Raleway({ 
   subsets: ['latin'], 
@@ -35,7 +36,7 @@ const SignInPage = () => {
   return (
     <>
       <ContainerComponent
-        className={`h-screen w-full relative text-slate-700`}
+        className={`h-[84.3vh] w-full relative text-slate-700`}
         classes={{}}
         fixed={false}
         disableGutters={true}
@@ -44,12 +45,11 @@ const SignInPage = () => {
           className={`mt-20 flex items-center justify-center gap-2`}
         >
           <Link href='/'>
-            <ImageComponent 
+            <Image
               src={`/assets/filipizen.svg`} 
               alt={`Filipizen Logo`} 
               width={250} 
               height={250} 
-              className={``} 
               priority
             />
           </Link>
@@ -60,8 +60,8 @@ const SignInPage = () => {
             isSpan={false}
           >
             <FormControl className="w-1/3">
-              <ImageComponent 
-                src={"/assets/qr-code.png"}
+              <Image
+                src={`/assets/qr-code.svg`}
                 alt={"QR Code"}
                 height={300}
                 width={300}
