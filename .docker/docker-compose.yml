@@ -11,4 +11,4 @@ services:
             max-file: "5"
             max-size: 10m
       ports:
-         - "3001:3000"
+         - "4001:3000"
