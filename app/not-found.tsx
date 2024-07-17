@@ -1,6 +1,5 @@
-import React from 'react'
-import Custom404 from './components/layout/Custom404'
-import { Metadata } from 'next'
+import Custom404 from './components/layout/Custom404';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "Filipizen - Error",
@@ -8,6 +7,7 @@ export const metadata: Metadata = {
 }
 
 const NotFoundPage = () => {
+
   return (
     <Custom404 />
   )
