@@ -77,12 +77,11 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
     <ContentWrapper className={navbarStyles}>
       <ContentWrapper className='flex pt-[2px] gap-5 items-center justify-center text-white'>
         <Link href={data === undefined ? `/` : `/partners/${data?.group?.name}_${data?.name}`} className='flex items-center justify-center text-center'>
-          <ImageComponent   
+          <img   
             src={src}
             alt='logo'
             width={width || 24}
             height={height || 24}
-            priority
           />
           <p className={`${page === 'profile2' ? 'text-[#DDDDDD] text-[21.3333px] ml-[5px]' : ' text-white text-[20px] ml-[10px] pt-[0px]'} font-bold`}>{title}</p>
         </Link>

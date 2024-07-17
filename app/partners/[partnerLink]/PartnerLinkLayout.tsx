@@ -69,8 +69,6 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceProp
     newServiceList.push(obj)
   }
 
-  console.log(data.id);
-
   return (
     <>
       {isClient &&
