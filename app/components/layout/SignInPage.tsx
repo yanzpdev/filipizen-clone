@@ -41,7 +41,7 @@ const SignInPage = () => {
         fixed={false}
         disableGutters={true}
       >
-        <ContentWrapper 
+        <div 
           className={`mt-20 flex items-center justify-center gap-2`}
         >
           <Link href='/'>
@@ -53,11 +53,11 @@ const SignInPage = () => {
               priority
             />
           </Link>
-        </ContentWrapper>
+        </div>
         <ThemeProvider theme={theme}>
-          <ContentWrapper 
+          <span 
             className={`pt-6 flex items-center justify-center`}
-            isSpan={false}
+            // isSpan={false}
           >
             <FormControl className="w-1/3">
               <Image
@@ -74,7 +74,7 @@ const SignInPage = () => {
                 align='center'
               >
                 Use the Filipizen App to log in via QR code
-                <ContentWrapper className="flex gap-4">
+                <span className="flex gap-4">
                   <Link
                     className=""
                     href="https://play.google.com/store/apps"
@@ -100,10 +100,9 @@ const SignInPage = () => {
                       height={100}
                     />
                   </Link>
-                  
-                </ContentWrapper>
+                </span>
               </Typography>
-              <ContentWrapper className="mt-3 mx-auto text-center items-center justify-center flex gap-2">
+              <span className="mt-3 mx-auto text-center items-center justify-center flex gap-2">
                 <ButtonComponent
                   variant="text"
                   href="/"
@@ -119,9 +118,9 @@ const SignInPage = () => {
                 >
                   Privacy Policy
                 </ButtonComponent>
-              </ContentWrapper>
+              </span>
             </FormControl>        
-          </ContentWrapper>
+          </span>
         </ThemeProvider>
       </ContainerComponent>
       <Footer />
