@@ -69,6 +69,8 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceProp
     newServiceList.push(obj)
   }
 
+  console.log(data.id);
+
   return (
     <>
       {isClient &&
@@ -76,7 +78,7 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceProp
           <ContentWrapper className={`min-h-[95.3vh] h-full relative`}>
             <Header 
               navbarStyles="w-full px-[50px] pb-[5px] pt-[3px] bg-[#2c3e50] h-[50px] flex justify-between items-center" 
-              src={`https://www.filipizen.com/resources/${data.id}.png`}
+              src={`/assets/partner/${data.id}.png`}
               height={40}
               width={40}
               title={data.title}
