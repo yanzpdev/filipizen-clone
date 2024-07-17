@@ -75,8 +75,7 @@ const SignInPage = () => {
               >
                 Use the Filipizen App to log in via QR code
                 <ContentWrapper className="flex gap-4">
-                  <ButtonComponent
-                    variant="text"
+                  <Link
                     className=""
                     href="https://play.google.com/store/apps"
                     target="_blank"
@@ -87,10 +86,9 @@ const SignInPage = () => {
                       width={120}
                       height={100}
                     />
-                  </ButtonComponent>
+                  </Link>
                   
-                  <ButtonComponent
-                    variant="text"
+                  <Link
                     className=""
                     href="https://www.apple.com/ph/app-store/"
                     target="_blank"
@@ -101,7 +99,7 @@ const SignInPage = () => {
                       width={120}
                       height={100}
                     />
-                  </ButtonComponent>
+                  </Link>
                   
                 </ContentWrapper>
               </Typography>
