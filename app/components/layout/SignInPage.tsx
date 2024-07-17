@@ -82,7 +82,7 @@ const SignInPage = () => {
                     target="_blank"
                   >
                     <ImageComponent 
-                      src={"/assets/googleplay.png"} 
+                      src={"/assets/googleplay.svg"} 
                       alt={"Google Play"} 
                       width={120}
                       height={100}
@@ -96,7 +96,7 @@ const SignInPage = () => {
                     target="_blank"
                   >
                     <ImageComponent 
-                      src={"/assets/appstore.png"} 
+                      src={"/assets/appstore.svg"} 
                       alt={"App Store"} 
                       width={120}
                       height={100}
