@@ -75,19 +75,7 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
         {name: 'LIFT Report'}
       ]
     }
-  ]
-  
-  const options = {
-    title: "Population of Largest U.S. Cities",
-    chartArea: { width: "50%" },
-    hAxis: {
-      title: "Total Population",
-      minValue: 0,
-    },
-    vAxis: {
-      title: "City",
-    },
-  };
+  ];
   
   return (
     <ContentWrapper className={`min-h-[100vh] max-h-[100%] relative w-screen`}>
@@ -107,8 +95,9 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
           <ContentWrapper className="mx-[80px] px-[32px] h-full">
           <h1 className="mt-[32px] mb-[16px] text-[28px] font-bold leading-none">Datasets</h1>
           <ContentWrapper className="flex flex-col w-fit gap-x-5 h-full">
-          <h2 className={`pt-[20px] pb-[5px] leading-none text-slate-800 text-[19.6px] font-semibold`}>No data available yet.</h2>
-            {/* {items.map((item, index) => (
+          {items ?
+            <>
+              {items.map((item, index) => (
                 <ContentWrapper 
                   key={index} 
                   className={`col-span-1 ${
@@ -128,7 +117,12 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
                       )}
                     </ContentWrapper>
                 </ContentWrapper>
-            ))}  */}
+              ))} 
+            </>
+          :
+            <h2 className={`pt-[20px] pb-[5px] leading-none text-slate-800 text-[19.6px] font-semibold`}>No data available yet.</h2>
+          }
+
             </ContentWrapper>
             <ContentWrapper className='h-[15px]'></ContentWrapper>
             {/* <hr className="my-[8px] border-slate-500"/>

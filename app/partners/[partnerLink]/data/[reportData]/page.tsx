@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import PartnerLinkLayout from './PartnerLinkLayout';
 import { getMembersData } from '@/app/utils/CloudPartnerService';
-import { redirect } from 'next/navigation';
 import Custom404 from '@/app/components/layout/Custom404';
 import { flattenedData } from './data';
 
@@ -73,6 +72,7 @@ const page:React.FC<PageProps> = async({params}) => {
     acceptedUrlParams.push(partner.group.name + "_" + partner.name + '/data/rptdata');
   })
 
+  console.log(data);
 
   if (acceptedUrlParams.includes(params.partnerLink+'/data/rptdata')) {
     return (
@@ -80,7 +80,7 @@ const page:React.FC<PageProps> = async({params}) => {
         {partner.map((item) => (
           <div key={item.id}>
             {item.name === clusterId[1] &&
-              <PartnerLinkLayout data={item} pivotdata={data} />
+              <PartnerLinkLayout data={item} pivotData={data} />
             } 
           </div>
         ))}
@@ -91,6 +91,7 @@ const page:React.FC<PageProps> = async({params}) => {
   else {
     return <Custom404 />
   }
+  
 }
 
 export default page
