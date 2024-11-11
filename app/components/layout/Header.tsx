@@ -36,9 +36,22 @@ interface HeaderProps {
   page?: string;
   data?: DataProps;
   headerSelect?: string;
+  hidePartnerOptions?: boolean;
 }
 
-const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, width, title, userName, page, data, headerSelect}) => {
+const Header:React.FC<HeaderProps> = ({
+  navbarStyles, 
+  extraStyle, 
+  src, 
+  height, 
+  width, 
+  title, 
+  userName, 
+  page, 
+  data, 
+  headerSelect,
+  hidePartnerOptions
+}) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [fullName, setFullName] = useState<string | undefined >(userName);
@@ -85,7 +98,7 @@ const Header:React.FC<HeaderProps> = ({navbarStyles, extraStyle, src, height, wi
           />
           <p className={`${page === 'profile2' ? 'text-[#DDDDDD] text-[21.3333px] ml-[5px]' : ' text-white text-[20px] ml-[10px] pt-[0px]'} font-bold`}>{title}</p>
         </Link>
-        {page === 'partner' &&
+        {page === 'partner' && !hidePartnerOptions &&
           <ContentWrapper className='ml-10 text-[#f5f5f5] flex items-center relative justify-center gap-10 text-[20px] font-bold'>
             <Link href={`/partners/${data?.group?.name}_${data?.name}`} className={`px-3 py-1 rounded-md duration-200 relative top-[9px] h-14 ${headerSelect === 'services' ? 'bg-[#f5f5f5] text-[#2c3e50]' : 'hover:bg-[#f5f5f5] hover:text-[#2c3e50]'} `}>Services</Link>
             <Link href={`/partners/${data?.group?.name}_${data?.name}/data`} className={`px-3 py-1 rounded-md duration-200 relative top-[9px] h-14 ${headerSelect === 'data' ? 'bg-[#f5f5f5] text-[#2c3e50]' : 'hover:bg-[#f5f5f5] hover:text-[#2c3e50]'}`}>Data</Link>

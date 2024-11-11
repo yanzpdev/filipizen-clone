@@ -30,5 +30,6 @@ export default async function Home() {
         <Footer />
       </div>
     </main>
+    
   );
 }

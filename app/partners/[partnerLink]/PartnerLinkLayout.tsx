@@ -107,6 +107,7 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceProp
                               >
                                 <Link 
                                   href={`${data.group.name}_${data.name}/${service.objid}/${subservice.name}`} 
+                                  // href={`http://192.168.2.163:3001/partners/${data.group.name}_${data.name}/${service.objid === 'rptis' && 'rpt'}/${subservice.name}`} 
                                   className="hover:underline"
                                 >
                                   {subservice.title}

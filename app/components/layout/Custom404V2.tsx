@@ -3,8 +3,6 @@ import { Container, Typography, createTheme, ThemeProvider } from "@mui/material
 import { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import Image from "next/image";
-import { headers } from 'next/headers'
-import Link from "next/link";
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],
@@ -23,7 +21,7 @@ export let fontTheme = createTheme({
   }
 })
 
-const Custom404 = () => {
+const Custom404 = ({partnerName}: any) => {
   return (
     <ThemeProvider theme={fontTheme}>
       <Container 
@@ -31,26 +29,18 @@ const Custom404 = () => {
         maxWidth='sm'
         disableGutters
       >
-        <Link href='/'>
-          <Image 
-            src={"/assets/filipizen.svg"} 
-            alt={"Filipizen Logo"} 
-            width={220}
-            height={60.66}
-            className="pt-[32px]"
-          />
-        </Link>
-        
+        <Image 
+          src={"/assets/filipizen.svg"} 
+          alt={"Filipizen Logo"} 
+          width={220}
+          height={60.66}
+          className="pt-[32px]"
+        />
         <Typography
           variant="h1"
-          className="mt-[32px] mb-[16px] text-[28px] font-bold"
+          className="mt-[32px] mb-[16px] text-[32px] font-bold"
         >
-          Oops!
-        </Typography>
-        <Typography
-          className="mb-[16px] text-[#000000a6] leading-none font-bold"
-        >
-          404 - PAGE NOT FOUND
+          Partner {partnerName} is currently inactive.
         </Typography>
         <Typography
           className="my-[17.4px] text-[14.8px] text-[#000000a6] leading-snug opacity-70"
@@ -62,7 +52,7 @@ const Custom404 = () => {
             marginInlineEnd: '0px',
           }}
         >
-          The page you are looking for might have been removed, had its name changed, or is temporarily unavailable
+          Kindly verify that the partner name is correct and try again.
         </Typography>
       </Container>
     </ThemeProvider>
