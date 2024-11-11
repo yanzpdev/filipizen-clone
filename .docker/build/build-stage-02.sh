@@ -1,6 +1,6 @@
 #!/bin/sh
 RUN_DIR=`pwd`
-cd ..
+cd ../..
 BASE_DIR=`pwd`
 
 echo "[filipizen-main] build stage-02..."
