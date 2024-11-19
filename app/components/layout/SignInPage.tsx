@@ -9,6 +9,7 @@ import ButtonComponent from "../ui/ButtonComponent";
 import Link from "next/link";
 import Footer from "./Footer";
 import Image from 'next/image';
+import React from 'react';
 
 const raleway = Raleway({ 
   subsets: ['latin'], 

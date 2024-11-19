@@ -5,6 +5,7 @@ import ContentWrapper from '../ui/ContentWrapper';
 import ButtonComponent from '../ui/ButtonComponent';
 import { useRouter } from 'next/navigation';
 import { useState, useRef, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 
 type DataProps = {
   id: number;
@@ -90,7 +91,7 @@ const Header:React.FC<HeaderProps> = ({
     <ContentWrapper className={navbarStyles}>
       <ContentWrapper className='flex pt-[2px] gap-5 items-center justify-center text-white'>
         <Link href={data === undefined ? `/` : `/partners/${data?.group?.name}_${data?.name}`} className='flex items-center justify-center text-center'>
-          <img   
+          <Image   
             src={src}
             alt='logo'
             width={width || 24}

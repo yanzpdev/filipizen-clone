@@ -2,7 +2,7 @@
 import { Ref } from 'react'
 import ButtonComponent from '../ui/ButtonComponent'
 import { Typography } from '@mui/material'
-import { signOut } from 'next-auth/react'
+// import { signOut } from 'next-auth/react'
 import ImageComponent from '../ui/ImageComponent'
 
 interface dropDownProps {
@@ -49,7 +49,7 @@ const DropDownMenu:React.FC<dropDownProps> = ({buttonRef, userName, image, email
       <ButtonComponent
         variant='contained'
         size='small'
-        onClick={signOut}
+        // onClick={signOut}
         className='bg-red-500 rounded-full hover:bg-red-600 w-full mt-2'
       >
         Sign Out
