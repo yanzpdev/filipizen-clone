@@ -13,10 +13,10 @@ import { IoCheckboxSharp } from "react-icons/io5";
 const HomeLayout = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showMiniMenu, setShowMiniMenu] = useState(false);
-
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  
   return (
     <div className="w-full overflow-hidden h-screen relative flex items-start bg-[#f6f8fc]">
-      {/* Desktop Sidebar Toggle */}
       <div className="hidden flex-col xl:flex w-fit h-screen bg-[#eaf1fb]">
         <button 
           className='p-[22px] pb-[26px]'
@@ -24,31 +24,37 @@ const HomeLayout = () => {
         >
           <GiHamburgerMenu size={22} className="text-[#5f6368] -mt-1" />
         </button>
-        <button 
-          className='pt-[18px] pb-[2px] flex flex-col items-center justify-center gap-y-2'
-          onClick={() => setShowMiniMenu((prev) => !prev)}
-        >
-          <IoCheckboxSharp size={22} className="text-[#5f6368] -mt-1" />
-          <span className='text-xs'>Item</span>
-        </button>
-        <button 
-          className='pt-[18px] pb-[2px] flex flex-col items-center justify-center gap-y-2'
-          onClick={() => setShowMiniMenu((prev) => !prev)}
-        >
-          <IoCheckboxSharp size={22} className="text-[#5f6368] -mt-1" />
-          <span className='text-xs'>Item</span>
-        </button>
+        {[...Array(3).map((_, index) => index)].map((_, index) => (
+          <button 
+            key={index}
+            className='mt-[16px] px-4 relative'
+            onClick={() => setShowMiniMenu((prev) => !prev)}
+          >
+            <div 
+              className='hover:bg-slate-300 duration-300 hover:rounded-full p-2'
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              <IoCheckboxSharp size={22} className="text-[#5f6368] mx-auto" />
+            </div>
+            <span className='text-xs'>Item {index + 1}</span>
+            {hoveredIndex === index && (
+              <div className="absolute left-[100%] -top-10 w-44 h-80 bg-white shadow-xl p-4 rounded-lg">
+              {/* Triangle */}
+              <div className="absolute -left-2 top-[59px] -translate-y-1/2 w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-r-[8px] border-r-white"></div>
+              <p>Item {index + 1} pop up</p>
+            </div>
+            )}
+          </button>
+        ))}
       </div>
 
-      {/* Sidebar for Mobile */}
       <AnimatePresence>
         {showMenu && <Sidebar setShowMenu={setShowMenu} showMenu={showMenu} />}
       </AnimatePresence>
 
       <div className="flex flex-col h-full w-full px-2 xl:px-4">
-        {/* Header */}
         <div className="flex items-center justify-between w-full">
-          {/* Logo */}
           <Link 
             href={`/`}
             className="hidden xl:block w-[219px]"
@@ -63,7 +69,7 @@ const HomeLayout = () => {
 
           {/* Search Bar */}
           <div className="flex items-center justify-between xl:ml-2.5 py-2 w-full xl:w-[84%]">
-            <div className="rounded-full w-full xl:w-[61%] bg-[#eaf1fb] p-2.5 py-3 flex items-center justify-between">
+            <div className="rounded-full w-full xl:w-[61%] bg-[#eaf1fb] p-2.5 py-3">
               <span className="flex items-center gap-3 ml-3">
                 {/* Mobile Menu Button */}
                 <button
@@ -72,27 +78,27 @@ const HomeLayout = () => {
                 >
                   <GiHamburgerMenu size={20} />
                 </button>
-                {/* Search Icon */}
                 <FaMagnifyingGlass size={20} className="text-[#757677] hidden xl:block" />
-                {/* Search Input */}
-                <input
-                  className="text-[#757677] font-extralight bg-transparent w-full"
-                  placeholder="Search"
-                />
-              </span>
-              {/* Placeholder for Mobile Profile Icon */}
-              <span className="xl:hidden h-10 w-10 border-2 border-black rounded-full flex items-center justify-center p-[1px]">
-                <span className="bg-blue-500 h-full w-full block rounded-full" />
+                <span className='flex items-center justify-between w-full'>
+                  <input
+                    className="text-[#757677] font-extralight bg-transparent w-[90%]"
+                    placeholder="Search"
+                  />
+                  <span className="xl:hidden h-10 w-10 border-2 border-black rounded-full flex items-center justify-center p-[1px]">
+                    <span className="bg-blue-500 h-full w-full block rounded-full" />
+                  </span>
+                </span>
+                
               </span>
             </div>
-            <div className='hidden xl:flex items-center justify-between gap-5'>
+            <div className='hidden xl:flex items-center justify-between gap-3'>
               <button
-                className={`w-fit mb-2 rounded-full m-auto`}
+                className={`w-fit mb-2 rounded-full m-auto hover:bg-slate-300 p-1.5 duration-300`}
               >
                 <GrCircleQuestion size={20} className='w-6 h-6 text-[#5f6368]' />
               </button>
               <button
-                className={`w-fit mb-2 rounded-full m-auto`}
+                className={`w-fit mb-2 rounded-full m-auto hover:bg-slate-300 p-1.5 duration-300`}
               >
                 <svg 
                   className="Xy" 
@@ -115,17 +121,13 @@ const HomeLayout = () => {
 
           </div>
         </div>
-        {/* Main Content Area */}
         <div className="w-full h-[90vh] 2xl:h-[99%] flex justify-between">
-          {/* Mini Sidebar */}
           <MiniSidebar showMenu={showMiniMenu} />
 
-          {/* Mobile Content */}
           <div className="h-full xl:hidden w-full">
             <div className="w-full h-full bg-white rounded-[18px] px-5"></div>
           </div>
 
-          {/* Desktop Content */}
           <AnimatePresence>
             <motion.div
               className="ml-3 h-[90vh] 2xl:h-[99%] hidden xl:block"
