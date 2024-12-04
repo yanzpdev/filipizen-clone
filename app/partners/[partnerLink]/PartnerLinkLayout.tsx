@@ -6,6 +6,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Roboto } from 'next/font/google';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import React from 'react';
 
 const roboto = Roboto({ 
   weight: ["400", '500', '700'], 

@@ -1,5 +1,6 @@
 'use client';
 import ContainerComponent from "../ui/ContainerComponent";
+import ContentWrapper from "../ui/ContentWrapper";
 import ImageComponent from "../ui/ImageComponent";
 import { Button, FormControl, TextField, Typography } from "@mui/material";
 import { Raleway, Roboto } from 'next/font/google';
@@ -36,6 +37,9 @@ export let theme2 = createTheme({
   }
 })
 
+const socket = io(process.env.NEXT_PUBLIC_SERVER_URL + ':5000', {
+  transports: ['websocket'], // Ensure we're using websocket for real-time updates
+});
 
 const SignInPage = () => {
   const [qrCodeUrl, setQRCodeUrl] = useState<string | null>(null);
@@ -43,36 +47,30 @@ const SignInPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const clientId = localStorage.getItem("clientId") || crypto.randomUUID();
-    localStorage.setItem("clientId", clientId);
-
     const createSocketConnection = () => {
-      const socket = io(process.env.NEXT_PUBLIC_SERVER_URL + ':5000', {
+      const socket = io("http://localhost:5000", {
         transports: ["websocket"],
-        reconnection: true,
-        query: { clientId },
+        reconnection: false,
       });
-
-      socket.on("request-token", (sessionToken: string ) => {
+  
+      socket.on("uuid", (newUUID: string) => {
+        const data = {
+          challenge: newUUID,
+          domain: "www.filipizen.com",
+          credentialQuery: [{ type: "Filipizen" }],
+          service: "/login",
+        };
+  
         try {
-          const qrCodeData = JSON.stringify({ sessionToken, clientId });
+          const qrCodeData = JSON.stringify(data);
           QRCode.toDataURL(qrCodeData, { errorCorrectionLevel: "H" })
             .then((url) => setQRCodeUrl(url))
             .catch((err) => console.error("Error generating QR code", err));
-        }
+        } 
         
         catch (err) {
           console.error("Error generating QR Code", err);
         }
-      });
-
-      socket.on("auth-success", () => {
-        console.log("auth success!");
-        router.push("/home");  
-      });
-
-      socket.on("auth-fail", () => {
-        console.log("auth failed!");  
       });
   
       return socket;
@@ -84,7 +82,7 @@ const SignInPage = () => {
       setQRCodeUrl(null);
       socket.disconnect();
       socket = createSocketConnection();
-    }, 25000);
+    }, 120000);
   
     return () => {
       clearInterval(interval);
@@ -110,7 +108,6 @@ const SignInPage = () => {
               width={250} 
               height={250} 
               priority
-              className="w-auto h-[70px]"
             />
           </Link>
         </div>
@@ -180,8 +177,6 @@ const SignInPage = () => {
                       alt={"Google Play"} 
                       width={120}
                       height={100}
-                      className="w-auto h-[40px]"
-
                     />
                   </Link>
                   
@@ -195,8 +190,6 @@ const SignInPage = () => {
                       alt={"App Store"} 
                       width={120}
                       height={100}
-                      className="w-auto h-[40px]"
-
                     />
                   </Link>
                 </span>

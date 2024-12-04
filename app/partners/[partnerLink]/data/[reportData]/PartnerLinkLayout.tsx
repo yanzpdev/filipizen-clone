@@ -3,8 +3,8 @@ import { useState } from 'react';
 import Footer from '@/app/components/layout/Footer';
 import Header from '@/app/components/layout/Header';
 import ContentWrapper from '@/app/components/ui/ContentWrapper';
-import ChartDataComponent from '@/app/components/ui/ChartDataComponent';
-import PivotTableComponent from '@/app/components/ui/PivotTableComponent';
+// import ChartDataComponent from '@/app/components/ui/ChartDataComponent';
+// import PivotTableComponent from '@/app/components/ui/PivotTableComponent';
 
 interface PartnerProps {
   id: number;
@@ -25,11 +25,7 @@ interface PartnerProps {
   isonline: string;
 }
 
-
-
 const PartnerLinkLayout: React.FC<{ data: PartnerProps, pivotData: any }> = ({ data, pivotData }) => {
-
-
   return (
     <ContentWrapper className="min-h-[100vh] h-full relative w-full overflow-x-hidden">
       <Header 
@@ -47,7 +43,7 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, pivotData: any }> = ({ d
         <ContentWrapper className="mx-[80px] px-[32px]"> 
           <ContentWrapper className="w-full h-full">
             <ContentWrapper className="my-10">
-              <PivotTableComponent data={pivotData} />
+              {/* <PivotTableComponent data={pivotData} /> */}
               {/* <ChartDataComponent pivotData={pivotData} /> */}
             </ContentWrapper>
           </ContentWrapper>

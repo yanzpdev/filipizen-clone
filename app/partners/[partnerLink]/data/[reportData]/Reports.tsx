@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { flattenedData } from './data';
 import Link from 'next/link';
+import React from 'react';
 
 const Reports = ({prevLink, pivotdata}: any) => {
   const [display, setDisplay] = useState('reports');

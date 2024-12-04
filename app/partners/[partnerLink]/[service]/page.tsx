@@ -2,6 +2,7 @@ import Custom404 from '@/app/components/layout/Custom404'
 import Header from '@/app/components/layout/Header';
 import { getMembersData } from '@/app/utils/CloudPartnerService';
 import { Metadata } from 'next';
+import React from 'react';
 
 export const metadata: Metadata = {
   title: 'Filipizen - Error',
