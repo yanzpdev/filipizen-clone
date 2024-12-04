@@ -43,19 +43,19 @@ const SignInPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const clientId = localStorage.getItem("clientId") || crypto.randomUUID();
-    localStorage.setItem("clientId", clientId);
+    // const clientId = localStorage.getItem("clientId") || crypto.randomUUID();
+    // localStorage.setItem("clientId", clientId);
 
     const createSocketConnection = () => {
       const socket = io(process.env.NEXT_PUBLIC_SERVER_URL + ':5000', {
         transports: ["websocket"],
         reconnection: true,
-        query: { clientId },
+        // query: { clientId },
       });
 
       socket.on("request-token", (sessionToken: string ) => {
         try {
-          const qrCodeData = JSON.stringify({ sessionToken, clientId });
+          const qrCodeData = JSON.stringify({ sessionToken, clientId: "test" });
           QRCode.toDataURL(qrCodeData, { errorCorrectionLevel: "H" })
             .then((url) => setQRCodeUrl(url))
             .catch((err) => console.error("Error generating QR code", err));
