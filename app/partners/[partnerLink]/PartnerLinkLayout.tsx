@@ -58,6 +58,8 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceProp
     setIsClient(true);
   }, []);
 
+  console.log(data);
+
   const newServiceList = serviceList;
 
   if (serviceList.length <= 4) {

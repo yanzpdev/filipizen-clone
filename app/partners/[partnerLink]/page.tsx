@@ -33,6 +33,8 @@ export const generateMetadata = async ({ params }: any) => {
   const clusterId = params.partnerLink.replace(/[^\w|]/g, "").split("_");
   const acceptedUrlParams: string[] = [];
 
+  console.log("Count: ",  partnerData.length);
+
   const partner: Omit<Member, 'clusterid'>[] = partnerData
     .filter((item) => item.group.name === clusterId[0])
     .map(({ 
@@ -131,6 +133,8 @@ const Page: React.FC<PageProps> = async ({ params }) => {
   });
 
   const test = acceptedUrlParams.filter((item) => item === params.partnerLink);
+  
+
 
   if (acceptedUrlParams.includes(params.partnerLink)) {
     return (
