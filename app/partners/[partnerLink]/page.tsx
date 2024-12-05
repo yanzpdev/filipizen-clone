@@ -93,7 +93,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
       isonline,
     }));
 
-  // const services = await getServices(clusterId[0], clusterId[1]);
+  const services = await getServices(clusterId[0], clusterId[1]);
 
   var lguId = null;
 
@@ -110,7 +110,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
         {partner.map((item) => (
           <div key={item.id}>
             {item.name === clusterId[1] &&
-              <PartnerLinkLayout data={item} serviceList={[]} />
+              <PartnerLinkLayout data={item} serviceList={services} />
             }
           </div>
           // <div key={item.id}>{item.name === clusterId[1] && <PartnerLinkLayout data={item} serviceList={services} />}</div>
