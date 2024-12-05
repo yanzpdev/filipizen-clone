@@ -1,7 +1,7 @@
 const url = process.env.FILIPIZEN_URL
 const getMembersData = async () => {
 
-  console.log(`${url}/cloud-server/json/partner/CloudPartnerService.getList`);
+  // console.log(`${url}/cloud-server/json/partner/CloudPartnerService.getList`);
   try {
     const response = await fetch(`${url}/cloud-server/json/partner/CloudPartnerService.getList`, {
       headers: {

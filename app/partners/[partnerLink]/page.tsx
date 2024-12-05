@@ -33,8 +33,6 @@ export const generateMetadata = async ({ params }: any) => {
   const clusterId = params.partnerLink.replace(/[^\w|]/g, "").split("_");
   const acceptedUrlParams: string[] = [];
 
-  console.log("Count: ",  partnerData.length);
-
   const partner: Omit<Member, 'clusterid'>[] = partnerData
     .filter((item) => item.group.name === clusterId[0])
     .map(({ 
@@ -123,7 +121,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
       isonline
     }));
 
-  const services = await getServices(clusterId[0], clusterId[1]);
+  // const services = await getServices(clusterId[0], clusterId[1]);
 
   var lguId = null;
 
@@ -132,9 +130,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
     lguId = partner.id;
   });
 
-  const test = acceptedUrlParams.filter((item) => item === params.partnerLink);
-  
-
+  // const test = acceptedUrlParams.filter((item) => item === params.partnerLink);
 
   if (acceptedUrlParams.includes(params.partnerLink)) {
     return (
@@ -142,7 +138,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
         {partner.map((item) => (
           <div key={item.id}>
             {item.name === clusterId[1] &&
-              <PartnerLinkLayout data={item} serviceList={services} />
+              <PartnerLinkLayout data={item} serviceList={[]} />
             }
           </div>
         ))}

@@ -58,8 +58,6 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceProp
     setIsClient(true);
   }, []);
 
-  console.log(data);
-
   const newServiceList = serviceList;
 
   if (serviceList.length <= 4) {
@@ -109,7 +107,8 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps, serviceList: ServiceProp
                                 className='flex flex-col leading-relaxed w-fit text-[15.2px] text-[#3f51b5]'
                               >
                                 <Link 
-                                  href={`${data.group.name}_${data.name}/${service.objid}/${subservice.name}`} 
+                                  href=""
+                                  // href={`${data.group.name}_${data.name}/${service.objid}/${subservice.name}`} 
                                   // href={`http://192.168.2.163:3001/partners/${data.group.name}_${data.name}/${service.objid === 'rptis' && 'rpt'}/${subservice.name}`} 
                                   className="hover:underline"
                                 >
