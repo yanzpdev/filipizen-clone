@@ -1,11 +1,9 @@
-import { Metadata } from 'next';
-import PartnerLinkLayout from './PartnerLinkLayout';
-import { getMembersData, getServices } from '@/app/utils/CloudPartnerService';
-import Custom404 from '@/app/components/layout/Custom404';
-import Header from '@/app/components/layout/Header';
+import Custom404 from "@/app/components/layout/Custom404";
+import { getMembersData, getServices } from "@/app/utils/CloudPartnerService";
+import PartnerLinkLayout from "./PartnerLinkLayout";
 
 interface PageProps {
-  params: { partnerLink: string, service: string };
+  params: { partnerLink: string; service: string };
 }
 
 interface Member {
@@ -33,11 +31,11 @@ export const generateMetadata = async ({ params }: any) => {
   const clusterId = params.partnerLink.replace(/[^\w|]/g, "").split("_");
   const acceptedUrlParams: string[] = [];
 
-  const partner: Omit<Member, 'clusterid'>[] = partnerData
+  const partner: Omit<Member, "clusterid">[] = partnerData
     .filter((item) => item.group.name === clusterId[0])
-    .map(({ 
-      id, 
-      title, 
+    .map(({ id, title, subtype, state, email, name, includeservices, excludeservices, phoneno, group, channelid, isonline }) => ({
+      id,
+      title,
       subtype,
       state,
       email,
@@ -47,20 +45,7 @@ export const generateMetadata = async ({ params }: any) => {
       phoneno,
       group,
       channelid,
-      isonline
-    }) => ({ 
-      id, 
-      title, 
-      subtype,
-      state,
-      email,
-      name,
-      includeservices,
-      excludeservices,
-      phoneno,
-      group,
-      channelid,
-      isonline
+      isonline,
     }));
 
   partnerData.map((partner) => {
@@ -73,7 +58,7 @@ export const generateMetadata = async ({ params }: any) => {
       if (partner.name === clusterId[1]) {
         title = partner.title;
       }
-    })
+    });
     return {
       title: `Filipizen - ${title}`,
       description: `Filipizen information - ${title} `,
@@ -81,8 +66,8 @@ export const generateMetadata = async ({ params }: any) => {
   }
 
   return {
-    title: 'Filipizen - Error',
-    description: 'The page you are looking for does not exist.',
+    title: "Filipizen - Error",
+    description: "The page you are looking for does not exist.",
   };
 };
 
@@ -91,11 +76,11 @@ const Page: React.FC<PageProps> = async ({ params }) => {
   const clusterId = params.partnerLink.replace(/[^\w|]/g, "").split("_");
   const acceptedUrlParams: string[] = [];
 
-  const partner: Omit<Member, 'clusterid'>[] = partnerData
+  const partner: Omit<Member, "clusterid">[] = partnerData
     .filter((item) => item.group.name === clusterId[0]) // change back to item.clusterid when error occurs
-    .map(({ 
-      id, 
-      title, 
+    .map(({ id, title, subtype, state, email, name, includeservices, excludeservices, phoneno, group, channelid, isonline }) => ({
+      id,
+      title,
       subtype,
       state,
       email,
@@ -105,20 +90,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
       phoneno,
       group,
       channelid,
-      isonline
-    }) => ({ 
-      id, 
-      title, 
-      subtype,
-      state,
-      email,
-      name,
-      includeservices,
-      excludeservices,
-      phoneno,
-      group,
-      channelid,
-      isonline
+      isonline,
     }));
 
   const services = await getServices(clusterId[0], clusterId[1]);
@@ -134,13 +106,9 @@ const Page: React.FC<PageProps> = async ({ params }) => {
 
   if (acceptedUrlParams.includes(params.partnerLink)) {
     return (
-      <div className='h-screen'>
+      <div className="h-screen">
         {partner.map((item) => (
-          <div key={item.id}>
-            {item.name === clusterId[1] &&
-              <PartnerLinkLayout data={item} serviceList={services} />
-            }
-          </div>
+          <div key={item.id}>{item.name === clusterId[1] && <PartnerLinkLayout data={item} serviceList={services} />}</div>
         ))}
       </div>
     );
