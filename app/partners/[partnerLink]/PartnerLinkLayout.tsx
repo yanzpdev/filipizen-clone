@@ -92,14 +92,14 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps; serviceList: ServiceProp
                             <h2 className={`pt-[20px] pb-[5px] leading-none text-[#27ae60] text-[19.6px] font-bold order-[${index}]`}>{service.title}</h2>
                             {service.services.map((subservice: any, subIndex: number) => (
                               <ContentWrapper key={subIndex} className="flex flex-col leading-relaxed w-fit text-[15.2px] text-[#3f51b5]">
-                                <Link
+                                <a
                                   prefetch={false}
                                   href={`${data.group.name}_${data.name}/${service.objid}/${subservice.name}`}
                                   // href={`http://192.168.2.163:3001/partners/${data.group.name}_${data.name}/${service.objid === 'rptis' && 'rpt'}/${subservice.name}`}
                                   className="hover:underline"
                                 >
                                   {subservice.title}
-                                </Link>
+                                </a>
                               </ContentWrapper>
                             ))}
                           </ContentWrapper>
