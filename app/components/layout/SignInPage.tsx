@@ -10,7 +10,7 @@ import Footer from "./Footer";
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import QRCode from "qrcode";
-import io from "socket.io-client";  // Import socket.io-client
+import io from "socket.io-client"; 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
@@ -36,61 +36,103 @@ export let theme2 = createTheme({
   }
 })
 
-
 const SignInPage = () => {
   const [qrCodeUrl, setQRCodeUrl] = useState<string | null>(null);
   const [isTimedOut, setIsTimedOut] = useState<boolean>(false); 
   const router = useRouter();
 
   useEffect(() => {
-    const clientId = localStorage.getItem("clientId") || crypto.randomUUID();
-    localStorage.setItem("clientId", clientId);
+    const generateId = async () => {
+      try {
+        const res = await fetch(`/api/generate-id?${Date.now.toString()}`);
 
-    const createSocketConnection = () => {
-      const socket = io(process.env.NEXT_PUBLIC_SERVER_URL + ':5000', {
-        transports: ["websocket"],
-        reconnection: true,
-        query: { clientId },
-      });
-
-      socket.on("request-token", (sessionToken: string ) => {
-        try {
-          const qrCodeData = JSON.stringify({ sessionToken, clientId });
-          QRCode.toDataURL(qrCodeData, { errorCorrectionLevel: "H" })
-            .then((url) => setQRCodeUrl(url))
-            .catch((err) => console.error("Error generating QR code", err));
+        if (!res.ok) {
+          throw new Error(`Failed to fetch: ${res.statusText}`);
         }
+
+        const id = await res.json();
+        console.log("Generated ID:", id);
+        return id;
+      } 
+      
+      catch (error) {
+        console.error('Error fetching or generating QR code:', error);
+      }
+    };
+
+
+    const generateQRCode = async (challenge: any) => {
+      const payload = {
+        "challenge": challenge.id,
+        "domain": "www.filipizen.com", // change to ip address 
+        "credentialQuery": [
+          {
+            "type": "Filipizen",   
+          },
+        ],
         
-        catch (err) {
-          console.error("Error generating QR Code", err);
-        }
+        "service": "/authenticate", 
+      };
+
+
+      const qrCodeData = JSON.stringify(payload);
+      console.log(qrCodeData);
+
+      const qrCodeUrl = await QRCode.toDataURL(qrCodeData, {
+        errorCorrectionLevel: 'H',
+      });
+      setQRCodeUrl(qrCodeUrl);
+    }
+
+    let socket: any;
+    
+    const connectSocket = async (uuid: { id: string }) => {
+      socket = io('http://localhost:5000', {
+        query: { uuid: uuid.id }
       });
 
-      socket.on("auth-success", () => {
-        console.log("auth success!");
-        router.push("/home");  
+      socket.on('connect', () => {
+        console.log("connected");
+        console.log("sent to join: ", uuid.id);
+        socket.emit("join", uuid.id); 
       });
 
-      socket.on("auth-fail", () => {
-        console.log("auth failed!");  
-      });
-  
-      return socket;
-    };
-  
-    let socket = createSocketConnection();
-  
-    const interval = setInterval(() => {
-      setQRCodeUrl(null);
-      socket.disconnect();
-      socket = createSocketConnection();
-    }, 25000);
-  
-    return () => {
-      clearInterval(interval);
-      socket.disconnect();
-    };
-  }, []);
+      socket.on('disconnect', () => {
+        console.log('Disconnected from server');
+      })
+
+      socket.on('error', (errMsg: any) => {
+        console.log("error", errMsg);
+      })
+
+      socket.on("message", (message: any) => {
+        console.log("Received message: ", message);
+        
+        // message = token /session id
+        console.log("Session ID: ", message);
+
+        setTimeout(() => {
+          socket.disconnect();
+          router.push('/home');
+        }, 1000);
+      })
+    }
+
+    const rebuild = async () => {
+      const uuid = await generateId();
+      generateQRCode(uuid);
+      connectSocket(uuid);
+    }
+    
+    rebuild();
+
+    const intervalId = setInterval(async () => {
+      setQRCodeUrl(null); 
+      await rebuild();
+    }, 300000); 
+
+    return () => clearInterval(intervalId);
+  }, [router]); 
 
   return (
     <>
@@ -119,7 +161,7 @@ const SignInPage = () => {
             className={`pt-6 flex items-center justify-center`}
           >
             <FormControl className="w-full">
-              {qrCodeUrl ? 
+              {qrCodeUrl != null ? 
                 <motion.div
                   key={qrCodeUrl}
                   initial={{ opacity: 0 }}
