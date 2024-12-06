@@ -107,13 +107,14 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps }> = ({ data }) => {
                   <h2 className={`pt-[20px] pb-[5px] leading-none text-[#27ae60] text-[19.6px] font-bold `}>{item.name}</h2>
                     <ContentWrapper className='flex flex-col leading-relaxed w-fit text-[15.2px] text-[#3f51b5]'>
                       {item.menu.map((menuItem, index) => 
-                      <a 
+                      <Link 
+                        prefetch={false}
                         key={index}
                         href={`data/rptdata`} 
                         className="hover:underline"
                       >
                         {menuItem.name}
-                      </a>
+                      </Link>
                       )}  
                     </ContentWrapper>
                 </ContentWrapper>
