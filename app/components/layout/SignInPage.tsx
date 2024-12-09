@@ -1,18 +1,19 @@
 'use client';
 import ContainerComponent from "../ui/ContainerComponent";
 import ImageComponent from "../ui/ImageComponent";
-import { Button, FormControl, TextField, Typography } from "@mui/material";
+import { FormControl, Typography } from "@mui/material";
 import { Raleway, Roboto } from 'next/font/google';
 import { createTheme, ThemeProvider } from "@mui/material/styles"; 
 import ButtonComponent from "../ui/ButtonComponent";
 import Link from "next/link";
 import Footer from "./Footer";
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
-import QRCode from "qrcode";
-import io from "socket.io-client"; 
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import QRCodeComponent from "./QRCodeComponent";
+import { initializeSocket } from "@/app/utils/socket";
+import { generateId, generateQRCode } from "@/app/utils/apiUtils";
+import { Socket } from "socket.io-client";
 
 const raleway = Raleway({ 
   subsets: ['latin'], 
@@ -38,101 +39,54 @@ export let theme2 = createTheme({
 
 const SignInPage = () => {
   const [qrCodeUrl, setQRCodeUrl] = useState<string | null>(null);
-  const [isTimedOut, setIsTimedOut] = useState<boolean>(false); 
+  const [isTimedOut, setIsTimedOut] = useState(false);
+  const socketRef = useRef<Socket | null>(null);
   const router = useRouter();
 
+  let socket: any;
+  
   useEffect(() => {
-    const generateId = async () => {
-      try {
-        const res = await fetch(`/api/generate-id?${Date.now.toString()}`);
+    const handleSocketMessage = (message: any) => {
+      setTimeout(() => {
+        socketRef.current?.disconnect();
+        socketRef.current = null;
+      }, 1000);
+      router.push('/home');
+    };
 
-        if (!res.ok) {
-          throw new Error(`Failed to fetch: ${res.statusText}`);
+    const rebuild = async () => {
+      try {
+        const uuid = await generateId();
+        const qrUrl = await generateQRCode(uuid);
+        setQRCodeUrl(qrUrl);
+
+        // Ensure any existing socket is disconnected
+        if (socketRef.current) {
+          socketRef.current.disconnect();
+          socketRef.current = null;
         }
 
-        const id = await res.json();
-        console.log("Generated ID:", id);
-        return id;
+        // Initialize a new socket
+        socketRef.current = initializeSocket(uuid.id, handleSocketMessage);
       } 
       
       catch (error) {
-        console.error('Error fetching or generating QR code:', error);
+        console.error(error);
+        setIsTimedOut(true);
       }
     };
 
-
-    const generateQRCode = async (challenge: any) => {
-      const payload = {
-        "challenge": challenge.id,
-        "domain": "www.filipizen.com", // change to ip address 
-        "credentialQuery": [
-          {
-            "type": "Filipizen",   
-          },
-        ],
-        
-        "service": "/authenticate", 
-      };
-
-
-      const qrCodeData = JSON.stringify(payload);
-      console.log(qrCodeData);
-
-      const qrCodeUrl = await QRCode.toDataURL(qrCodeData, {
-        errorCorrectionLevel: 'H',
-      });
-      setQRCodeUrl(qrCodeUrl);
-    }
-
-    let socket: any;
-    
-    const connectSocket = async (uuid: { id: string }) => {
-      socket = io('http://localhost:5000', {
-        query: { uuid: uuid.id }
-      });
-
-      socket.on('connect', () => {
-        console.log("connected");
-        console.log("sent to join: ", uuid.id);
-        socket.emit("join", uuid.id); 
-      });
-
-      socket.on('disconnect', () => {
-        console.log('Disconnected from server');
-      })
-
-      socket.on('error', (errMsg: any) => {
-        console.log("error", errMsg);
-      })
-
-      socket.on("message", (message: any) => {
-        console.log("Received message: ", message);
-        
-        // message = token /session id
-        console.log("Session ID: ", message);
-
-        setTimeout(() => {
-          socket.disconnect();
-          router.push('/home');
-        }, 1000);
-      })
-    }
-
-    const rebuild = async () => {
-      const uuid = await generateId();
-      generateQRCode(uuid);
-      connectSocket(uuid);
-    }
-    
     rebuild();
+    const intervalId = setInterval(rebuild, 300000);
 
-    const intervalId = setInterval(async () => {
-      setQRCodeUrl(null); 
-      await rebuild();
-    }, 300000); 
-
-    return () => clearInterval(intervalId);
-  }, [router]); 
+    return () => {
+      clearInterval(intervalId);
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
+  }, [router, socket]);
 
   return (
     <>
@@ -161,49 +115,7 @@ const SignInPage = () => {
             className={`pt-6 flex items-center justify-center`}
           >
             <FormControl className="w-full">
-              {qrCodeUrl != null ? 
-                <motion.div
-                  key={qrCodeUrl}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <Image
-                    src={qrCodeUrl}
-                    alt={"QR Code"}
-                    height={300}
-                    width={300}
-                    className="mx-auto rounded-lg"
-                    priority
-                  />
-                </motion.div>
-              :
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <Image
-                    src={'/assets/roundloading.gif'}
-                    alt={"QR Code"}
-                    height={300}
-                    width={300}
-                    className="mx-auto rounded-lg"
-                    priority
-                  />
-                </motion.div>
-              }
-
-              {isTimedOut && !qrCodeUrl && 
-                <motion.span 
-                  className="text-center text-red-500"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  There was a problem generating the QR code. Please try again.
-                </motion.span>  
-              }
+              <QRCodeComponent qrCodeUrl={qrCodeUrl} isTimedOut={isTimedOut} />
 
               <Typography 
                 variant='body1' 

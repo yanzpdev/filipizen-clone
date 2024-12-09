@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { IoCheckboxSharp } from "react-icons/io5";
 import { MdChevronLeft } from "react-icons/md";
 import Image from 'next/image';
@@ -15,11 +15,17 @@ type SidebarProps = {
 const Sidebar: React.FC<SidebarProps> = ({ setShowMenu, showMenu }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [expandedItems, setExpandedItems] = useState<number[]>([]);
-  const handleClickOutside = (event: MouseEvent) => {
+  // const handleClickOutside = (event: MouseEvent) => {
+  //   if (ref.current && !ref.current.contains(event.target as Node)) {
+  //     setShowMenu(false);
+  //   }
+  // };
+
+  const handleClickOutside = useCallback((event: MouseEvent) => {
     if (ref.current && !ref.current.contains(event.target as Node)) {
       setShowMenu(false);
     }
-  };
+  }, [setShowMenu]);
 
   const handleSubItemClick = (index: number) => {
     setExpandedItems(prev => 
@@ -35,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setShowMenu, showMenu }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showMenu]);
+  }, [showMenu, handleClickOutside]);
 
   return (
     <div className="xl:hidden fixed h-screen bg-[#00000088] w-screen z-50">

@@ -9,6 +9,7 @@ const Loading = () => {
         width={150} 
         height={150} 
         priority
+        unoptimized
       />
     </div>
   )

@@ -9,6 +9,7 @@ interface ImageProps {
   className?: string;
   layout?: string;
   priority?: boolean;
+  unoptimized?: boolean;
 }
 
 const ImageComponent:React.FC<ImageProps> = ({
@@ -19,7 +20,8 @@ const ImageComponent:React.FC<ImageProps> = ({
     style,
     className,
     layout,
-    priority
+    priority,
+    unoptimized
 }) => {
   return (
     <Image 
@@ -31,6 +33,7 @@ const ImageComponent:React.FC<ImageProps> = ({
       className={className}
       layout={layout}
       priority={priority}
+      unoptimized={unoptimized}
     />
   )
 }

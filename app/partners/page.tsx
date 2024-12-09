@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 const partners = async() => {
   const partnerData = await getMembersData();
 
-  console.log(partnerData.length)
   return (
     <ContentWrapper className='h-full overflow-x-hidden relative'>
       <Header 
