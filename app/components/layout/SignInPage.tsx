@@ -47,9 +47,11 @@ const SignInPage = () => {
   
   useEffect(() => {
     const handleSocketMessage = (message: any) => {
+
+      console.log("Message: ", message);
       setTimeout(() => {
-        socketRef.current?.disconnect();
-        socketRef.current = null;
+        // socketRef.current?.disconnect();
+        // socketRef.current = null;
       }, 1000);
       router.push('/home');
     };
@@ -61,10 +63,10 @@ const SignInPage = () => {
         setQRCodeUrl(qrUrl);
 
         // Ensure any existing socket is disconnected
-        if (socketRef.current) {
-          socketRef.current.disconnect();
-          socketRef.current = null;
-        }
+        // if (socketRef.current) {
+        //   socketRef.current.disconnect();
+        //   socketRef.current = null;
+        // }
 
         // Initialize a new socket
         socketRef.current = initializeSocket(uuid.id, handleSocketMessage);
@@ -81,10 +83,10 @@ const SignInPage = () => {
 
     return () => {
       clearInterval(intervalId);
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
+      // if (socketRef.current) {
+      //   socketRef.current.disconnect();
+      //   socketRef.current = null;
+      // }
     };
   }, [router, socket]);
 

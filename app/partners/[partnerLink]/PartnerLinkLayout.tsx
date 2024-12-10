@@ -42,7 +42,12 @@ interface ServiceProps {
   seqno: number;
   title: string;
   objid: string;
-  services: { name: string; title: string }[];
+  services: { 
+    name: string; 
+    title: string; 
+    pathname: string; 
+  }[];
+  pathname: string;
 }
 
 interface ServiceListProps {
@@ -57,17 +62,19 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps; serviceList: ServiceProp
     setIsClient(true);
   }, []);
 
-  const newServiceList = serviceList;
+  // const newServiceList = serviceList;
 
-  if (serviceList.length <= 4) {
-    const obj = {
-      seqno: 1,
-      title: "void item",
-      objid: "void",
-      services: [],
-    };
-    newServiceList.push(obj);
-  }
+  // if (serviceList.length <= 4) {
+  //   const obj = {
+  //     seqno: 1,
+  //     title: "void item",
+  //     objid: "void",
+  //     services: [],
+  //   };
+  //   newServiceList.push(obj);
+  // }
+
+  console.log(serviceList[8].services[0])
 
   return (
     <>
@@ -84,7 +91,7 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps; serviceList: ServiceProp
                       <h2 className={`pt-[20px] pb-[5px] leading-none text-slate-800 text-[19.6px] font-semibold`}>No transactions available yet.</h2>
                     ) : (
                       <>
-                        {newServiceList.map((service: any, index: number) => (
+                        {serviceList.map((service: any, index: number) => (
                           <ContentWrapper
                             key={index}
                             className={`w-full break-inside-avoid ${service.objid === "void" && "invisible"}`} // ${ index % 2 === 0 ? 'row-start-1' : 'row-start-2' }
@@ -94,8 +101,7 @@ const PartnerLinkLayout: React.FC<{ data: PartnerProps; serviceList: ServiceProp
                               <ContentWrapper key={subIndex} className="flex flex-col leading-relaxed w-fit text-[15.2px] text-[#3f51b5]">
                                 <Link
                                   prefetch={false}
-                                  href={`${data.group.name}_${data.name}/${service.objid}/${subservice.name}`}
-                                  // href={`http://192.168.2.163:3001/partners/${data.group.name}_${data.name}/${service.objid === 'rptis' && 'rpt'}/${subservice.name}`}
+                                  href={`${subservice.pathname ? `${subservice.pathname}/${data.group.name}_${data.name}/${subservice.parent.objid}/${subservice.name}` : `/partners/${data.group.name}_${data.name}/${subservice.parent.objid}/${subservice.name}`}${subservice.pathname ? '/' : ''}`}
                                   className="hover:underline"
                                 >
                                   {subservice.title}

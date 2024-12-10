@@ -102,6 +102,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
     lguId = partner.id;
   });
 
+
   // const test = acceptedUrlParams.filter((item) => item === params.partnerLink);
 
   if (acceptedUrlParams.includes(params.partnerLink)) {

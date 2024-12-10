@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
     socket.on('connect', () => {
       console.log(`join to server ${challenge}`)
-
+      // socket.join(challenge);
       const data = { challenge: challenge, message: uuid }
       socket.emit("notification", data);
       console.log("Data: ", data);
