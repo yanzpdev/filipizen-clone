@@ -2,13 +2,12 @@
 import io, { Socket } from "socket.io-client";
 
 export const initializeSocket = (uuid: string, onMessage: (message: any) => void): Socket => {
-//   const url = process.env.SERVER_URL
-  const socket = io('http://localhost:5000', { query: { uuid } });
+  const socket = io('http://localhost:5000');
 
   socket.on('connect', () => {
     console.log("connected to server");
     console.log("uuid is: ", uuid);
-    socket.emit("join", uuid);
+    socket.emit('join', uuid);
   });
 
   socket.on('message', onMessage);

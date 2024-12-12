@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import QRCodeComponent from "./QRCodeComponent";
 import { initializeSocket } from "@/app/utils/socket";
 import { generateId, generateQRCode } from "@/app/utils/apiUtils";
-import { Socket } from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 
 const raleway = Raleway({ 
   subsets: ['latin'], 
@@ -39,20 +39,22 @@ export let theme2 = createTheme({
 
 const SignInPage = () => {
   const [qrCodeUrl, setQRCodeUrl] = useState<string | null>(null);
+  const [uuid, setUuid] = useState<string>();
   const [isTimedOut, setIsTimedOut] = useState(false);
   const socketRef = useRef<Socket | null>(null);
+  const [time, setTime] = useState<number>(300);
   const router = useRouter();
 
+  // const socket = io('192.168.2.111:5000');
+
   let socket: any;
-  
+
   useEffect(() => {
     const handleSocketMessage = (message: any) => {
-
       console.log("Message: ", message);
       setTimeout(() => {
-        // socketRef.current?.disconnect();
-        // socketRef.current = null;
       }, 1000);
+      socket.disconnect();
       router.push('/home');
     };
 
@@ -61,14 +63,8 @@ const SignInPage = () => {
         const uuid = await generateId();
         const qrUrl = await generateQRCode(uuid);
         setQRCodeUrl(qrUrl);
+        setTime(300)
 
-        // Ensure any existing socket is disconnected
-        // if (socketRef.current) {
-        //   socketRef.current.disconnect();
-        //   socketRef.current = null;
-        // }
-
-        // Initialize a new socket
         socketRef.current = initializeSocket(uuid.id, handleSocketMessage);
       } 
       
@@ -83,12 +79,58 @@ const SignInPage = () => {
 
     return () => {
       clearInterval(intervalId);
-      // if (socketRef.current) {
-      //   socketRef.current.disconnect();
-      //   socketRef.current = null;
-      // }
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
     };
-  }, [router, socket]);
+  }, [router]);
+
+  useEffect(() => {
+    if (time <= 0) return;
+
+    const timer = setInterval(() => {
+      setTime((prevTime) => prevTime - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [time]);
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+  };
+
+  // useEffect(() => {
+  //   const rebuild = async () => {
+  //     const generatedUuid = await generateId();
+  //     const qrUrl = await generateQRCode(generatedUuid);
+  //     setUuid(generatedUuid.id);
+  //     setQRCodeUrl(qrUrl);
+  //   };
+
+  //   rebuild();
+  //   const intervalId = setInterval(rebuild, 300000);
+
+  //   return () => {
+  //     clearInterval(intervalId);
+  //     socket.disconnect();
+  //   };
+
+  // }, [router])
+
+  // useEffect(() => {
+  //   socket.on("connect", () => {
+  //     console.log("connected to server");
+  //     console.log(uuid);
+  //   })
+
+  //   socket.on("message", (challenge: string, message: string) => {
+  //     console.log("Received challenge:", challenge); 
+  //     console.log("Received message:", message);     
+  //   });
+  // }, [uuid])
 
   return (
     <>
@@ -118,7 +160,7 @@ const SignInPage = () => {
           >
             <FormControl className="w-full">
               <QRCodeComponent qrCodeUrl={qrCodeUrl} isTimedOut={isTimedOut} />
-
+              <p className="text-center mt-2">{formatTime(time)}</p>
               <Typography 
                 variant='body1' 
                 className="mt-6 text-sm font-medium leading-none flex flex-col gap-2 items-center justify-center"

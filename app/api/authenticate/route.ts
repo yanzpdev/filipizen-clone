@@ -2,28 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import io from "socket.io-client";  
 
 let socket: any;
-let url = process.env.URL;
-let serverUrl = process.env.SERVER_URL;
+let serverUrl = 'http://localhost:5000';
 
 export async function POST(req: NextRequest) {
-  const res = await fetch (`${url}/api/generate-uuid`);
-  const uuid = await res.json();
-
   try {
     const body = await req.json();
     const challenge = body.payload.challenge;
 
-    console.log(challenge);
-
     socket = io(serverUrl);
 
     socket.on('connect', () => {
-      console.log(`join to server ${challenge}`)
-      // socket.join(challenge);
-      const data = { challenge: challenge, message: uuid }
-      socket.emit("notification", data);
-      console.log("Data: ", data);
-      // socket.disconnect();
+      socket.emit('join', challenge);
+      socket.emit("send-message", challenge, "test message");
+
+      socket.disconnect();
     });
 
     return NextResponse.json({ status: "success", challenge });

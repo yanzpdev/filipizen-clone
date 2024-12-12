@@ -1,6 +1,6 @@
 import QRCode from "qrcode";
 
-const url = process.env.URL
+const url = process.env.NEXT_PUBLIC_URL
 
 export const generateId = async () => {
   const res = await fetch(`/api/generate-id?${Date.now()}`);
@@ -13,7 +13,7 @@ export const generateQRCode = async (challenge: any) => {
     challenge: challenge.id,
     domain: url,
     credentialQuery: [{ type: "Filipizen" }],
-    service: "/authenticate",
+    service: "/api/authenticate",
   };
 
   return await QRCode.toDataURL(JSON.stringify(payload), {
