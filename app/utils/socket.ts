@@ -2,7 +2,7 @@
 import io, { Socket } from "socket.io-client";
 
 export const initializeSocket = (uuid: string, onMessage: (message: any) => void): Socket => {
-  const socket = io('http://localhost:5000');
+  const socket = io(process.env.NEXT_PUBLIC_SOCKETIO_HOST);
 
   socket.on('connect', () => {
     console.log("connected to server");
@@ -11,7 +11,6 @@ export const initializeSocket = (uuid: string, onMessage: (message: any) => void
   });
 
   socket.on('message', onMessage);
-
   socket.on('disconnect', () => console.log("disconnected from server"));
   socket.on('error', (errMsg) => console.error("socket error:", errMsg));
 

@@ -15,7 +15,7 @@ export const generateQRCode = async (challenge: any) => {
     credentialQuery: [{ type: "Filipizen" }],
     service: "/api/authenticate",
   };
-
+  
   return await QRCode.toDataURL(JSON.stringify(payload), {
     errorCorrectionLevel: 'H',
   });
