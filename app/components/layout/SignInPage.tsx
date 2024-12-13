@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import ContainerComponent from "../ui/ContainerComponent";
 import ImageComponent from "../ui/ImageComponent";
@@ -212,13 +213,16 @@ const SignInPage = () => {
                     href="https://play.google.com/store/apps"
                     target="_blank"
                   >
-                    <ImageComponent
+                    {/* <ImageComponent
                       src={"/assets/googleplay.svg"}
                       alt={"Google Play"}
                       width={120}
                       height={100}
                       className="w-auto h-[40px]"
-                    />
+                    /> */}
+
+                      <img src="/assets/googleplay.svg" alt="Google Play" width={120} height={120}  className="w-auto h-[40px]"/>
+
                   </Link>
 
                   <Link
@@ -226,13 +230,16 @@ const SignInPage = () => {
                     href="https://www.apple.com/ph/app-store/"
                     target="_blank"
                   >
-                    <ImageComponent
+                    {/* <ImageComponent
                       src={"/assets/appstore.svg"}
                       alt={"App Store"}
                       width={120}
                       height={100}
                       className="w-auto h-[40px]"
-                    />
+                    /> */}
+
+<img src="/assets/appstore.svg" alt="App Store" width={120} height={100}  className="w-auto h-[40px]"/>
+
                   </Link>
                 </span>
               </Typography>
