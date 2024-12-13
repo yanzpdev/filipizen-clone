@@ -39,7 +39,7 @@ const QRCodeComponent = ({ qrCodeUrl, isTimedOut }: { qrCodeUrl: string | null, 
           unoptimized
         /> */}
         
-        <img src={'/assets/roundloading.gif'} alt="Loadingss" height={300}
+        <img src={'/assets/roundloading.gif'} alt="Loading" height={300}
           width={300}
           className="mx-auto rounded-lg" />
       </motion.div>
