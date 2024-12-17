@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { HiCog6Tooth } from "react-icons/hi2";
 import { GrCircleQuestion } from "react-icons/gr";
+import Panel from '@/components/io/Panel';
 
 type SidebarProps = {
   showMenu: boolean;
@@ -44,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setShowMenu, showMenu }) => {
   }, [showMenu, handleClickOutside]);
 
   return (
-    <div className="xl:hidden fixed h-screen bg-[#00000088] w-screen z-50">
+    <Panel className="xl:hidden fixed h-screen bg-[#00000088] w-screen z-50">
       <motion.div 
         ref={ref} 
         className="w-9/12 md:w-1/2 bg-white px-3 fixed left-0 h-full shadow-md overflow-y-scroll"
@@ -53,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setShowMenu, showMenu }) => {
         exit={{ x: -400 }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
       >
-        <div className='flex items-center justify-between border-b py-5'>
+        <Panel className='flex items-center justify-between border-b py-5'>
           <Image 
             src="/assets/filipizen.svg"
             alt="Logo"
@@ -61,7 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setShowMenu, showMenu }) => {
             height={120}
             className=''
           />
-        </div>
+        </Panel>
         <ul className='flex flex-col bg-white'>
           {[...Array(7)].map((_, index) => (
             <li 
@@ -73,10 +74,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setShowMenu, showMenu }) => {
                   className={`py-3 px-5 ${index === 0 ? 'mt-2' : ''} flex items-center w-full justify-between mb-2 rounded-full`}
                   onClick={() => handleSubItemClick(index)}
                 >
-                  <span className='flex items-center gap-5 w-full'>
+                  <Panel className='flex items-center gap-5 w-full'>
                     <IoCheckboxSharp size={20} />
-                    <span>Item {index + 1}</span>
-                  </span>
+                    <Panel>Item {index + 1}</Panel>
+                  </Panel>
                   <MdChevronLeft  
                     size={20}
                     className={`${expandedItems.includes(index) ? '-rotate-90' : ''} duration-300`}
@@ -87,10 +88,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setShowMenu, showMenu }) => {
                   href='#'
                   className={`py-3 px-5 ${index === 0 ? 'mt-2' : ''} flex items-center w-full justify-between mb-2 rounded-full`}
                 >
-                  <span className='flex items-center gap-5 w-full'>
+                  <Panel className='flex items-center gap-5 w-full'>
                     <IoCheckboxSharp size={20} />
-                    <span>Item {index + 1}</span>
-                  </span>
+                    <Panel>Item {index + 1}</Panel>
+                  </Panel>
                 </Link> 
               }
               
@@ -112,10 +113,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setShowMenu, showMenu }) => {
                           href={`#`}
                           className='w-full'
                         >
-                          <span className='flex items-center gap-5 w-full'>
+                          <Panel className='flex items-center gap-5 w-full'>
                             <IoCheckboxSharp size={20} />
-                            <span>Sub Item {subIndex + 1}</span>
-                          </span>
+                            <Panel>Sub Item {subIndex + 1}</Panel>
+                          </Panel>
                         </Link>
                       </li>
                     ))}
@@ -129,10 +130,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setShowMenu, showMenu }) => {
             <button
               className={`py-3 px-5 flex items-center w-full justify-between mb-2 rounded-full`}
             >
-              <span className='flex items-center gap-5 w-full'>
+              <Panel className='flex items-center gap-5 w-full'>
                 <HiCog6Tooth size={20} />
-                <span>Settings</span>
-              </span>
+                <Panel>Settings</Panel>
+              </Panel>
             </button>
           </li>
 
@@ -140,15 +141,15 @@ const Sidebar: React.FC<SidebarProps> = ({ setShowMenu, showMenu }) => {
             <button
               className={`py-3 px-5 flex items-center w-full justify-between mb-2 rounded-full`}
             >
-              <span className='flex items-center gap-5 w-full'>
+              <Panel className='flex items-center gap-5 w-full'>
                 <GrCircleQuestion size={20} />
-                <span>Help & feedback</span>
-              </span>
+                <Panel>Help & feedback</Panel>
+              </Panel>
             </button>
           </li>
         </ul>
       </motion.div>
-    </div>
+    </Panel>
   )
 }
 

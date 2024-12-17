@@ -1,11 +1,11 @@
 'use client';
-import ButtonComponent from '@/app/components/ui/ButtonComponent';
-import ContentWrapper from '@/app/components/ui/ContentWrapper';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { flattenedData } from './data';
 import Link from 'next/link';
 import React from 'react';
+import Panel from '@/components/io/Panel';
+import Button from '@/components/io/Button';
 
 const Reports = ({prevLink, pivotdata}: any) => {
   const [display, setDisplay] = useState('reports');
@@ -70,10 +70,10 @@ const Reports = ({prevLink, pivotdata}: any) => {
 
 
   return (
-    <ContentWrapper className='h-full w-full py-5'>
+    <Panel className='h-full w-full py-5'>
       <>
-        <ContentWrapper className='flex items-center justify-start gap-3 pb-5 '>
-          <ButtonComponent
+        <Panel className='flex items-center justify-start gap-3 pb-5 '>
+          <Button
             variant='text' 
             className={`normal-case text-base font-semibold hover:bg-transparent hover:underline underline-offset-4 text-slate-800 ${display === 'reports' && 'underline'}`}
             onClick={() => setDisplay('reports')}
@@ -86,8 +86,8 @@ const Reports = ({prevLink, pivotdata}: any) => {
             }}
           >
             Reports
-          </ButtonComponent>
-          <ButtonComponent 
+          </Button>
+          <Button 
             variant='text' 
             className={`normal-case text-base font-semibold hover:bg-transparent hover:underline underline-offset-4 text-slate-800 ${display === 'charts' && 'underline'}`}
             disableFocusRipple
@@ -100,16 +100,16 @@ const Reports = ({prevLink, pivotdata}: any) => {
             }}
           >
             Charts
-          </ButtonComponent>
-        </ContentWrapper>
+          </Button>
+        </Panel>
         <div className='w-full'>
           
         </div>
       </>
-      <ContentWrapper className='h-[15px]' />
+      <Panel className='h-[15px]' />
       <hr className="my-[8px] border-slate-500"/>
-      <ContentWrapper className='flex gap-5'>
-        <ButtonComponent
+      <Panel className='flex gap-5'>
+        <Button
           variant='contained'
           className={`text-[14px] font-[500] bg-[#f5f5f5] text-[#731cef] hover:bg-[#eeeaf4] rounded-md tracking-widest`}
           style={{
@@ -119,7 +119,7 @@ const Reports = ({prevLink, pivotdata}: any) => {
           onClick={() => router.push(prevLink)}
         >
           Back
-        </ButtonComponent>
+        </Button>
         {/* <Link
           href={'/'}
           className={`text-[14px] px-5 py-1 font-[500] bg-[#f5f5f5] text-[#731cef] hover:bg-[#eeeaf4] rounded-md tracking-widest`}
@@ -130,7 +130,7 @@ const Reports = ({prevLink, pivotdata}: any) => {
         >
           Back
         </Link> */}
-      </ContentWrapper>
+      </Panel>
       {/* {page === 1 ?
         <>
           <ContentWrapper className='w-full h-full mt-7'>
@@ -173,7 +173,7 @@ const Reports = ({prevLink, pivotdata}: any) => {
       :
         <>
           <ContentWrapper className='flex items-center justify-start gap-7 my-7'>
-            <ButtonComponent
+            <Button
               variant='text' 
               className={`normal-case text-xl font-semibold hover:bg-transparent hover:underline underline-offset-4 text-slate-800 ${display === 'reports' && 'underline'}`}
               onClick={() => setDisplay('reports')}
@@ -186,8 +186,8 @@ const Reports = ({prevLink, pivotdata}: any) => {
               }}
             >
               Reports
-            </ButtonComponent>
-            <ButtonComponent 
+            </Button>
+            <Button 
               variant='text' 
               className={`normal-case text-xl font-semibold hover:bg-transparent hover:underline underline-offset-4 text-slate-800 ${display === 'charts' && 'underline'}`}
               disableFocusRipple
@@ -200,7 +200,7 @@ const Reports = ({prevLink, pivotdata}: any) => {
               }}
             >
               Charts
-            </ButtonComponent>
+            </Button>
           </ContentWrapper>
           <div className='w-full'>
             {display === 'reports' && (
@@ -211,7 +211,7 @@ const Reports = ({prevLink, pivotdata}: any) => {
             {display === 'charts' && (
               <div className='grid grid-cols-10 border w-full bg-white'>
                 <div className='flex flex-col gap-2 col-span-1 p-5 bg-white border-r'>
-                  <ButtonComponent 
+                  <Button 
                     variant='text' 
                     className={`w-10 normal-case text-base mx-auto font-semibold ${chartType === 'BarChart' ? 'bg-black text-white' : 'bg-slate-200 text-slate-800 hover:bg-black hover:text-white'}  underline-offset-4 `}
                     disableFocusRipple
@@ -224,8 +224,8 @@ const Reports = ({prevLink, pivotdata}: any) => {
                     }}
                   >
                     Bar
-                  </ButtonComponent>
-                  <ButtonComponent 
+                  </Button>
+                  <Button 
                     variant='text' 
                     className={`w-10 normal-case text-base mx-auto font-semibold ${chartType === 'PieChart' ? 'bg-black text-white' : 'bg-slate-200 text-slate-800 hover:bg-black hover:text-white'}  underline-offset-4 `}
                     disableFocusRipple
@@ -238,8 +238,8 @@ const Reports = ({prevLink, pivotdata}: any) => {
                     }}
                   >
                     Pie
-                  </ButtonComponent>
-                  <ButtonComponent 
+                  </Button>
+                  <Button 
                     variant='text' 
                     className={`w-10 normal-case text-base mx-auto font-semibold ${chartType === 'LineChart' ? 'bg-black text-white' : 'bg-slate-200 text-slate-800 hover:bg-black hover:text-white'}  underline-offset-4 `}
                     disableFocusRipple
@@ -252,7 +252,7 @@ const Reports = ({prevLink, pivotdata}: any) => {
                     }}
                   >
                     Line
-                  </ButtonComponent>
+                  </Button>
                 </div>
                 <div className='col-span-9 flex flex-col gap-y-5'>
                   <ChartComponent chartType={chartType} chartData={chartdata} chartOptions={options} />
@@ -266,7 +266,7 @@ const Reports = ({prevLink, pivotdata}: any) => {
     <ContentWrapper className='h-[15px]' />
     <hr className="my-[8px] border-slate-500"/>
     <ContentWrapper className='flex gap-5'>
-      <ButtonComponent
+      <Button
         variant='contained'
         className={`text-[14px] font-[500] bg-[#f5f5f5] text-[#731cef] hover:bg-[#eeeaf4] rounded-md tracking-widest`}
         style={{
@@ -276,9 +276,9 @@ const Reports = ({prevLink, pivotdata}: any) => {
         onClick={page === 2 ? () => setPage(1) : () => router.push(prevLink)}
       >
         Back
-      </ButtonComponent>
+      </Button>
       {page !== 2 &&
-        <ButtonComponent
+        <Button
           variant='contained'
           className={`text-[14px] font-[500] bg-[#f5f5f5] text-[#731cef] hover:bg-[#eeeaf4] rounded-md tracking-widest`}
           style={{
@@ -288,10 +288,10 @@ const Reports = ({prevLink, pivotdata}: any) => {
           onClick={() => setPage(2)}
         >
           Next
-        </ButtonComponent>
+        </Button>
       } */}
       
-    </ContentWrapper>
+    </Panel>
   )
 }
 

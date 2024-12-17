@@ -1,11 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
+  // reactStrictMode: false,
   images: {
     remotePatterns: [
-      // 'www.filipizen.com',
-      // 'lh3.googleusercontent.com',
-      // 'platform-lookaside.fbsbx.com'
       {
         protocol: 'https',
         hostname: 'www.filipizen.com',

@@ -1,9 +1,9 @@
 import LoadingComponent from '@/components/ui/LoadingComponent'
 
-const Loading = () => {
+const loading = () => {
   return (
     <LoadingComponent />
   )
 }
 
-export default Loading;
+export default loading

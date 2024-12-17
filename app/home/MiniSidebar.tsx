@@ -1,11 +1,12 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { IoCheckboxSharp } from "react-icons/io5";
 import { MdChevronLeft } from "react-icons/md";
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { HiCog6Tooth } from "react-icons/hi2";
 import { GrCircleQuestion } from "react-icons/gr";
+import Panel from '@/components/io/Panel';
 
 const MiniSidebar = ({showMenu}: {showMenu: boolean}) => {
   const [expandedItems, setExpandedItems] = useState<number[]>([]);
@@ -16,7 +17,7 @@ const MiniSidebar = ({showMenu}: {showMenu: boolean}) => {
     );
   };
   return (
-    <div className='overflow-y-auto overflow-x-hidden'>
+    <Panel className='overflow-y-auto overflow-x-hidden'>
       <AnimatePresence>
         {showMenu &&
           <motion.div
@@ -37,16 +38,16 @@ const MiniSidebar = ({showMenu}: {showMenu: boolean}) => {
                       className={`p-3 ${index === 0 ? 'mt-2' : ''} flex items-center w-full justify-between mb-2 rounded-full`}
                       onClick={() => handleSubItemClick(index)}
                     >
-                      <span className='flex items-center gap-5 w-full'>
+                      <Panel className='flex items-center gap-5 w-full'>
                         <IoCheckboxSharp size={16} />
-                        <span
+                        <Panel
                           className={`transition-all duration-300 ${
                             showMenu ? 'max-w-full' : 'max-w-0 overflow-hidden'
                           } whitespace-nowrap text-ellipsis`}
                         >
                           Item {index + 1}
-                        </span>
-                      </span>
+                        </Panel>
+                      </Panel>
                       <MdChevronLeft  
                         size={16}
                         className={`${expandedItems.includes(index) ? '-rotate-90' : ''} duration-300`}
@@ -57,16 +58,16 @@ const MiniSidebar = ({showMenu}: {showMenu: boolean}) => {
                       href='#'
                       className={`p-3 ${index === 0 ? 'mt-2' : ''} flex items-center w-full justify-between mb-2 rounded-full`}
                     >
-                      <span className='flex items-center gap-5 w-full'>
+                      <Panel className='flex items-center gap-5 w-full'>
                         <IoCheckboxSharp size={16} />
-                        <span
+                        <Panel
                           className={`transition-all duration-300 ${
                             showMenu ? 'max-w-full' : 'max-w-0 overflow-hidden'
                           } whitespace-nowrap text-ellipsis`}
                         >
                           Item {index + 1}
-                        </span>
-                      </span>
+                        </Panel>
+                      </Panel>
                     </Link> 
                   }
                   
@@ -105,10 +106,10 @@ const MiniSidebar = ({showMenu}: {showMenu: boolean}) => {
                 <button
                   className={`py-3 px-5 flex items-center w-full justify-between mb-2 rounded-full`}
                 >
-                  <span className='flex items-center gap-5 w-full'>
+                  <Panel className='flex items-center gap-5 w-full'>
                     <HiCog6Tooth size={20} />
-                    <span>Settings</span>
-                  </span>
+                    <Panel>Settings</Panel>
+                  </Panel>
                 </button>
               </li>
     
@@ -116,18 +117,17 @@ const MiniSidebar = ({showMenu}: {showMenu: boolean}) => {
                 <button
                   className={`py-3 px-5 flex items-center w-full justify-between mb-2 rounded-full`}
                 >
-                  <span className='flex items-center gap-5 w-full'>
+                  <Panel className='flex items-center gap-5 w-full'>
                     <GrCircleQuestion size={20} />
-                    <span>Help & feedback</span>
-                  </span>
+                    <Panel>Help & feedback</Panel>
+                  </Panel>
                 </button>
               </li>
             </ul>
           </motion.div>
         }
-        
       </AnimatePresence>
-    </div>
+    </Panel>
   )
 }
 

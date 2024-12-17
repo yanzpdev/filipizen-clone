@@ -1,95 +1,98 @@
-import { Metadata } from 'next';
-import PartnerLinkLayout from './PartnerLinkLayout';
-import Custom404 from '@/app/components/layout/Custom404';
-import { getMembersData } from '@/app/utils/CloudPartnerService';
+import Panel from '@/components/io/Panel';
+import Header from '@/components/ui/Header';
+import { getPartnerData } from '@/services/CloudPartnerService';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import React from 'react'
 
-export const metadata: Metadata = {
-  title: 'Filipizen - Partners',
-  description: 'Filipizen Website',
-}
+const PartnerLinkDataPage = async({ params }: { params: { partnerLink: string } }) => {
+  const matchString = params.partnerLink.match(/^([^_]+)_(.+)$/);
+  let groupName = '';
+  let name = '';
 
-interface PageProps {
-  params: {partnerLink: string};
-}
-
-interface Member {
-  id: number;
-  clusterid: string;
-  title: string;
-  subtype: string;
-  state: string;
-  email: string;
-  name: string;
-  includeservices: string;
-  excludeservices: string;
-  phoneno: string;
-  group: {
-    name: string;
-    objid: string;
-    title: string;
-  } 
-  channelid: string;
-  isonline: string;
-}
-
-const page:React.FC<PageProps> = async({params}) => {
-  const partnerData: Member[] = await getMembersData();
-  const clusterId = params.partnerLink.replace(/[^\w|]/g, "").split("_")
-  const acceptedUrlParams: string[] = [];
-
-  const partner: Omit<Member, 'clusterid'>[] = partnerData
-  .filter((item) => item.clusterid === clusterId[0])
-  .map(({ 
-    id, 
-    title, 
-    subtype,
-    state,
-    email,
-    name,
-    includeservices,
-    excludeservices,
-    phoneno,
-    group,
-    channelid,
-    isonline
-  }) => ({ 
-    id, 
-    title, 
-    subtype,
-    state,
-    email,
-    name,
-    includeservices,
-    excludeservices,
-    phoneno,
-    group,
-    channelid,
-    isonline
-  }));
-
-  partnerData.map((partner) => {
-    acceptedUrlParams.push(partner.group.name + "_" + partner.name);
-  })
-
-  
-  if (acceptedUrlParams.includes(params.partnerLink)) {
-    return (
-      <div className='h-screen'>
-        {partner.map((item) => (
-          <div key={item.id}>
-            {item.name === clusterId[1] &&
-              <PartnerLinkLayout data={item} />
-            } 
-          </div>
-        ))}
-      </div>
-    )
+  if (matchString) {
+    [groupName, name] = [matchString[1], matchString[2]];
   }
 
-  else {
-    return <Custom404 />
+  const partner = await getPartnerData(groupName, name);
+
+  if (partner.status === "ERROR") {
+    redirect(`/partners/inactive?groupname=${groupName}&name=${name}`);
   }
+
+  const items = [
+    {
+      name: 'Datasets', 
+      menu: 
+      [
+        {name: 'Real Property'},
+        {name: 'Business Data'}
+      ]
+    },
+    {
+      name: 'Reports', 
+      menu: 
+      [
+        {name: 'Quarterly Report of Real Property Assessment (QRRPA)'},
+        {name: 'Assessment Roll'},
+        {name: 'Statement of Receipt Sources'},
+        {name: 'City Municipality Competitive Index (CMCI)'},
+        {name: 'PSIC Report'},
+        {name: 'LIFT Report'}
+      ]
+    }
+  ];
+
+  return (
+    <Panel className={`min-h-[95.3vh] h-full relative`}>
+      <Header 
+        navbarStyles="w-full px-[50px] pb-[5px] pt-[3px] bg-[#2c3e50] h-[50px] flex justify-between items-center" 
+        src={`/assets/partner/${partner.id}.png`} 
+        height={40} 
+        width={40} 
+        title={partner.title} 
+        page="partner" 
+        data={partner} 
+        headerSelect="data" 
+      />
+      <Panel className="mb-[2rem] min-h-[79.7%]">
+        <Panel className="mx-[80px] px-[32px] h-full">
+          <h1 className="mt-[32px] mb-[16px] text-[28px] font-bold leading-none">Select Transaction</h1>
+          <Panel className="flex flex-col w-fit gap-x-5 h-full">
+            {items ?
+              <>
+                {items.map((item, index) => (
+                  <Panel 
+                    key={index} 
+                    className={`col-span-1 ${
+                      index % 2 === 0 ? 'row-start-1' : 'row-start-2'
+                    } break-inside-avoid`}
+                  >
+                    <h2 className={`pt-[20px] pb-[5px] leading-none text-[#27ae60] text-[19.6px] font-bold `}>{item.name}</h2>
+                      <Panel className='flex flex-col leading-relaxed w-fit text-[15.2px] text-[#3f51b5]'>
+                        {item.menu.map((menuItem, index) => 
+                        <Link 
+                          prefetch={false}
+                          key={index}
+                          href={`data/rptdata`} 
+                          className="hover:underline"
+                        >
+                          {menuItem.name}
+                        </Link>
+                        )}  
+                      </Panel>
+                  </Panel>
+                ))} 
+              </>
+            :
+              <h2 className={`pt-[20px] pb-[5px] leading-none text-slate-800 text-[19.6px] font-semibold`}>No data available yet.</h2>
+            }
+          </Panel>
+          <Panel className="h-[15px]" />
+        </Panel>
+      </Panel>
+    </Panel>
+  )
 }
 
-export default page
-
+export default PartnerLinkDataPage;

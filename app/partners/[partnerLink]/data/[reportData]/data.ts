@@ -1,138 +1,17 @@
-class CloudPartnerService {
-  url = 'http://192.168.2.11:8070/osiris3/json/dw/RptDataService.';
-  async getTaxableTypes() {
-    try {
-      const response = await fetch(this.url+'getTaxableTypes', {
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        },
-        cache: 'no-store',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-
-      const data = await response.json();
-      return data;
-    } 
-    
-    catch (error) {
-      console.error('Error fetching data:', error);
-      return [];
-    }
-  }
-
-  async getPropertyClassifications() {
-    try {
-      const response = await fetch(this.url+'getPropertyClassifications', {
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        },
-        cache: 'no-store',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-
-      const data = await response.json();
-      return data;
-    } 
-    
-    catch (error) {
-      console.error('Error fetching data:', error);
-      return [];
-    }
-  }
-
-  async getPropertyTypes() {
-    try {
-      const response = await fetch(this.url+'getPropertyTypes', {
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        },
-        cache: 'no-store',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-
-      const data = await response.json();
-      return data;
-    } 
-    
-    catch (error) {
-      console.error('Error fetching data:', error);
-      return [];
-    }
-  }
-
-  async getReportDates() {
-    try {
-      const response = await fetch(this.url+'getReportDates', {
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        },
-        cache: 'no-store',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-
-      const data = await response.json();
-      return data;
-    } 
-    
-    catch (error) {
-      console.error('Error fetching data:', error);
-      return [];
-    }
-  }
-  async getReportData() {
-    try {
-      const response = await fetch(this.url+'getReportData', {
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        },
-        cache: 'no-store',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-
-      const data = await response.json();
-      return data;
-    } 
-    
-    catch (error) {
-      console.error('Error fetching data:', error);
-      return [];
-    }
-  }
-}
-
-const cloudPartnerService = new CloudPartnerService();
+import { 
+  getPropertyClassifications, 
+  getPropertyTypes, 
+  getReportData, 
+  getReportDates, 
+  getTaxableTypes 
+} from "@/services/CloudPartnerService";
 
 const rptData = async () => {
-  const taxableTypesData = await cloudPartnerService.getTaxableTypes();
-  const propertyTypesData = await cloudPartnerService.getPropertyTypes();
-  const propertyClassificationsData = await cloudPartnerService.getPropertyClassifications();
-  const reportDatesData = await cloudPartnerService.getReportDates();
-  const reportsData = await cloudPartnerService.getReportData();
+  const taxableTypesData = await getTaxableTypes();
+  const propertyTypesData = await getPropertyTypes();
+  const propertyClassificationsData = await getPropertyClassifications();
+  const reportDatesData = await getReportDates();
+  const reportsData = await getReportData();
 
   const data = {
     'Taxable Types': taxableTypesData,

@@ -1,4 +1,4 @@
-import Custom404 from './components/layout/Custom404';
+import Custom404 from '../components/ui/Custom404';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -13,4 +13,4 @@ const NotFoundPage = () => {
   )
 }
 
-export default NotFoundPage
+export default NotFoundPage;
