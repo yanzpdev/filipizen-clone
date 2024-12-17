@@ -4,13 +4,11 @@ import Image from "next/image"
 const Loading = () => {
   return (
     <Panel className="h-screen w-screen flex items-center justify-center">
-      <Image 
+      <img 
         src={"/assets/elipsisloading.gif"} 
         alt={"Loading..."} 
         width={150} 
         height={150} 
-        priority
-        unoptimized
       />
     </Panel>
   )

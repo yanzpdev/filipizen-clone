@@ -190,36 +190,34 @@ const LoginPage = () => {
           >
             <Panel>Use the Filipizen App to log in via QR code</Panel>
             <Panel className="flex gap-4">
-              <Link
+              <a
                 className=""
                 href="https://play.google.com/store/apps"
                 target="_blank"
               >
-                <Image
+                {/* <Image
                   src={"/assets/googleplay.svg"}
                   alt={"Google Play"}
                   width={120}
                   height={100}
                   className="w-auto h-[40px]"
-                  priority
-                />
-                  {/* <img src="/assets/googleplay.svg" alt="Google Play" width={120} height={120}  className="w-auto h-[40px]"/> */}
-              </Link>
-              <Link
+                /> */}
+                <img src="/assets/googleplay.svg" alt="Google Play" width={120} height={120}  className="w-auto h-[40px]"/>
+              </a>
+              <a
                 className=""
                 href="https://www.apple.com/ph/app-store/"
                 target="_blank"
               >
-                <Image
+                {/* <Image
                   src={"/assets/appstore.svg"}
                   alt={"App Store"}
                   width={120}
                   height={100}
                   className="w-auto h-[40px]"
-                  priority
-                />
-        {/* <img src="/assets/appstore.svg" alt="App Store" width={120} height={100}  className="w-auto h-[40px]"/> */}
-              </Link>
+                /> */}
+                <img src="/assets/appstore.svg" alt="App Store" width={120} height={100}  className="w-auto h-[40px]"/>
+              </a>
             </Panel>
           </Panel>
           <Panel className="mt-3 mx-auto text-center items-center justify-center flex gap-2">

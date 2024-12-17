@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { motion } from "framer-motion";
-import Image from 'next/image';
 
 const QRCodeComponent = ({ qrCodeUrl, isTimedOut }: { qrCodeUrl: string | null, isTimedOut: boolean }) => (
   <>

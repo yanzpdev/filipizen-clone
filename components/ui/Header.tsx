@@ -50,7 +50,7 @@ const Header:React.FC<HeaderProps> = ({
     <Panel className={navbarStyles}>
       <Panel className='flex pt-[2px] gap-5 items-center justify-center text-white'>
         <Link href={data === undefined ? `/` : `/partners/${data?.group?.name}_${data?.name}`} className='flex items-center justify-center text-center'>
-          <Image   
+          <img   
             src={src}
             alt='logo'
             width={width || 24}
