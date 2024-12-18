@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: { partnerLink: stri
 
 export default async function PartnerLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main>
+    <main className="h-screen w-full flex flex-col items-center justify-between">
       {children}
       <Footer inPartner={true} />
     </main>

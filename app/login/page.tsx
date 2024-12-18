@@ -154,12 +154,12 @@ const LoginPage = () => {
 
   return (
     <Container
-      className={`h-[84.3vh] w-full relative text-slate-700`}
+      className={`h-fit w-full relative text-slate-700`}
       classes={{}}
       fixed={false}
       disableGutters={true}
     >
-      <Panel className={`mt-20 flex items-center justify-center gap-2`}>
+      <Panel className={`pt-20 flex items-center justify-center gap-2`}>
         <Link href="/">
           <Image
             src={`/assets/filipizen.svg`}

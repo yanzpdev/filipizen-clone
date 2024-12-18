@@ -44,9 +44,9 @@ const PartnerLinkDataPage = async({ params }: { params: { partnerLink: string } 
   ];
 
   return (
-    <Panel className={`min-h-[95.3vh] h-full relative`}>
+    <Panel className={`h-full w-full relative`}>
       <Header 
-        navbarStyles="w-full px-[50px] pb-[5px] pt-[3px] bg-[#2c3e50] h-[50px] flex justify-between items-center" 
+        className="w-full px-5 lg:px-[50px] pb-[5px] pt-[3px] bg-[#2c3e50] h-[50px] flex justify-between items-center" 
         src={`/assets/partner/${partner.id}.png`} 
         height={40} 
         width={40} 
@@ -56,8 +56,8 @@ const PartnerLinkDataPage = async({ params }: { params: { partnerLink: string } 
         headerSelect="data" 
       />
       <Panel className="mb-[2rem] min-h-[79.7%]">
-        <Panel className="mx-[80px] px-[32px] h-full">
-          <h1 className="mt-[32px] mb-[16px] text-[28px] font-bold leading-none">Select Transaction</h1>
+        <Panel className="mx-[20px] lg:mx-[80px] lg:px-[32px] h-full">
+          <h1 className="mt-[32px] mb-[16px] lg:text-[28px] font-bold leading-none">Select Transaction</h1>
           <Panel className="flex flex-col w-fit gap-x-5 h-full">
             {items ?
               <>
@@ -68,8 +68,8 @@ const PartnerLinkDataPage = async({ params }: { params: { partnerLink: string } 
                       index % 2 === 0 ? 'row-start-1' : 'row-start-2'
                     } break-inside-avoid`}
                   >
-                    <h2 className={`pt-[20px] pb-[5px] leading-none text-[#27ae60] text-[19.6px] font-bold `}>{item.name}</h2>
-                      <Panel className='flex flex-col leading-relaxed w-fit text-[15.2px] text-[#3f51b5]'>
+                    <h2 className={`pt-[20px] pb-[5px] leading-none text-[#27ae60] lg:text-[19.6px] font-bold `}>{item.name}</h2>
+                      <Panel className='flex flex-col leading-relaxed w-fit text-sm lg:text-[15.2px] text-[#3f51b5]'>
                         {item.menu.map((menuItem, index) => 
                         <Link 
                           prefetch={false}

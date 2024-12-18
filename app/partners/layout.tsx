@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function PartnersLayout({children}: {children:React.ReactNode}) {
   return (
-    <main>
+    <main className="h-screen">
       {children}
     </main>
   );

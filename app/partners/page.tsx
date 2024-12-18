@@ -56,16 +56,16 @@ const Partners = async() => {
   };
 
   return (
-    <Panel className='h-full overflow-x-hidden relative'>
+    <Panel className='h-full w-full overflow-x-hidden relative'>
       <Header 
-        navbarStyles='w-screen px-[20px] pt-[5px] pb-[7px] bg-[#ecf0f1] flex justify-between items-center' 
+        className='w-screen px-[20px] pt-[5px] pb-[7px] bg-[#ecf0f1] flex justify-between items-center' 
         src='/assets/filipizen.svg'
         height={22.06}
         width={80} 
         title=''
       />
       <Panel className='p-[20px] w-fit'></Panel>
-      <Panel className='mx-[48px] h-full'>
+      <Panel className='mx-[48px] h-fit'>
         <h1 className='text-[#000000d9] text-[1.71rem] font-[700] mb-[16px] leading-none tracking-tight'>
           List of Partners
         </h1>
@@ -92,10 +92,7 @@ const Partners = async() => {
       </Panel>
     
       <Panel className='h-[80px]'></Panel>
-      <Panel className='w-full absolute bottom-0'>
-        <Footer />
-      </Panel>
-     
+      <Footer />     
     </Panel>
   )
 }
